@@ -26,3 +26,20 @@ Open `index.html` in a browser. The first version is a small web game with:
 - Track local weather and seasonal events.
 - Make hybrids inherit traits more visibly.
 - Add a journal for discovered varieties and market notes.
+
+## Working Locally
+
+The local development repo lives at:
+
+```sh
+/Users/ethanadams/dev/garden-nursery
+```
+
+Run Codex CLI from the repo:
+
+```sh
+cd /Users/ethanadams/dev/garden-nursery
+codex
+```
+
+For the ChatGPT Project setup, see `docs/chatgpt-project-setup.md`.
