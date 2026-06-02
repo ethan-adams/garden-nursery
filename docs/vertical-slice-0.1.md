@@ -73,11 +73,11 @@ Even placeholder writing should follow the creative direction:
 
 ## Issue Sequence
 
-- `[GARDEN-1] Set up Godot project`
-- `[GARDEN-2] Define starter region brief`
-- `[GARDEN-3] Establish Steam Deck UX baseline`
-- `[GARDEN-4] Define core data model`
-- `[GARDEN-5] Build first nursery stand scene`
-- `[GARDEN-6] Prototype market-reading loop`
-- `[GARDEN-7] Create writing sample pack`
-- `[GARDEN-8] Add Godot CI sanity check`
+- `#5` Set up Godot project.
+- `#6` Define starter region brief.
+- `#8` Establish Steam Deck UX baseline.
+- `#7` Define core data model.
+- `#10` Build first nursery stand scene.
+- `#9` Prototype market-reading loop.
+- `#13` Create writing sample pack.
+- `#12` Add Godot CI sanity check.
