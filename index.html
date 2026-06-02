@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Garden Nursery</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app">
+      <section class="topbar" aria-label="Nursery status">
+        <div>
+          <p class="eyebrow">Foothill Plant House</p>
+          <h1>Garden Nursery</h1>
+        </div>
+        <div class="stats">
+          <div>
+            <span>Week</span>
+            <strong id="week">1</strong>
+          </div>
+          <div>
+            <span>Cash</span>
+            <strong id="cash">$120</strong>
+          </div>
+          <div>
+            <span>Reputation</span>
+            <strong id="reputation">12</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="layout">
+        <aside class="panel market-panel">
+          <div class="panel-heading">
+            <h2>Regional Market</h2>
+            <button id="next-week" class="primary">Next Week</button>
+          </div>
+          <div id="trend" class="trend"></div>
+          <h3>Customers Today</h3>
+          <div id="customers" class="customer-list"></div>
+        </aside>
+
+        <section class="panel inventory-panel">
+          <div class="panel-heading">
+            <h2>Inventory</h2>
+            <button id="restock">Restock Favorites</button>
+          </div>
+          <div id="inventory" class="plant-grid"></div>
+        </section>
+
+        <aside class="panel hybrid-panel">
+          <h2>Hybrid Bench</h2>
+          <p class="quiet">Cross two plants to discover varieties that might fit tomorrow's market.</p>
+          <div class="select-row">
+            <label>
+              Parent A
+              <select id="parent-a"></select>
+            </label>
+            <label>
+              Parent B
+              <select id="parent-b"></select>
+            </label>
+          </div>
+          <button id="hybridize" class="primary">Start Hybrid</button>
+          <div id="hybrid-result" class="hybrid-result"></div>
+          <h3>Nursery Notes</h3>
+          <ul id="log" class="log"></ul>
+        </aside>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>

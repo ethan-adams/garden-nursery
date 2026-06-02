@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Sunny plant nursery benches</title>
+  <desc id="desc">A stylized garden nursery with plant benches, greenhouse panes, trees, and warm afternoon light.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#d7eef0"/>
+      <stop offset="0.62" stop-color="#f5e9c6"/>
+      <stop offset="1" stop-color="#d8c295"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#eef8f4" stop-opacity="0.86"/>
+      <stop offset="1" stop-color="#b7d5cd" stop-opacity="0.56"/>
+    </linearGradient>
+    <filter id="soft">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <circle cx="1320" cy="130" r="86" fill="#f2ca68" opacity="0.78"/>
+  <g opacity="0.45" filter="url(#soft)">
+    <ellipse cx="280" cy="210" rx="230" ry="78" fill="#ffffff"/>
+    <ellipse cx="820" cy="170" rx="270" ry="82" fill="#ffffff"/>
+  </g>
+  <path d="M0 430 C190 360 310 390 470 330 C670 250 820 330 980 280 C1210 205 1370 286 1600 205 L1600 900 L0 900 Z" fill="#78956e"/>
+  <path d="M0 515 C240 445 405 485 590 430 C790 370 980 445 1190 392 C1340 354 1480 370 1600 338 L1600 900 L0 900 Z" fill="#4f744d"/>
+  <g transform="translate(170 150)">
+    <path d="M130 350 L430 80 L730 350 Z" fill="url(#glass)" stroke="#f7fbf5" stroke-width="10"/>
+    <path d="M430 80 L430 350 M280 215 L580 215 M205 282 L655 282" stroke="#ffffff" stroke-width="8" opacity="0.7"/>
+    <rect x="130" y="350" width="600" height="245" fill="#e9dfc2" opacity="0.92"/>
+    <rect x="174" y="385" width="135" height="150" fill="#9b7657"/>
+    <rect x="340" y="385" width="135" height="150" fill="#9b7657"/>
+    <rect x="506" y="385" width="135" height="150" fill="#9b7657"/>
+  </g>
+  <g transform="translate(780 465)">
+    <rect x="0" y="75" width="520" height="32" rx="10" fill="#8f6a4d"/>
+    <rect x="28" y="107" width="24" height="170" fill="#6d4e39"/>
+    <rect x="462" y="107" width="24" height="170" fill="#6d4e39"/>
+    <g transform="translate(40 0)">
+      <rect x="0" y="50" width="72" height="44" rx="5" fill="#b97956"/>
+      <path d="M9 50 C26 12 52 12 65 50" fill="#496f46"/>
+      <path d="M36 50 C32 25 33 14 43 0" stroke="#2d5030" stroke-width="6" fill="none"/>
+    </g>
+    <g transform="translate(150 8)">
+      <rect x="0" y="42" width="78" height="44" rx="5" fill="#c89157"/>
+      <path d="M8 42 C22 8 70 14 72 42" fill="#668b4f"/>
+      <circle cx="38" cy="22" r="11" fill="#d79fbb"/>
+    </g>
+    <g transform="translate(270 4)">
+      <rect x="0" y="46" width="80" height="44" rx="5" fill="#9c6f54"/>
+      <path d="M7 46 C19 13 35 20 42 46 C54 12 74 18 76 46" fill="#567f62"/>
+    </g>
+    <g transform="translate(395 6)">
+      <rect x="0" y="44" width="76" height="44" rx="5" fill="#b97956"/>
+      <path d="M7 44 C19 11 64 13 72 44" fill="#415f3f"/>
+      <circle cx="31" cy="25" r="9" fill="#f0d06a"/>
+      <circle cx="51" cy="24" r="7" fill="#f0d06a"/>
+    </g>
+  </g>
+  <g transform="translate(210 615)">
+    <rect x="0" y="70" width="500" height="34" rx="10" fill="#795941"/>
+    <rect x="38" y="104" width="24" height="120" fill="#5e4434"/>
+    <rect x="438" y="104" width="24" height="120" fill="#5e4434"/>
+    <g fill="#315733">
+      <ellipse cx="70" cy="48" rx="52" ry="38"/>
+      <ellipse cx="165" cy="42" rx="48" ry="36"/>
+      <ellipse cx="260" cy="48" rx="58" ry="42"/>
+      <ellipse cx="360" cy="45" rx="50" ry="34"/>
+      <ellipse cx="445" cy="48" rx="55" ry="40"/>
+    </g>
+    <g fill="#e6b7c8">
+      <circle cx="86" cy="35" r="8"/>
+      <circle cx="246" cy="32" r="8"/>
+      <circle cx="388" cy="32" r="8"/>
+    </g>
+  </g>
+  <path d="M0 760 C220 700 405 735 620 704 C830 674 1010 723 1210 690 C1390 660 1515 700 1600 682 L1600 900 L0 900 Z" fill="#cfb885"/>
+</svg>
