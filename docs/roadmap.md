@@ -14,6 +14,8 @@ This is the project memory rail for agentic work. Update it when a meaningful sy
 
 Make a cozy, systemic nursery game where the player learns to read plants, customers, seasons, and regional taste. It should feel like spending a Saturday at a good nursery: tactile, alive, observant, and full of small discoveries.
 
+See `docs/creative-direction.md` for the current creative direction, including the fictional-country region plan, writing pillars, magical realism rules, Steam Deck constraints, and market-reading pillar.
+
 ## Next Systems To Consider
 
 - Godot migration spike with one playable nursery loop.
