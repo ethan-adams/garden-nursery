@@ -25,5 +25,7 @@ Make a cozy, systemic nursery game where the player learns to read plants, custo
 ## Harness Goals
 
 - Keep `npm test` fast enough to run before every commit.
+- Route ordinary agent work through branches and pull requests instead of direct pushes to `main`.
+- Use GitHub Actions sanity checks to verify PR branches remotely.
 - Add browser smoke tests once the project adopts a dev server or test browser dependency.
 - Prefer tests for simulation rules as soon as game logic is split out of DOM rendering.

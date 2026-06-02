@@ -13,14 +13,33 @@ When given a task, the agent should own the whole loop:
 1. Restate the task as a concrete implementation target.
 2. Inspect the current code and docs before editing.
 3. Break the work into small steps when the task is more than a tiny change.
-4. Implement without waiting for approval unless the task crosses a boundary listed in Working Style.
-5. Run `npm test` before committing.
-6. Commit with a clear message when the work is complete and tests pass.
-7. Push to `origin/main` when the user has asked for autonomous repo work or the change is clearly part of the ongoing game build.
+4. Create or switch to a task branch before editing. Use names like `feature/propagation-bench`, `fix/hybrid-pricing`, or `chore/pr-harness`.
+5. Implement without waiting for approval unless the task crosses a boundary listed in Working Style.
+6. Run `npm test` before committing.
+7. Commit with a clear message when the work is complete and tests pass.
+8. Push the task branch and open a pull request against `main`.
+9. Confirm GitHub sanity checks are passing or report exactly what failed.
 
 If tests fail, fix the failure and rerun them. Do not commit known failing checks unless the user explicitly asks to capture a broken state.
 
 If a task creates a new system, add or update a note in `docs/roadmap.md` so future agents can continue from the current design intent.
+
+Do not push directly to `origin/main` for ordinary work. `main` should move through pull requests so the history stays reviewable and CI has a chance to catch mistakes.
+
+Before opening a PR, keep the branch history clean:
+
+- Prefer one coherent commit for a focused task.
+- Use two or more commits only when they tell a useful story, such as `Add propagation model` followed by `Render propagation bench`.
+- If the branch has noisy checkpoint commits, squash or reset them before publishing the PR.
+- Do not rewrite shared branches after a PR is open unless the user asks or the cleanup is clearly harmless.
+
+PR titles should start with one of:
+
+- `feat:`
+- `fix:`
+- `chore:`
+- `docs:`
+- `test:`
 
 ## Game Direction
 
@@ -54,4 +73,6 @@ If a task creates a new system, add or update a note in `docs/roadmap.md` so fut
 - Before pushing, verify the configured remote and branch.
 - Prefer `npm test` as the single pre-commit check entrypoint.
 - Keep `scripts/agent-check.mjs` dependency-light unless the game gains a build system.
+- Use the PR template in `.github/PULL_REQUEST_TEMPLATE.md`.
+- Use GitHub Actions sanity checks as the remote source of truth after pushing a PR branch.
 - Mention any skipped browser/manual verification in the final note.
