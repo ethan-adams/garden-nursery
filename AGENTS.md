@@ -11,14 +11,16 @@ The user wants Codex to make most implementation decisions independently. Ask on
 When given a task, the agent should own the whole loop:
 
 1. Restate the task as a concrete implementation target.
-2. Inspect the current code and docs before editing.
-3. Break the work into small steps when the task is more than a tiny change.
-4. Create or switch to a task branch before editing. Use names like `feature/propagation-bench`, `fix/hybrid-pricing`, or `chore/pr-harness`.
-5. Implement without waiting for approval unless the task crosses a boundary listed in Working Style.
-6. Run `npm test` before committing.
-7. Commit with a clear message when the work is complete and tests pass.
-8. Push the task branch and open a pull request against `main`.
-9. Confirm GitHub sanity checks are passing or report exactly what failed.
+2. If an issue id is provided, inspect it with `gh issue view` or search by title, for example `gh issue list --search "GARDEN-1"`.
+3. Inspect the current code and docs before editing.
+4. Break the work into small steps when the task is more than a tiny change.
+5. Create or switch to a task branch before editing. Use branch names based on the issue code when possible, such as `feature/GARDEN-1-godot-project`, `docs/GARDEN-2-vertical-slice`, or `chore/GARDEN-8-harness`.
+6. Implement without waiting for approval unless the task crosses a boundary listed in Working Style.
+7. Run `npm test` before committing.
+8. Commit with a clear message when the work is complete and tests pass.
+9. Push the task branch and open a pull request against `main`.
+10. Confirm GitHub sanity checks are passing or report exactly what failed.
+11. Squash-merge the PR when checks pass, unless the user explicitly asks to review first.
 
 If tests fail, fix the failure and rerun them. Do not commit known failing checks unless the user explicitly asks to capture a broken state.
 
@@ -40,6 +42,8 @@ PR titles should start with one of:
 - `chore:`
 - `docs:`
 - `test:`
+
+Issue-backed work should use stable garden codes in titles, such as `[GARDEN-1] Set up Godot project`. PR titles do not need to include the code, but PR bodies should link the issue.
 
 ## Game Direction
 
@@ -76,3 +80,11 @@ PR titles should start with one of:
 - Use the PR template in `.github/PULL_REQUEST_TEMPLATE.md`.
 - Use GitHub Actions sanity checks as the remote source of truth after pushing a PR branch.
 - Mention any skipped browser/manual verification in the final note.
+
+## Tooling Baseline
+
+- Local repo path: `/Users/ethanadams/dev/garden-nursery`.
+- GitHub repo: `ethan-adams/garden-nursery`.
+- Current Godot baseline: `4.5.1.stable`.
+- Use `godot --version` to verify the local engine.
+- Prefer `garden-work GARDEN-N` from the shell for issue-driven autonomous work once the helper is installed.
