@@ -87,4 +87,4 @@ Issue-backed work should use stable garden codes in titles, such as `[GARDEN-1] 
 - GitHub repo: `ethan-adams/garden-nursery`.
 - Current Godot baseline: `4.5.1.stable`.
 - Use `godot --version` to verify the local engine.
-- Prefer `garden-work GARDEN-N` from the shell for issue-driven autonomous work once the helper is installed.
+- Prefer plain Codex CLI prompts from the repo root, such as `Work GARDEN-1. Follow AGENTS.md.`

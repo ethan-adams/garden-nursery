@@ -5,8 +5,11 @@ Use stable `GARDEN-N` codes when asking Codex CLI to work autonomously.
 Example:
 
 ```sh
-garden-work GARDEN-1
+cd /Users/ethanadams/dev/garden-nursery
+cdsp
 ```
+
+Then ask Codex: `Work GARDEN-1. Follow AGENTS.md.`
 
 ## Godot Vertical Slice 0.1
 
