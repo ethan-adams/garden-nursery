@@ -8,6 +8,7 @@ This is the project memory rail for agentic work. Update it when a meaningful sy
 - Core loop: inspect market trend, sell plants, restock likely winners, advance week.
 - Discovery loop: hybridize two parent plants to create a new stock item.
 - Harness: `npm test` runs dependency-light checks through `scripts/agent-check.mjs`.
+- Engine direction: research currently recommends migrating the real game to Godot 4.x with GDScript. See `docs/engine-stack-research.md`.
 
 ## North Star
 
@@ -15,6 +16,7 @@ Make a cozy, systemic nursery game where the player learns to read plants, custo
 
 ## Next Systems To Consider
 
+- Godot migration spike with one playable nursery loop.
 - Propagation bench with time, failure chance, and plant-specific methods.
 - Customer archetypes with garden constraints, budgets, and taste memory.
 - Regional climate model: heat, frost dates, water restrictions, soil, and native ranges.
