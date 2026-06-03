@@ -32,6 +32,7 @@ godot/
 - Keep data catalogs in stable, text-friendly files.
 - Avoid one enormous all-in-one `.tscn` scene.
 - Use clear node names for focus navigation and Steam Deck UI checks.
+- Follow `docs/steam-deck-ux-baseline.md` for resolution, text sizing, focus navigation, and input action naming.
 
 ## Godot Baseline
 
@@ -55,3 +56,7 @@ Good early options:
 - GDScript resources if editor workflows become more important.
 
 The first Godot slice should choose whichever option makes agent editing and automated checks easiest.
+
+## UI Input Bias
+
+Name input actions by player intent, not hardware. Use `ui_confirm`, `ui_cancel`, `ui_details`, `ui_tab_next`, `ui_tab_previous`, `ui_sort`, and `ui_journal` for controller-friendly UI commands as those surfaces come online.

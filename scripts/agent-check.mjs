@@ -86,6 +86,10 @@ check("Godot project shell is wired", async () => {
 
   assert(project.includes("config_version=5"), "project.godot must use Godot 4 config_version=5");
   assert(project.includes('config/features=PackedStringArray("4.5")'), "project.godot must target Godot 4.5");
+  assert(project.includes("window/size/viewport_width=1280"), "project.godot must target 1280 viewport width");
+  assert(project.includes("window/size/viewport_height=800"), "project.godot must target 800 viewport height");
+  assert(project.includes('window/stretch/mode="canvas_items"'), "project.godot must use canvas_items stretch mode");
+  assert(project.includes('window/stretch/aspect="expand"'), "project.godot must use expand stretch aspect");
 
   const mainSceneMatch = project.match(/run\/main_scene="([^"]+)"/);
   assert(mainSceneMatch, "project.godot must define application run/main_scene");
@@ -107,6 +111,25 @@ check("Godot project shell is wired", async () => {
       ? godotPathToRepoPath(resourcePath)
       : join(dirname(mainScenePath), resourcePath);
     assert(await fileExists(repoPath), `missing Godot scene resource: ${repoPath}`);
+  }
+});
+
+check("Steam Deck UX baseline is documented", async () => {
+  const doc = await readFile("docs/steam-deck-ux-baseline.md", "utf8");
+  for (const required of [
+    "1280x800",
+    "Text Sizing",
+    "Focus Navigation",
+    "Input Actions",
+    "Current Automated Checks",
+    "Manual Checks Later",
+    "ui_confirm",
+    "ui_cancel",
+    "ui_details",
+    "ui_tab_next",
+    "ui_tab_previous"
+  ]) {
+    assert(doc.includes(required), `Steam Deck UX baseline missing ${required}`);
   }
 });
 
