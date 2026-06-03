@@ -11,10 +11,10 @@ The user wants Codex to make most implementation decisions independently. Ask on
 When given a task, the agent should own the whole loop:
 
 1. Restate the task as a concrete implementation target.
-2. If an issue id is provided, inspect it with `gh issue view` or search by title, for example `gh issue list --search "GARDEN-1"`.
+2. If an issue number is provided, inspect it with `gh issue view <number>`, for example `gh issue view 5`.
 3. Inspect the current code and docs before editing.
 4. Break the work into small steps when the task is more than a tiny change.
-5. Create or switch to a task branch before editing. Use branch names based on the issue code when possible, such as `feature/GARDEN-1-godot-project`, `docs/GARDEN-2-vertical-slice`, or `chore/GARDEN-8-harness`.
+5. Create or switch to a task branch before editing. Use branch names based on the GitHub issue number when possible, such as `feature/5-godot-project`, `docs/6-starter-region`, or `chore/12-godot-ci`.
 6. Implement without waiting for approval unless the task crosses a boundary listed in Working Style.
 7. Run `npm test` before committing.
 8. Commit with a clear message when the work is complete and tests pass.
@@ -43,7 +43,7 @@ PR titles should start with one of:
 - `docs:`
 - `test:`
 
-Issue-backed work should use stable garden codes in titles, such as `[GARDEN-1] Set up Godot project`. PR titles do not need to include the code, but PR bodies should link the issue.
+Issue-backed work should use GitHub issue numbers as the stable work id. PR bodies should link the issue with `Closes #N` when the PR completes it.
 
 ## Game Direction
 
@@ -87,4 +87,4 @@ Issue-backed work should use stable garden codes in titles, such as `[GARDEN-1] 
 - GitHub repo: `ethan-adams/garden-nursery`.
 - Current Godot baseline: `4.5.1.stable`.
 - Use `godot --version` to verify the local engine.
-- Prefer plain Codex CLI prompts from the repo root, such as `Work GARDEN-1. Follow AGENTS.md.`
+- Prefer plain Codex CLI prompts from the repo root, such as `Work issue #5. Follow AGENTS.md.`

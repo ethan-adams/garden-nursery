@@ -1,7 +1,7 @@
 ---
 name: Feature slice
 about: A playable, testable work slice for Garden Nursery
-title: "[GARDEN-X] "
+title: ""
 labels: agent-ready
 assignees: ""
 ---
@@ -17,5 +17,4 @@ assignees: ""
 - [ ] 
 
 ## Notes
-
 

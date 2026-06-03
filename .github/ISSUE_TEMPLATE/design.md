@@ -1,7 +1,7 @@
 ---
 name: Design slice
 about: A design, writing, or planning artifact that should become repo canon
-title: "[GARDEN-X] "
+title: ""
 labels: design, agent-ready
 assignees: ""
 ---
@@ -19,4 +19,3 @@ assignees: ""
 ## Acceptance Criteria
 
 - [ ] 
-

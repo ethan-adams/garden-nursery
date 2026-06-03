@@ -31,6 +31,6 @@ See `docs/creative-direction.md` for the current creative direction, including t
 - Keep `npm test` fast enough to run before every commit.
 - Route ordinary agent work through branches and pull requests instead of direct pushes to `main`.
 - Use GitHub Actions sanity checks to verify PR branches remotely.
-- Prefer issue-backed work with stable `[GARDEN-N]` titles.
+- Prefer issue-backed work using GitHub issue numbers as the stable work id.
 - Add browser smoke tests once the project adopts a dev server or test browser dependency.
 - Prefer tests for simulation rules as soon as game logic is split out of DOM rendering.
