@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://garden_nursery_main"]
 
-[ext_resource type="PackedScene" path="res://scenes/nursery/nursery_stand.tscn" id="1_stand"]
+[ext_resource type="PackedScene" path="res://scenes/nursery/nursery_yard.tscn" id="1_yard"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -10,10 +10,4 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="NurseryStand" parent="." instance=ExtResource("1_stand")]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="NurseryYard" parent="." instance=ExtResource("1_yard")]

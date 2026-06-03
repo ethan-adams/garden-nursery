@@ -8,6 +8,7 @@ This is the project memory rail for agentic work. Update it when a meaningful sy
 - Core loop: inspect market trend, sell plants, restock likely winners, advance week.
 - Discovery loop: hybridize two parent plants to create a new stock item.
 - Godot project shell under `godot/` with a minimal 1280x800 main scene for the vertical slice.
+- Walkable 2.5D nursery yard foundation under `godot/scenes/nursery/nursery_yard.tscn`, with player movement, camera, Hush Arbor yard blockout, and station placeholders.
 - First Godot roadside nursery stand scene under `godot/scenes/nursery/nursery_stand.tscn`, driven by JSON catalogs and playable as a market-reading/recommendation loop.
 - Core content data format chosen: JSON catalogs for starter plants, Hush Arbor customer archetypes, region market signals/outcomes, and dialogue samples.
 - Hush Arbor market-reading prototype: players cycle imperfect signal sources, recommend a plant, and see cash/reputation/week outcome text respond to trait matches and risks.
@@ -29,7 +30,8 @@ See `docs/creative-direction.md` for the current creative direction, including t
 
 ## Next Systems To Consider
 
-- Godot migration spike with one playable nursery loop.
+- Walkable 2.5D nursery yard with player movement, camera, and spatial stations for the existing loop.
+- In-world interaction framework that opens market, plant stand, propagation, and ledger surfaces from yard objects.
 - Customer archetypes with garden constraints, budgets, and taste memory.
 - Regional climate model: heat, frost dates, water restrictions, soil, and native ranges.
 - Plant genetics model for hybrid traits, rarity, stability, and naming.

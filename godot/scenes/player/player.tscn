@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://garden_nursery_player"]
+
+[ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_player_controller"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_player"]
+radius = 18.0
+height = 44.0
+
+[node name="Player" type="CharacterBody2D"]
+position = Vector2(640, 438)
+script = ExtResource("1_player_controller")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_player")
+
+[node name="Body" type="Polygon2D" parent="."]
+color = Color(0.254902, 0.333333, 0.278431, 1)
+polygon = PackedVector2Array(-15, -22, 15, -22, 18, 12, 8, 25, -8, 25, -18, 12)
+
+[node name="Apron" type="Polygon2D" parent="."]
+color = Color(0.631373, 0.705882, 0.545098, 1)
+polygon = PackedVector2Array(-10, -11, 10, -11, 13, 20, -13, 20)
+
+[node name="Head" type="Polygon2D" parent="."]
+color = Color(0.823529, 0.666667, 0.490196, 1)
+polygon = PackedVector2Array(-12, -45, 12, -45, 15, -28, 8, -18, -8, -18, -15, -28)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+enabled = true
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+limit_left = 120
+limit_top = 80
+limit_right = 1160
+limit_bottom = 720
