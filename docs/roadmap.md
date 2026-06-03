@@ -9,6 +9,7 @@ This is the project memory rail for agentic work. Update it when a meaningful sy
 - Discovery loop: hybridize two parent plants to create a new stock item.
 - Godot project shell under `godot/` with a minimal 1280x800 main scene for the vertical slice.
 - Steam Deck UX baseline documented in `docs/steam-deck-ux-baseline.md`: 1280x800 target, readable text, controller-first focus navigation, semantic UI input action names, and current automatic/manual check boundaries.
+- Starter region brief documented in `docs/starter-region-brief.md`: Hush Arbor, a forgiving temperate valley with porch gardens, orchard culture, mild magical realism, and gentle market-reading signals.
 - Harness: `npm test` runs dependency-light checks through `scripts/agent-check.mjs`.
 - Engine direction: the real game is migrating to Godot 4.5.x with GDScript. See `docs/engine-stack-research.md`.
 

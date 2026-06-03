@@ -33,7 +33,7 @@ Build a small playable loop in one starter region:
 - Steam Deck-friendly 1280x800 baseline.
 - Controller navigable UI.
 - Steam Deck UX baseline from `docs/steam-deck-ux-baseline.md`.
-- Starter region placeholder name and climate hooks.
+- Starter region brief from `docs/starter-region-brief.md`.
 - Small roadside nursery stand scene.
 - Plant inventory with 12-20 plant/crop analogues.
 - 3-4 recurring customer archetypes.
@@ -51,6 +51,8 @@ Build a small playable loop in one starter region:
 - The project can run through the repo harness.
 
 ## First Region Requirements
+
+Working region: Hush Arbor, a forgiving temperate valley with porch gardens, old orchards, mild frost risk, wet autumns, and local demand shaped by shade, timing, cider culture, seed-swap etiquette, schools, cafes, and newcomer gardens.
 
 The first region should be welcoming, readable, and forgiving.
 
