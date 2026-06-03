@@ -19,3 +19,9 @@ assignees: ""
 ## Acceptance Criteria
 
 - [ ] 
+
+## Done when
+
+- [ ] `npm test` passes
+- [ ] The decision or design is linked from the relevant roadmap/session doc
+- [ ] Any follow-up implementation issues are listed

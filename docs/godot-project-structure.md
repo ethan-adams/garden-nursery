@@ -63,13 +63,15 @@ GDScript resources remain an option later if editor workflows become more import
 
 Local `npm test` remains the default pre-commit entrypoint and validates the static browser sketch, Godot project wiring, data schemas, writing pack shape, and nursery scene text resources.
 
+`npm run test:product` adds a local Godot smoke check and should be used before pushing scene, script, or resource changes.
+
 GitHub Actions also runs a lightweight Godot import check. The CI job downloads the official Godot `4.5.1-stable` Linux binary from the Godot builds release, caches it, then runs:
 
 ```sh
 godot --headless --path godot --quit-after 1
 ```
 
-This intentionally avoids export templates for now. The goal is to catch broken project imports and script syntax cheaply before the project has release exports.
+CI also installs the official `4.5.1-stable` export templates and runs the committed `Steam Deck` Linux export preset. This creates a debug artifact for Steam Deck playtesting and catches broken export configuration before merge.
 
 ## UI Input Bias
 

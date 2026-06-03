@@ -15,7 +15,9 @@ This is the project memory rail for agentic work. Update it when a meaningful sy
 - Steam Deck UX baseline documented in `docs/steam-deck-ux-baseline.md`: 1280x800 target, readable text, controller-first focus navigation, semantic UI input action names, and current automatic/manual check boundaries.
 - Starter region brief documented in `docs/starter-region-brief.md`: Hush Arbor, a forgiving temperate valley with porch gardens, orchard culture, mild magical realism, and gentle market-reading signals.
 - Harness: `npm test` runs dependency-light checks through `scripts/agent-check.mjs`.
-- CI: GitHub Actions runs `npm test` plus a cached official Godot 4.5.1 Linux headless import check for the `godot/` project.
+- Product testing: `npm test` validates repo/data/scene shape, while `npm run test:product` adds a Godot headless smoke test for scene/script/resource failures.
+- CI: GitHub Actions runs `npm test`, a cached official Godot 4.5.1 Linux headless import check, and a Steam Deck/Linux debug export artifact build.
+- Steam Deck playtest path documented in `docs/testing-and-builds.md`; debug exports are produced into `dist/steamdeck/` locally or as GitHub Actions artifacts.
 - Engine direction: the real game is migrating to Godot 4.5.x with GDScript. See `docs/engine-stack-research.md`.
 
 ## North Star
@@ -37,6 +39,8 @@ See `docs/creative-direction.md` for the current creative direction, including t
 ## Harness Goals
 
 - Keep `npm test` fast enough to run before every commit.
+- Use `npm run test:product` before pushing Godot scene/script/resource changes.
+- Keep Steam Deck debug exports building in CI so playtest artifacts are routine.
 - Verify the Godot project file, main scene, and local placeholder assets before PRs.
 - Route ordinary agent work through branches and pull requests instead of direct pushes to `main`.
 - Use GitHub Actions sanity checks to verify PR branches remotely.

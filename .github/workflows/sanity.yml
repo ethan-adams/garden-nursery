@@ -54,3 +54,58 @@ jobs:
 
       - name: Verify Godot project imports
         run: .ci/godot/godot --headless --path godot --quit-after 1
+
+  steamdeck-export:
+    name: Steam Deck debug export
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Cache Godot binary
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: .ci/godot
+          key: godot-4.5.1-stable-linux-x86-64
+
+      - name: Download Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p .ci/godot
+          curl -L -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.5.1-stable/Godot_v4.5.1-stable_linux.x86_64.zip
+          unzip /tmp/godot.zip -d .ci/godot
+          mv .ci/godot/Godot_v4.5.1-stable_linux.x86_64 .ci/godot/godot
+          chmod +x .ci/godot/godot
+
+      - name: Cache Godot export templates
+        id: cache-templates
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/godot/export_templates/4.5.1.stable
+          key: godot-4.5.1-stable-export-templates
+
+      - name: Install Godot export templates
+        if: steps.cache-templates.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates/4.5.1.stable
+          curl -L -o /tmp/godot-templates.tpz https://github.com/godotengine/godot-builds/releases/download/4.5.1-stable/Godot_v4.5.1-stable_export_templates.tpz
+          unzip /tmp/godot-templates.tpz -d /tmp/godot-templates
+          cp /tmp/godot-templates/templates/* ~/.local/share/godot/export_templates/4.5.1.stable/
+
+      - name: Export Steam Deck debug build
+        env:
+          PATH: ${{ github.workspace }}/.ci/godot:${{ env.PATH }}
+        run: npm run export:steamdeck
+
+      - name: Upload Steam Deck debug artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: garden-nursery-steamdeck-debug
+          path: dist/steamdeck/
