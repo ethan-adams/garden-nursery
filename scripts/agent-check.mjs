@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { access } from "node:fs/promises";
+import { dirname, join } from "node:path";
 
 const checks = [];
 
@@ -41,6 +42,11 @@ async function fileExists(path) {
   }
 }
 
+function godotPathToRepoPath(path) {
+  assert(path.startsWith("res://"), `Godot path must use res://: ${path}`);
+  return join("godot", path.slice("res://".length));
+}
+
 function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
@@ -71,6 +77,36 @@ check("Game has the core prototype loop", async () => {
   const js = await readFile("game.js", "utf8");
   for (const required of ["sellPlant", "restockFavorites", "hybridize", "nextWeek", "generateCustomers"]) {
     assert(js.includes(`function ${required}`), `game.js missing ${required}()`);
+  }
+});
+
+check("Godot project shell is wired", async () => {
+  const projectPath = "godot/project.godot";
+  const project = await readFile(projectPath, "utf8");
+
+  assert(project.includes("config_version=5"), "project.godot must use Godot 4 config_version=5");
+  assert(project.includes('config/features=PackedStringArray("4.5")'), "project.godot must target Godot 4.5");
+
+  const mainSceneMatch = project.match(/run\/main_scene="([^"]+)"/);
+  assert(mainSceneMatch, "project.godot must define application run/main_scene");
+  const mainScenePath = godotPathToRepoPath(mainSceneMatch[1]);
+  assert(await fileExists(mainScenePath), `missing Godot main scene: ${mainScenePath}`);
+
+  const iconMatch = project.match(/config\/icon="([^"]+)"/);
+  assert(iconMatch, "project.godot must define application config/icon");
+  const iconPath = godotPathToRepoPath(iconMatch[1]);
+  assert(await fileExists(iconPath), `missing Godot project icon: ${iconPath}`);
+
+  const mainScene = await readFile(mainScenePath, "utf8");
+  assert(mainScene.includes("[gd_scene format=3"), "main scene must be a Godot 4 text scene");
+  assert(mainScene.includes('[node name="Main" type="Control"]'), "main scene must have a Control root named Main");
+
+  const extResources = [...mainScene.matchAll(/\[ext_resource[^\]]+path="([^"]+)"/g)];
+  for (const [, resourcePath] of extResources) {
+    const repoPath = resourcePath.startsWith("res://")
+      ? godotPathToRepoPath(resourcePath)
+      : join(dirname(mainScenePath), resourcePath);
+    assert(await fileExists(repoPath), `missing Godot scene resource: ${repoPath}`);
   }
 });
 

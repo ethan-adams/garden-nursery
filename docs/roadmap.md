@@ -7,8 +7,9 @@ This is the project memory rail for agentic work. Update it when a meaningful sy
 - Static browser game in `index.html`, `styles.css`, and `game.js`.
 - Core loop: inspect market trend, sell plants, restock likely winners, advance week.
 - Discovery loop: hybridize two parent plants to create a new stock item.
+- Godot project shell under `godot/` with a minimal 1280x800 main scene for the vertical slice.
 - Harness: `npm test` runs dependency-light checks through `scripts/agent-check.mjs`.
-- Engine direction: research currently recommends migrating the real game to Godot 4.x with GDScript. See `docs/engine-stack-research.md`.
+- Engine direction: the real game is migrating to Godot 4.5.x with GDScript. See `docs/engine-stack-research.md`.
 
 ## North Star
 
@@ -29,6 +30,7 @@ See `docs/creative-direction.md` for the current creative direction, including t
 ## Harness Goals
 
 - Keep `npm test` fast enough to run before every commit.
+- Verify the Godot project file, main scene, and local placeholder assets before PRs.
 - Route ordinary agent work through branches and pull requests instead of direct pushes to `main`.
 - Use GitHub Actions sanity checks to verify PR branches remotely.
 - Prefer issue-backed work using GitHub issue numbers as the stable work id.

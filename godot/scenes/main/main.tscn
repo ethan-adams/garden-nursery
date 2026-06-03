@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://garden_nursery_main"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WorkbenchBackground" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.145098, 0.192157, 0.14902, 1)
+
+[node name="SafeArea" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 56
+theme_override_constants/margin_top = 44
+theme_override_constants/margin_right = 56
+theme_override_constants/margin_bottom = 44
+
+[node name="OpeningPanel" type="PanelContainer" parent="SafeArea"]
+layout_mode = 2
+
+[node name="PanelMargin" type="MarginContainer" parent="SafeArea/OpeningPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 24
+
+[node name="CopyStack" type="VBoxContainer" parent="SafeArea/OpeningPanel/PanelMargin"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="SafeArea/OpeningPanel/PanelMargin/CopyStack"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "Garden Nursery"
+
+[node name="Subtitle" type="Label" parent="SafeArea/OpeningPanel/PanelMargin/CopyStack"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Godot vertical slice shell"
+
+[node name="Status" type="Label" parent="SafeArea/OpeningPanel/PanelMargin/CopyStack"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Ready for the first roadside nursery stand."
+autowrap_mode = 3
