@@ -100,9 +100,9 @@ jobs:
           cp /tmp/godot-templates/templates/* ~/.local/share/godot/export_templates/4.5.1.stable/
 
       - name: Export Steam Deck debug build
-        env:
-          PATH: ${{ github.workspace }}/.ci/godot:${{ env.PATH }}
-        run: npm run export:steamdeck
+        run: |
+          export PATH="$GITHUB_WORKSPACE/.ci/godot:$PATH"
+          npm run export:steamdeck
 
       - name: Upload Steam Deck debug artifact
         uses: actions/upload-artifact@v4
