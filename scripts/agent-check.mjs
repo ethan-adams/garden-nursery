@@ -149,6 +149,13 @@ check("Core data catalogs are valid", async () => {
     assert(Array.isArray(plant.traits) && plant.traits.length >= 2, `plant ${plant.id} must define traits`);
     assert(Object.hasOwn(plant.care_needs, "water"), `plant ${plant.id} must define water care`);
     assert(Object.hasOwn(plant.care_needs, "light"), `plant ${plant.id} must define light care`);
+    assert(Object.hasOwn(plant, "propagation"), `plant ${plant.id} must define propagation`);
+    for (const required of ["method", "weeks", "cost", "yield", "success_chance", "notes"]) {
+      assert(Object.hasOwn(plant.propagation, required), `plant ${plant.id} propagation missing ${required}`);
+    }
+    assert(plant.propagation.weeks >= 1, `plant ${plant.id} propagation must take at least one week`);
+    assert(plant.propagation.yield >= 1, `plant ${plant.id} propagation must yield at least one plant`);
+    assert(plant.propagation.success_chance > 0 && plant.propagation.success_chance <= 1, `plant ${plant.id} propagation success chance must be 0-1`);
   }
 
   assert(customerCatalog.format === "garden-nursery.customers.v1", "customer catalog format must be v1");
@@ -192,7 +199,9 @@ check("Nursery stand scene is playable shape", async () => {
     "Inventory Recommendations",
     "Regulars Today",
     "Week Outcome",
+    "Propagation Bench",
     "NextSignalButton",
+    "StartPropagationButton",
     "AdvanceWeekButton",
     "focus_mode = 2"
   ]) {
@@ -203,6 +212,8 @@ check("Nursery stand scene is playable shape", async () => {
     "CUSTOMERS_PATH",
     "REGION_PATH",
     "_recommend_plant",
+    "_on_start_propagation_button_pressed",
+    "_process_propagation_week",
     "_on_advance_week_button_pressed",
     "_trait_score"
   ]) {

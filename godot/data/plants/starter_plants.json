@@ -14,6 +14,14 @@
         "light": "part-sun",
         "difficulty": "forgiving"
       },
+      "propagation": {
+        "method": "divide clumps",
+        "weeks": 1,
+        "cost": 5,
+        "yield": 3,
+        "success_chance": 0.95,
+        "notes": "Old clumps split cleanly if the tray stays damp."
+      },
       "market_notes": "Reliable for cooks, teachers, and nervous first-time gardeners after frost gossip."
     },
     {
@@ -28,6 +36,14 @@
         "water": "steady",
         "light": "afternoon-sun",
         "difficulty": "fussy early"
+      },
+      "propagation": {
+        "method": "warm seed tray",
+        "weeks": 2,
+        "cost": 9,
+        "yield": 4,
+        "success_chance": 0.68,
+        "notes": "Needs bottom warmth; early cold snaps make the tray sulk."
       },
       "market_notes": "Tempting before the weather is ready; best when customers can protect it."
     },
@@ -44,6 +60,14 @@
         "light": "shade",
         "difficulty": "gentle"
       },
+      "propagation": {
+        "method": "softwood cuttings",
+        "weeks": 2,
+        "cost": 7,
+        "yield": 3,
+        "success_chance": 0.8,
+        "notes": "Roots best under a cracked jar in steady shade."
+      },
       "market_notes": "Strong when chimney shade, old stone walls, or delicate household situations come up."
     },
     {
@@ -58,6 +82,14 @@
         "water": "moderate",
         "light": "sun",
         "difficulty": "forgiving"
+      },
+      "propagation": {
+        "method": "direct seed tray",
+        "weeks": 1,
+        "cost": 4,
+        "yield": 4,
+        "success_chance": 0.9,
+        "notes": "A cheerful seed tray, especially when children label it badly."
       },
       "market_notes": "Good for classrooms, seed-swap tables, and porch color before summer plants take over."
     },
@@ -74,6 +106,14 @@
         "light": "part-sun",
         "difficulty": "easy"
       },
+      "propagation": {
+        "method": "cool seed tray",
+        "weeks": 1,
+        "cost": 4,
+        "yield": 3,
+        "success_chance": 0.88,
+        "notes": "Fast if the tray never dries out."
+      },
       "market_notes": "Moves well when cafes are buying modest herb bundles rather than showy starts."
     },
     {
@@ -88,6 +128,14 @@
         "water": "moderate",
         "light": "mixed",
         "difficulty": "odd but sturdy"
+      },
+      "propagation": {
+        "method": "root division",
+        "weeks": 2,
+        "cost": 8,
+        "yield": 2,
+        "success_chance": 0.72,
+        "notes": "Works if you ask politely and do not count the roots aloud."
       },
       "market_notes": "A conversation plant: profitable with regulars, confusing for hurried newcomers."
     }
