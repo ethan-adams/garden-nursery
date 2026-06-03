@@ -1,0 +1,4 @@
+dist/
+godot/.godot/
+godot/**/*.import
+godot/**/*.uid

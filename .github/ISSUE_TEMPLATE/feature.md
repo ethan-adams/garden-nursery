@@ -16,5 +16,11 @@ assignees: ""
 
 - [ ] 
 
-## Notes
+## Done when
 
+- [ ] `npm test` passes
+- [ ] Product-impacting Godot changes run `npm run test:product`
+- [ ] Player-facing behavior is visible or documented
+- [ ] Data-driven content loads from `godot/data/` when practical
+
+## Notes

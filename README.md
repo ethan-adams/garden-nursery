@@ -16,7 +16,7 @@ The current target is **Godot Vertical Slice 0.1**:
 - A week loop with outcomes.
 - Writing that is warm, specific, hopeful, and not generic cozy filler.
 
-The old browser prototype in `index.html`, `styles.css`, and `game.js` is only a disposable design sketch until the Godot slice replaces it.
+The old browser prototype in `browser-prototype/` is only a disposable design sketch. The product path is the Godot project under `godot/`.
 
 ## Key Docs
 
@@ -27,6 +27,9 @@ The old browser prototype in `index.html`, `styles.css`, and `game.js` is only a
 - `docs/starter-region-brief.md` - Hush Arbor starter region brief for the vertical slice.
 - `docs/steam-deck-ux-baseline.md` - 1280x800 and controller-first UX baseline.
 - `docs/godot-project-structure.md` - planned Godot folder conventions.
+- `docs/testing-and-builds.md` - local, CI, Mac, and Steam Deck testing process.
+- `docs/decisions.md` - lightweight project decision log.
+- `docs/claude-brief-review.md` - critical review of the Claude-generated planning brief.
 - `docs/issue-backlog.md` - current issue queue.
 - `docs/agent-pr-workflow.md` - PR-first development process.
 - `docs/chatgpt-project-setup.md` - ChatGPT Project setup notes.
@@ -57,6 +60,26 @@ Run the current repo sanity check:
 npm test
 ```
 
+Run the stronger Godot product check before pushing scene or script changes:
+
+```sh
+npm run test:product
+```
+
+Run the Godot prototype locally:
+
+```sh
+npm run godot:run
+```
+
+Export a Steam Deck/Linux debug build:
+
+```sh
+npm run export:steamdeck
+```
+
+See `docs/testing-and-builds.md` for the standard Mac and Steam Deck playtest flow.
+
 ## Codex Workflow
 
 Start Codex CLI from the repo:
@@ -83,12 +106,6 @@ Normal workflow:
 7. Wait for GitHub Actions.
 8. Squash-merge when passing.
 
-## Next Issue
+## Current Next Work
 
-Start with:
-
-```text
-#5 Set up Godot project
-```
-
-Recommended issue order is listed in `docs/session-handoff.md`.
+The first issue queue is complete. The next useful tickets should harden the playable loop: propagation queue, customer-specific recommendation outcomes, expanded Hush Arbor plant catalog, and controller/layout playtest checks.

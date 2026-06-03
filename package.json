@@ -5,6 +5,11 @@
   "type": "module",
   "scripts": {
     "check": "node scripts/agent-check.mjs",
-    "test": "npm run check"
+    "validate:data": "node scripts/validate-data.mjs",
+    "godot:smoke": "node scripts/godot-smoke.mjs",
+    "godot:run": "godot --path godot",
+    "export:steamdeck": "node scripts/export-godot.mjs steamdeck",
+    "test": "npm run validate:data && npm run check",
+    "test:product": "npm test && npm run godot:smoke"
   }
 }

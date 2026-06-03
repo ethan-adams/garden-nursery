@@ -67,11 +67,11 @@ async function readJson(path) {
 }
 
 check("JavaScript parses", async () => {
-  await run("node", ["--check", "game.js"]);
+  await run("node", ["--check", "browser-prototype/game.js"]);
 });
 
 check("Browser entrypoint is wired", async () => {
-  const html = await readFile("index.html", "utf8");
+  const html = await readFile("browser-prototype/index.html", "utf8");
   assert(html.includes('<link rel="stylesheet" href="styles.css">'), "index.html must load styles.css");
   assert(html.includes('<script src="game.js"></script>'), "index.html must load game.js");
   assert(html.includes('id="inventory"'), "index.html must include inventory mount");
@@ -79,15 +79,15 @@ check("Browser entrypoint is wired", async () => {
 });
 
 check("Local visual assets are present", async () => {
-  const css = await readFile("styles.css", "utf8");
+  const css = await readFile("browser-prototype/styles.css", "utf8");
   const assetMatch = css.match(/url\("([^"]+)"\)/);
   assert(assetMatch, "styles.css should reference a background asset");
   assert(!assetMatch[1].startsWith("http"), "background asset should be local, not remote");
-  assert(await fileExists(assetMatch[1]), `missing referenced asset: ${assetMatch[1]}`);
+  assert(await fileExists(join("browser-prototype", assetMatch[1])), `missing referenced asset: ${assetMatch[1]}`);
 });
 
 check("Game has the core prototype loop", async () => {
-  const js = await readFile("game.js", "utf8");
+  const js = await readFile("browser-prototype/game.js", "utf8");
   for (const required of ["sellPlant", "restockFavorites", "hybridize", "nextWeek", "generateCustomers"]) {
     assert(js.includes(`function ${required}`), `game.js missing ${required}()`);
   }
@@ -125,6 +125,13 @@ check("Godot project shell is wired", async () => {
       : join(dirname(mainScenePath), resourcePath);
     assert(await fileExists(repoPath), `missing Godot scene resource: ${repoPath}`);
   }
+});
+
+check("Godot export preset is present", async () => {
+  const presets = await readFile("godot/export_presets.cfg", "utf8");
+  assert(presets.includes('name="Steam Deck"'), "export presets must include Steam Deck preset");
+  assert(presets.includes('platform="Linux/X11"'), "Steam Deck preset must export Linux/X11");
+  assert(presets.includes('export_path="../dist/steamdeck/GardenNursery.x86_64"'), "Steam Deck export path must target dist/steamdeck");
 });
 
 check("Core data catalogs are valid", async () => {
@@ -259,6 +266,19 @@ check("Godot data directories contain editable catalogs", async () => {
   ]) {
     const files = await readdir(directory);
     assert(files.some((file) => file.endsWith(".json")), `${directory} must include JSON catalog data`);
+  }
+});
+
+check("Testing and build docs are present", async () => {
+  const doc = await readFile("docs/testing-and-builds.md", "utf8");
+  for (const required of [
+    "npm test",
+    "npm run test:product",
+    "npm run export:steamdeck",
+    "Steam Deck Test Path",
+    "GitHub Actions"
+  ]) {
+    assert(doc.includes(required), `testing docs missing ${required}`);
   }
 });
 
