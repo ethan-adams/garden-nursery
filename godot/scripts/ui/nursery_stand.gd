@@ -14,6 +14,7 @@ var cash := 120
 var reputation := 12
 var selected_signal_index := 0
 var selected_plant_id := ""
+var propagation_tray: Dictionary = {}
 var log_lines: Array[String] = []
 
 @onready var week_label: Label = %WeekValue
@@ -25,6 +26,8 @@ var log_lines: Array[String] = []
 @onready var inventory_list: VBoxContainer = %InventoryList
 @onready var customer_list: VBoxContainer = %CustomerList
 @onready var outcome_label: Label = %OutcomeText
+@onready var propagation_status_label: Label = %PropagationStatus
+@onready var start_propagation_button: Button = %StartPropagationButton
 @onready var log_label: Label = %LogText
 @onready var next_signal_button: Button = %NextSignalButton
 @onready var advance_week_button: Button = %AdvanceWeekButton
@@ -67,6 +70,7 @@ func _read_json(path: String) -> Dictionary:
 func _setup_focus() -> void:
 	next_signal_button.grab_focus()
 	next_signal_button.focus_mode = Control.FOCUS_ALL
+	start_propagation_button.focus_mode = Control.FOCUS_ALL
 	advance_week_button.focus_mode = Control.FOCUS_ALL
 
 
@@ -77,6 +81,7 @@ func _refresh_all() -> void:
 	_render_signal()
 	_render_inventory()
 	_render_customers()
+	_render_propagation_bench()
 	_render_log()
 
 
@@ -111,6 +116,40 @@ func _render_inventory() -> void:
 		button.focus_mode = Control.FOCUS_ALL
 		button.pressed.connect(_recommend_plant.bind(plant.get("id", "")))
 		inventory_list.add_child(button)
+
+
+func _render_propagation_bench() -> void:
+	if propagation_tray.is_empty():
+		var plant := _find_plant(selected_plant_id)
+		var profile := _propagation_profile(plant)
+		if plant.is_empty() or profile.is_empty():
+			propagation_status_label.text = "Bench idle. Choose a plant to see propagation options."
+			start_propagation_button.disabled = true
+			return
+		propagation_status_label.text = "Bench idle. Start %s by %s: %d week%s, $%d, yields %d, %d%% success.\n%s" % [
+			plant.get("name", "a plant"),
+			profile.get("method", "propagation"),
+			int(profile.get("weeks", 1)),
+			_plural_suffix(int(profile.get("weeks", 1))),
+			int(profile.get("cost", 0)),
+			int(profile.get("yield", 1)),
+			int(round(float(profile.get("success_chance", 0.0)) * 100.0)),
+			profile.get("notes", "")
+		]
+		start_propagation_button.disabled = cash < int(profile.get("cost", 0))
+		start_propagation_button.text = "Start Bench Tray"
+		return
+	var plant_in_tray := _find_plant(propagation_tray.get("plant_id", ""))
+	propagation_status_label.text = "%s tray: %s, %d week%s left. Expected yield %d; success chance %d%%." % [
+		plant_in_tray.get("name", "Propagation"),
+		propagation_tray.get("method", "propagation"),
+		int(propagation_tray.get("weeks_remaining", 0)),
+		_plural_suffix(int(propagation_tray.get("weeks_remaining", 0))),
+		int(propagation_tray.get("yield", 1)),
+		int(round(float(propagation_tray.get("success_chance", 0.0)) * 100.0))
+	]
+	start_propagation_button.disabled = true
+	start_propagation_button.text = "Bench Busy"
 
 
 func _render_customers() -> void:
@@ -166,11 +205,70 @@ func _on_advance_week_button_pressed() -> void:
 	week += 1
 	var plant := _find_plant(selected_plant_id)
 	var outcome := _best_outcome_for(plant)
+	var propagation_text := _process_propagation_week()
 	cash += int(outcome.get("cash_bonus", 0))
 	reputation += int(outcome.get("reputation_bonus", 0))
-	outcome_label.text = outcome.get("text", "The week ended quietly. The ledger learned less than you did.")
+	var outcome_text: String = outcome.get("text", "The week ended quietly. The ledger learned less than you did.")
+	if not propagation_text.is_empty():
+		outcome_text = "%s\n\n%s" % [outcome_text, propagation_text]
+	outcome_label.text = outcome_text
 	_add_log("Week %d closed: %s" % [week - 1, outcome.get("id", "quiet_week")])
 	_refresh_all()
+
+
+func _on_start_propagation_button_pressed() -> void:
+	if not propagation_tray.is_empty():
+		return
+	var plant := _find_plant(selected_plant_id)
+	var profile := _propagation_profile(plant)
+	if plant.is_empty() or profile.is_empty():
+		return
+	var cost := int(profile.get("cost", 0))
+	if cash < cost:
+		outcome_label.text = "The bench stayed empty. You need $%d to start %s." % [cost, plant.get("name", "that tray")]
+		return
+	cash -= cost
+	propagation_tray = {
+		"plant_id": plant.get("id", ""),
+		"method": profile.get("method", "propagation"),
+		"weeks_remaining": int(profile.get("weeks", 1)),
+		"yield": int(profile.get("yield", 1)),
+		"success_chance": float(profile.get("success_chance", 0.75))
+	}
+	outcome_label.text = "You set a %s tray on the bench. It will need %d week%s before it can join inventory." % [
+		plant.get("name", "plant"),
+		int(propagation_tray.get("weeks_remaining", 1)),
+		_plural_suffix(int(propagation_tray.get("weeks_remaining", 1)))
+	]
+	_add_log("Started %s by %s for $%d." % [plant.get("name", "a plant"), propagation_tray.get("method", "propagation"), cost])
+	_refresh_all()
+
+
+func _process_propagation_week() -> String:
+	if propagation_tray.is_empty():
+		return ""
+	propagation_tray["weeks_remaining"] = int(propagation_tray.get("weeks_remaining", 0)) - 1
+	if int(propagation_tray.get("weeks_remaining", 0)) > 0:
+		var growing_plant := _find_plant(propagation_tray.get("plant_id", ""))
+		return "The %s tray held steady on the bench. %d week%s left." % [
+			growing_plant.get("name", "propagation"),
+			int(propagation_tray.get("weeks_remaining", 0)),
+			_plural_suffix(int(propagation_tray.get("weeks_remaining", 0)))
+		]
+	var plant := _find_plant(propagation_tray.get("plant_id", ""))
+	var yield_count := int(propagation_tray.get("yield", 1))
+	var success_chance := float(propagation_tray.get("success_chance", 0.75))
+	var succeeded := randf() <= success_chance
+	propagation_tray = {}
+	if succeeded:
+		plant["starting_stock"] = int(plant.get("starting_stock", 0)) + yield_count
+		_add_log("Propagation finished: %s added %d stock." % [plant.get("name", "tray"), yield_count])
+		return "The bench paid off: %d %s starts rooted cleanly and joined inventory." % [
+			yield_count,
+			plant.get("name", "plant")
+		]
+	_add_log("Propagation failed before saleable stock.")
+	return "The bench disappointed you this week. The tray stayed green at the edges, then gave up before it became saleable."
 
 
 func _best_outcome_for(plant: Dictionary) -> Dictionary:
@@ -198,12 +296,22 @@ func _find_plant(plant_id: String) -> Dictionary:
 	return {}
 
 
+func _propagation_profile(plant: Dictionary) -> Dictionary:
+	return plant.get("propagation", {})
+
+
 func _trait_score(plant_traits: Array, desired_traits: Array) -> int:
 	var score := 0
 	for plant_trait in plant_traits:
 		if desired_traits.has(plant_trait):
 			score += 1
 	return score
+
+
+func _plural_suffix(amount: int) -> String:
+	if amount == 1:
+		return ""
+	return "s"
 
 
 func _add_log(message: String) -> void:

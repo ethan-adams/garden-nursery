@@ -251,6 +251,25 @@ theme_override_font_sizes/font_size = 20
 text = "Choose a market signal, recommend a plant, then advance the week."
 autowrap_mode = 3
 
+[node name="PropagationHeading" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Propagation Bench"
+
+[node name="PropagationStatus" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Bench idle."
+autowrap_mode = 3
+
+[node name="StartPropagationButton" type="Button" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+focus_mode = 2
+text = "Start Bench Tray"
+
 [node name="LogText" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -266,4 +285,5 @@ focus_mode = 2
 text = "Advance Week"
 
 [connection signal="pressed" from="SafeArea/RootStack/BoardRow/SignalPanel/SignalMargin/SignalStack/NextSignalButton" to="." method="_on_next_signal_button_pressed"]
+[connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/StartPropagationButton" to="." method="_on_start_propagation_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/AdvanceWeekButton" to="." method="_on_advance_week_button_pressed"]

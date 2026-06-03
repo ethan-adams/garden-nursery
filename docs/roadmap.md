@@ -11,6 +11,7 @@ This is the project memory rail for agentic work. Update it when a meaningful sy
 - First Godot roadside nursery stand scene under `godot/scenes/nursery/nursery_stand.tscn`, driven by JSON catalogs and playable as a market-reading/recommendation loop.
 - Core content data format chosen: JSON catalogs for starter plants, Hush Arbor customer archetypes, region market signals/outcomes, and dialogue samples.
 - Hush Arbor market-reading prototype: players cycle imperfect signal sources, recommend a plant, and see cash/reputation/week outcome text respond to trait matches and risks.
+- Propagation bench prototype: players can start one active plant tray with plant-specific method, cost, time, yield, and success chance; completed trays feed back into inventory on week advance.
 - Writing sample pack added in `docs/writing-sample-pack.md` and `godot/data/dialogue/writing_sample_pack.json` with recurring characters, barks, reflections, and a seed-swap event.
 - Steam Deck UX baseline documented in `docs/steam-deck-ux-baseline.md`: 1280x800 target, readable text, controller-first focus navigation, semantic UI input action names, and current automatic/manual check boundaries.
 - Starter region brief documented in `docs/starter-region-brief.md`: Hush Arbor, a forgiving temperate valley with porch gardens, orchard culture, mild magical realism, and gentle market-reading signals.
@@ -29,7 +30,6 @@ See `docs/creative-direction.md` for the current creative direction, including t
 ## Next Systems To Consider
 
 - Godot migration spike with one playable nursery loop.
-- Propagation bench with time, failure chance, and plant-specific methods.
 - Customer archetypes with garden constraints, budgets, and taste memory.
 - Regional climate model: heat, frost dates, water restrictions, soil, and native ranges.
 - Plant genetics model for hybrid traits, rarity, stability, and naming.
