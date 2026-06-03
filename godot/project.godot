@@ -1,0 +1,23 @@
+; Engine configuration file.
+; Keep this file small until the first playable Godot slice has real systems.
+
+config_version=5
+
+[application]
+
+config/name="Garden Nursery"
+run/main_scene="res://scenes/main/main.tscn"
+config/features=PackedStringArray("4.5")
+config/icon="res://assets/art/project-icon.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=800
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
