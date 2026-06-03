@@ -32,6 +32,7 @@ Build a small playable loop in one starter region:
 - Godot 4.5.x project.
 - Steam Deck-friendly 1280x800 baseline.
 - Controller navigable UI.
+- Steam Deck UX baseline from `docs/steam-deck-ux-baseline.md`.
 - Starter region placeholder name and climate hooks.
 - Small roadside nursery stand scene.
 - Plant inventory with 12-20 plant/crop analogues.
