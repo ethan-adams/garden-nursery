@@ -48,14 +48,28 @@ Do not upgrade the project to a newer Godot minor version without a PR that upda
 
 ## Data Format Bias
 
-Start with text-friendly data.
+The vertical slice now uses JSON catalogs because they are text-friendly, easy for agents to edit, and simple for `npm test` to validate without editor-only tooling.
 
-Good early options:
+Current catalogs:
 
-- JSON catalogs for plants, customers, regions, dialogue, and market signals.
-- GDScript resources if editor workflows become more important.
+- `godot/data/plants/starter_plants.json` for plant analogues, traits, care, climate fit, price, and starting stock.
+- `godot/data/customers/hush_arbor_archetypes.json` for recurring customer archetypes, budgets, garden constraints, taste, contradictions, and embedded market hints.
+- `godot/data/regions/hush_arbor.json` for region traits, starting state, market signals, uncertainty, and week outcome rules.
+- `godot/data/dialogue/writing_sample_pack.json` for character sketches, customer barks, week reflections, and local events.
 
-The first Godot slice should choose whichever option makes agent editing and automated checks easiest.
+GDScript resources remain an option later if editor workflows become more important than raw content editing.
+
+## CI Approach
+
+Local `npm test` remains the default pre-commit entrypoint and validates the static browser sketch, Godot project wiring, data schemas, writing pack shape, and nursery scene text resources.
+
+GitHub Actions also runs a lightweight Godot import check. The CI job downloads the official Godot `4.5.1-stable` Linux binary from the Godot builds release, caches it, then runs:
+
+```sh
+godot --headless --path godot --quit-after 1
+```
+
+This intentionally avoids export templates for now. The goal is to catch broken project imports and script syntax cheaply before the project has release exports.
 
 ## UI Input Bias
 

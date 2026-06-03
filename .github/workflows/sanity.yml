@@ -27,3 +27,30 @@ jobs:
 
       - name: Run agent harness
         run: npm test
+
+  godot-headless:
+    name: Godot headless import
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Cache Godot binary
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: .ci/godot
+          key: godot-4.5.1-stable-linux-x86-64
+
+      - name: Download Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p .ci/godot
+          curl -L -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.5.1-stable/Godot_v4.5.1-stable_linux.x86_64.zip
+          unzip /tmp/godot.zip -d .ci/godot
+          mv .ci/godot/Godot_v4.5.1-stable_linux.x86_64 .ci/godot/godot
+          chmod +x .ci/godot/godot
+
+      - name: Verify Godot project imports
+        run: .ci/godot/godot --headless --path godot --quit-after 1

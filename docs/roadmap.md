@@ -8,9 +8,14 @@ This is the project memory rail for agentic work. Update it when a meaningful sy
 - Core loop: inspect market trend, sell plants, restock likely winners, advance week.
 - Discovery loop: hybridize two parent plants to create a new stock item.
 - Godot project shell under `godot/` with a minimal 1280x800 main scene for the vertical slice.
+- First Godot roadside nursery stand scene under `godot/scenes/nursery/nursery_stand.tscn`, driven by JSON catalogs and playable as a market-reading/recommendation loop.
+- Core content data format chosen: JSON catalogs for starter plants, Hush Arbor customer archetypes, region market signals/outcomes, and dialogue samples.
+- Hush Arbor market-reading prototype: players cycle imperfect signal sources, recommend a plant, and see cash/reputation/week outcome text respond to trait matches and risks.
+- Writing sample pack added in `docs/writing-sample-pack.md` and `godot/data/dialogue/writing_sample_pack.json` with recurring characters, barks, reflections, and a seed-swap event.
 - Steam Deck UX baseline documented in `docs/steam-deck-ux-baseline.md`: 1280x800 target, readable text, controller-first focus navigation, semantic UI input action names, and current automatic/manual check boundaries.
 - Starter region brief documented in `docs/starter-region-brief.md`: Hush Arbor, a forgiving temperate valley with porch gardens, orchard culture, mild magical realism, and gentle market-reading signals.
 - Harness: `npm test` runs dependency-light checks through `scripts/agent-check.mjs`.
+- CI: GitHub Actions runs `npm test` plus a cached official Godot 4.5.1 Linux headless import check for the `godot/` project.
 - Engine direction: the real game is migrating to Godot 4.5.x with GDScript. See `docs/engine-stack-research.md`.
 
 ## North Star

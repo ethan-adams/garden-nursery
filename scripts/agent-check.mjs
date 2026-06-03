@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { access } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -33,6 +33,15 @@ function run(command, args) {
   });
 }
 
+async function commandExists(command) {
+  try {
+    await run(command, ["--version"]);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function fileExists(path) {
   try {
     await access(path);
@@ -51,6 +60,10 @@ function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
   }
+}
+
+async function readJson(path) {
+  return JSON.parse(await readFile(path, "utf8"));
 }
 
 check("JavaScript parses", async () => {
@@ -102,7 +115,7 @@ check("Godot project shell is wired", async () => {
   assert(await fileExists(iconPath), `missing Godot project icon: ${iconPath}`);
 
   const mainScene = await readFile(mainScenePath, "utf8");
-  assert(mainScene.includes("[gd_scene format=3"), "main scene must be a Godot 4 text scene");
+  assert(mainScene.includes("[gd_scene") && mainScene.includes("format=3"), "main scene must be a Godot 4 text scene");
   assert(mainScene.includes('[node name="Main" type="Control"]'), "main scene must have a Control root named Main");
 
   const extResources = [...mainScene.matchAll(/\[ext_resource[^\]]+path="([^"]+)"/g)];
@@ -112,6 +125,94 @@ check("Godot project shell is wired", async () => {
       : join(dirname(mainScenePath), resourcePath);
     assert(await fileExists(repoPath), `missing Godot scene resource: ${repoPath}`);
   }
+});
+
+check("Core data catalogs are valid", async () => {
+  const plantCatalog = await readJson("godot/data/plants/starter_plants.json");
+  const customerCatalog = await readJson("godot/data/customers/hush_arbor_archetypes.json");
+  const region = await readJson("godot/data/regions/hush_arbor.json");
+
+  assert(plantCatalog.format === "garden-nursery.plants.v1", "plant catalog format must be v1");
+  assert(Array.isArray(plantCatalog.plants), "plant catalog must include plants array");
+  assert(plantCatalog.plants.length >= 3, "plant catalog must include at least 3 plants");
+  for (const plant of plantCatalog.plants) {
+    for (const required of ["id", "name", "category", "price", "starting_stock", "traits", "climate_fit", "care_needs", "market_notes"]) {
+      assert(Object.hasOwn(plant, required), `plant ${plant.id ?? "(missing id)"} missing ${required}`);
+    }
+    assert(Array.isArray(plant.traits) && plant.traits.length >= 2, `plant ${plant.id} must define traits`);
+    assert(Object.hasOwn(plant.care_needs, "water"), `plant ${plant.id} must define water care`);
+    assert(Object.hasOwn(plant.care_needs, "light"), `plant ${plant.id} must define light care`);
+  }
+
+  assert(customerCatalog.format === "garden-nursery.customers.v1", "customer catalog format must be v1");
+  assert(Array.isArray(customerCatalog.customers), "customer catalog must include customers array");
+  assert(customerCatalog.customers.length >= 2, "customer catalog must include at least 2 customers");
+  for (const customer of customerCatalog.customers) {
+    for (const required of ["id", "display_name", "role", "budget", "garden_constraints", "taste", "contradiction", "market_hint"]) {
+      assert(Object.hasOwn(customer, required), `customer ${customer.id ?? "(missing id)"} missing ${required}`);
+    }
+  }
+
+  assert(region.format === "garden-nursery.region.v1", "region catalog format must be v1");
+  assert(Array.isArray(region.market_signals) && region.market_signals.length >= 3, "region must define at least 3 market signals");
+  assert(Array.isArray(region.week_outcomes) && region.week_outcomes.length >= 3, "region must define week outcomes");
+  for (const signal of region.market_signals) {
+    for (const required of ["id", "source", "text", "points_to_traits", "risk_traits", "uncertainty"]) {
+      assert(Object.hasOwn(signal, required), `signal ${signal.id ?? "(missing id)"} missing ${required}`);
+    }
+  }
+});
+
+check("Writing sample pack is complete", async () => {
+  const writing = await readJson("godot/data/dialogue/writing_sample_pack.json");
+  const doc = await readFile("docs/writing-sample-pack.md", "utf8");
+
+  assert(writing.format === "garden-nursery.dialogue.v1", "writing sample pack format must be v1");
+  assert(Array.isArray(writing.characters) && writing.characters.length >= 3, "writing pack must include 3 character sketches");
+  assert(Array.isArray(writing.customer_barks) && writing.customer_barks.length >= 10, "writing pack must include 10 barks");
+  assert(Array.isArray(writing.week_reflections) && writing.week_reflections.length >= 3, "writing pack must include 3 week reflections");
+  assert(Object.hasOwn(writing, "seasonal_event"), "writing pack must include seasonal event");
+  for (const required of ["Mara Lye", "Tovan Ree", "Cilla Park", "First Seed Swap"]) {
+    assert(doc.includes(required), `writing doc missing ${required}`);
+  }
+});
+
+check("Nursery stand scene is playable shape", async () => {
+  const scene = await readFile("godot/scenes/nursery/nursery_stand.tscn", "utf8");
+  const script = await readFile("godot/scripts/ui/nursery_stand.gd", "utf8");
+  for (const required of [
+    "Market Signal Board",
+    "Inventory Recommendations",
+    "Regulars Today",
+    "Week Outcome",
+    "NextSignalButton",
+    "AdvanceWeekButton",
+    "focus_mode = 2"
+  ]) {
+    assert(scene.includes(required), `nursery stand scene missing ${required}`);
+  }
+  for (const required of [
+    "PLANTS_PATH",
+    "CUSTOMERS_PATH",
+    "REGION_PATH",
+    "_recommend_plant",
+    "_on_advance_week_button_pressed",
+    "_trait_score"
+  ]) {
+    assert(script.includes(required), `nursery stand script missing ${required}`);
+  }
+});
+
+check("Optional Godot headless import passes", async () => {
+  if (process.env.GARDEN_NURSERY_CHECK_GODOT !== "1") {
+    return;
+  }
+  assert(await commandExists("godot"), "GARDEN_NURSERY_CHECK_GODOT=1 requires godot on PATH");
+  const result = await run("godot", ["--headless", "--path", "godot", "--quit-after", "1"]);
+  const output = `${result.stdout}\n${result.stderr}`;
+  assert(!output.includes("SCRIPT ERROR"), "Godot reported a script error during headless import");
+  assert(!output.includes("Parse Error"), "Godot reported a parse error during headless import");
+  assert(!output.includes("ERROR: Failed to load"), "Godot failed to load a resource during headless import");
 });
 
 check("Steam Deck UX baseline is documented", async () => {
@@ -146,6 +247,18 @@ check("Starter region brief is documented", async () => {
     "Early Vertical-Slice Signals"
   ]) {
     assert(doc.includes(required), `starter region brief missing ${required}`);
+  }
+});
+
+check("Godot data directories contain editable catalogs", async () => {
+  for (const directory of [
+    "godot/data/plants",
+    "godot/data/customers",
+    "godot/data/regions",
+    "godot/data/dialogue"
+  ]) {
+    const files = await readdir(directory);
+    assert(files.some((file) => file.endsWith(".json")), `${directory} must include JSON catalog data`);
   }
 });
 
