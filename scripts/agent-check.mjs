@@ -133,6 +133,22 @@ check("Steam Deck UX baseline is documented", async () => {
   }
 });
 
+check("Starter region brief is documented", async () => {
+  const doc = await readFile("docs/starter-region-brief.md", "utf8");
+  for (const required of [
+    "Hush Arbor",
+    "Climate And Growing Conditions",
+    "Ecology",
+    "Seasonal Feel",
+    "Cultural And Local-Market Hooks",
+    "Magical-Realism Hooks",
+    "Gentle Market-Reading Tutorial",
+    "Early Vertical-Slice Signals"
+  ]) {
+    assert(doc.includes(required), `starter region brief missing ${required}`);
+  }
+});
+
 let failed = false;
 for (const item of checks) {
   try {

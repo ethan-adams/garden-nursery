@@ -24,6 +24,8 @@ The old browser prototype in `index.html`, `styles.css`, and `game.js` is only a
 - `docs/session-handoff.md` - shortest handoff for future Codex sessions.
 - `docs/creative-direction.md` - game identity, writing pillars, regions, magic, Steam Deck constraints.
 - `docs/vertical-slice-0.1.md` - first playable Godot target.
+- `docs/starter-region-brief.md` - Hush Arbor starter region brief for the vertical slice.
+- `docs/steam-deck-ux-baseline.md` - 1280x800 and controller-first UX baseline.
 - `docs/godot-project-structure.md` - planned Godot folder conventions.
 - `docs/issue-backlog.md` - current issue queue.
 - `docs/agent-pr-workflow.md` - PR-first development process.
