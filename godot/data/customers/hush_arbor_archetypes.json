@@ -1,0 +1,35 @@
+{
+  "format": "garden-nursery.customers.v1",
+  "customers": [
+    {
+      "id": "mara_lye",
+      "display_name": "Mara Lye",
+      "role": "cafe cook",
+      "budget": 28,
+      "garden_constraints": ["tiny back step", "morning sun", "staff forgets watering"],
+      "taste": ["culinary", "forgiving", "porch-friendly"],
+      "contradiction": "Mara wants perfect herbs for the cafe menu but hates admitting the alley is mostly shade.",
+      "market_hint": "If my parsley pot survives another week by the mop sink, I can sell soup without pretending garnish is optional."
+    },
+    {
+      "id": "tovan_ree",
+      "display_name": "Tovan Ree",
+      "role": "school garden teacher",
+      "budget": 34,
+      "garden_constraints": ["children overwater", "weekend neglect", "needs stories"],
+      "taste": ["hardy", "story-rich", "pollinator"],
+      "contradiction": "Tovan teaches patience beautifully, then panic-buys anything that promises fast results.",
+      "market_hint": "The third-years are naming every seed tray. Please sell me something that will not break their hearts by Monday."
+    },
+    {
+      "id": "cilla_park",
+      "display_name": "Cilla Park",
+      "role": "new porch gardener",
+      "budget": 22,
+      "garden_constraints": ["chimney shade", "clay pockets", "pride on the line"],
+      "taste": ["shade", "low-effort", "porch-friendly"],
+      "contradiction": "Cilla says she wants simple plants, but she keeps reaching for the fanciest tag.",
+      "market_hint": "The north side of my porch grows moss on a tin bucket. Is that a plant opinion or a personal insult?"
+    }
+  ]
+}

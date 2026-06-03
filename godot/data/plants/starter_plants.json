@@ -1,0 +1,95 @@
+{
+  "format": "garden-nursery.plants.v1",
+  "plants": [
+    {
+      "id": "hush_chives",
+      "name": "Hush Chives",
+      "category": "herb",
+      "price": 8,
+      "starting_stock": 7,
+      "traits": ["hardy", "culinary", "porch-friendly", "early-spring"],
+      "climate_fit": ["temperate", "cool-spring"],
+      "care_needs": {
+        "water": "steady",
+        "light": "part-sun",
+        "difficulty": "forgiving"
+      },
+      "market_notes": "Reliable for cooks, teachers, and nervous first-time gardeners after frost gossip."
+    },
+    {
+      "id": "lantern_tomato",
+      "name": "Lantern Tomato",
+      "category": "vegetable",
+      "price": 14,
+      "starting_stock": 4,
+      "traits": ["tender", "culinary", "glowing", "warmth-loving"],
+      "climate_fit": ["temperate", "warm-spell"],
+      "care_needs": {
+        "water": "steady",
+        "light": "afternoon-sun",
+        "difficulty": "fussy early"
+      },
+      "market_notes": "Tempting before the weather is ready; best when customers can protect it."
+    },
+    {
+      "id": "apology_violet",
+      "name": "Apology Violet",
+      "category": "flower",
+      "price": 11,
+      "starting_stock": 5,
+      "traits": ["shade", "porch-friendly", "magical", "low-effort"],
+      "climate_fit": ["temperate", "damp-shade"],
+      "care_needs": {
+        "water": "moist",
+        "light": "shade",
+        "difficulty": "gentle"
+      },
+      "market_notes": "Strong when chimney shade, old stone walls, or delicate household situations come up."
+    },
+    {
+      "id": "schoolyard_calendula",
+      "name": "Schoolyard Calendula",
+      "category": "flower",
+      "price": 9,
+      "starting_stock": 6,
+      "traits": ["hardy", "pollinator", "story-rich", "early-spring"],
+      "climate_fit": ["temperate", "cool-spring"],
+      "care_needs": {
+        "water": "moderate",
+        "light": "sun",
+        "difficulty": "forgiving"
+      },
+      "market_notes": "Good for classrooms, seed-swap tables, and porch color before summer plants take over."
+    },
+    {
+      "id": "creek_parsley",
+      "name": "Creek Parsley",
+      "category": "herb",
+      "price": 7,
+      "starting_stock": 8,
+      "traits": ["culinary", "damp-tolerant", "porch-friendly", "cool-spring"],
+      "climate_fit": ["temperate", "damp-loam"],
+      "care_needs": {
+        "water": "moist",
+        "light": "part-sun",
+        "difficulty": "easy"
+      },
+      "market_notes": "Moves well when cafes are buying modest herb bundles rather than showy starts."
+    },
+    {
+      "id": "borrowroot",
+      "name": "Borrow-root",
+      "category": "root",
+      "price": 12,
+      "starting_stock": 3,
+      "traits": ["magical", "story-rich", "low-effort", "soil-builder"],
+      "climate_fit": ["temperate", "neglected-corners"],
+      "care_needs": {
+        "water": "moderate",
+        "light": "mixed",
+        "difficulty": "odd but sturdy"
+      },
+      "market_notes": "A conversation plant: profitable with regulars, confusing for hurried newcomers."
+    }
+  ]
+}

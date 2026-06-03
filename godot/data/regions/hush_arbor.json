@@ -1,0 +1,69 @@
+{
+  "format": "garden-nursery.region.v1",
+  "id": "hush_arbor",
+  "name": "Hush Arbor",
+  "season": "early spring",
+  "traits": ["temperate valley", "wet lanes", "old orchards", "porch pride", "late-frost gossip"],
+  "starting_state": {
+    "week": 1,
+    "cash": 120,
+    "reputation": 12
+  },
+  "market_signals": [
+    {
+      "id": "weather_board_frost",
+      "source": "weather board",
+      "text": "Possible frost Thursday. Cover tender starts if the downslope wind clears the mist.",
+      "points_to_traits": ["hardy", "early-spring"],
+      "risk_traits": ["tender", "warmth-loving"],
+      "uncertainty": 0.25
+    },
+    {
+      "id": "supplier_hardy_trays",
+      "source": "supplier note",
+      "text": "Good price on hardy greens and chives; lantern tomatoes arrived pretty but early.",
+      "points_to_traits": ["hardy", "culinary"],
+      "risk_traits": ["tender"],
+      "uncertainty": 0.18
+    },
+    {
+      "id": "porch_chatter_shade",
+      "source": "customer chatter",
+      "text": "Three people asked whether a porch can be beautiful if it only gets morning sun.",
+      "points_to_traits": ["shade", "porch-friendly", "low-effort"],
+      "risk_traits": ["afternoon-sun"],
+      "uncertainty": 0.32
+    },
+    {
+      "id": "school_notice",
+      "source": "community board",
+      "text": "School garden workday moved up. Tovan needs sturdy plants with stories before the children lose interest.",
+      "points_to_traits": ["hardy", "story-rich", "pollinator"],
+      "risk_traits": [],
+      "uncertainty": 0.22
+    }
+  ],
+  "week_outcomes": [
+    {
+      "id": "read_frost_correctly",
+      "trigger_traits": ["hardy", "early-spring"],
+      "cash_bonus": 18,
+      "reputation_bonus": 3,
+      "text": "The frost only silvered the creek grass, but customers remembered who warned them. Hardy trays sold before noon."
+    },
+    {
+      "id": "served_shade_porches",
+      "trigger_traits": ["shade", "porch-friendly"],
+      "cash_bonus": 14,
+      "reputation_bonus": 4,
+      "text": "The north-porch crowd compared notes over violet starts. Cilla pretended not to be pleased when hers looked best."
+    },
+    {
+      "id": "tomatoes_too_early",
+      "trigger_traits": ["tender", "warmth-loving"],
+      "cash_bonus": 8,
+      "reputation_bonus": -1,
+      "text": "Lantern tomatoes drew hands to the bench, then the cold made everyone ask for cover cloth. Pretty did not mean ready."
+    }
+  ]
+}

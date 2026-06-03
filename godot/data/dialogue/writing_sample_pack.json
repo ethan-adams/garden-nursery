@@ -1,0 +1,42 @@
+{
+  "format": "garden-nursery.dialogue.v1",
+  "characters": [
+    {
+      "id": "mara_lye",
+      "name": "Mara Lye",
+      "sketch": "Cafe cook, apron always damp at the hem. She wants herbs that make cheap soup taste deliberate, but she resents how often care work gets called instinct when it is really labor."
+    },
+    {
+      "id": "tovan_ree",
+      "name": "Tovan Ree",
+      "sketch": "School garden teacher with a pocket full of broken pencils and seed labels. He believes children deserve wonder and also quietly counts every coin twice."
+    },
+    {
+      "id": "cilla_park",
+      "name": "Cilla Park",
+      "sketch": "New homeowner trying to make a shaded porch look intentional before her mother visits. She jokes before admitting she is afraid every dead plant is a verdict."
+    }
+  ],
+  "customer_barks": [
+    "Mara: If the chives can survive my dishwasher's singing, I'll take two.",
+    "Tovan: Do you have anything sturdy enough for eight-year-olds with watering cans and legal authority?",
+    "Cilla: The porch is mostly shade, but I would like it to look like a choice.",
+    "Mara: The supplier said tomatoes. The weather board said hubris. Which one do you trust?",
+    "Tovan: Pollinators, yes, but nothing that sounds like a moral lesson when I explain it.",
+    "Cilla: I need low effort, not visibly low effort. There is a difference.",
+    "Mara: Parsley is not glamorous, but neither is rent.",
+    "Tovan: The children named the empty bed Captain Mud. We should intervene.",
+    "Cilla: If that violet droops around arguments, I may need a bulk discount.",
+    "Mara: Give me herbs that forgive a late bus and an early lunch rush."
+  ],
+  "week_reflections": [
+    "Mist held in the orchard rows until noon. The customers who bought hardy starts left smug; the tomato people left with instructions and suspicion.",
+    "By closing, the porch gardeners had traded shade measurements like family secrets. Reputation rose in quiet increments.",
+    "The school order did not pay much, but three children pressed their noses to the calendula tray and promised to come back with names."
+  ],
+  "seasonal_event": {
+    "id": "first_seed_swap",
+    "title": "First Seed Swap At Bellwether Hall",
+    "sketch": "Locals bring jars with handwritten labels, half the town pretends not to judge the handwriting, and every generous trade carries a memory. Demand rises for story-rich, hardy, and porch-friendly plants, but bragging about rare stock costs trust."
+  }
+}
