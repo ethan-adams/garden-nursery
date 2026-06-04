@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://garden_nursery_player"]
+[gd_scene load_steps=4 format=3 uid="uid://garden_nursery_player"]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_player_controller"]
+[ext_resource type="Script" path="res://scripts/world/local_texture_sprite.gd" id="2_texture_loader"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_player"]
 radius = 18.0
@@ -13,17 +14,11 @@ script = ExtResource("1_player_controller")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_player")
 
-[node name="Body" type="Polygon2D" parent="."]
-color = Color(0.254902, 0.333333, 0.278431, 1)
-polygon = PackedVector2Array(-15, -22, 15, -22, 18, 12, 8, 25, -8, 25, -18, 12)
-
-[node name="Apron" type="Polygon2D" parent="."]
-color = Color(0.631373, 0.705882, 0.545098, 1)
-polygon = PackedVector2Array(-10, -11, 10, -11, 13, 20, -13, 20)
-
-[node name="Head" type="Polygon2D" parent="."]
-color = Color(0.823529, 0.666667, 0.490196, 1)
-polygon = PackedVector2Array(-12, -45, 12, -45, 15, -28, 8, -18, -8, -18, -15, -28)
+[node name="GardenerSprite" type="Sprite2D" parent="."]
+position = Vector2(0, -20)
+scale = Vector2(0.82, 0.82)
+script = ExtResource("2_texture_loader")
+image_path = "res://assets/art/gardener-player.png"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 enabled = true

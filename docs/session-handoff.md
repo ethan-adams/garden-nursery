@@ -10,6 +10,7 @@
 - Godot baseline: `4.5.1.stable.official`
 - Current project phase: Godot Vertical Slice 0.1 is scaffolded and ready for deeper playable systems.
 - Current priority: pivot from flat dashboard prototype to a walkable 2.5D nursery yard.
+- Current quality correction: do not stack more systems onto a lifeless blockout. Prioritize yard composition, station readability, and first-screen UX before deeper mechanics.
 
 ## Latest Merged Work
 
@@ -48,7 +49,7 @@ Current walkable-yard issue batch:
 - `#26` Build walkable 2.5D nursery yard foundation
 - `#27` Add in-world interaction station framework
 - `#28` Move nursery loop into world station overlays
-- `#29` Add Hush Arbor nursery yard art and atmosphere pass
+- `#29` Rework Hush Arbor yard art direction and first-screen UX
 - `#30` Polish walkable yard camera, collision, and controller feel
 - `#31` Add sanity checks for walkable world scene
 
@@ -109,6 +110,7 @@ Local export currently requires Godot 4.5.1 Linux export templates installed on 
 ## What Is Missing
 
 - Walkable 2.5D nursery yard and in-world stations.
+- Stronger first-screen art direction and UX validation beyond automated smoke checks.
 - Customer-specific sold/unsold/discovery outcomes tied to budget, taste, garden constraints, and relationship memory.
 - Expanded Hush Arbor plant catalog: vertical slice target is 12-20 plants; current Godot catalog has 6.
 - Simulation tests for market scoring and customer outcomes after logic is split out of the scene script.
@@ -121,7 +123,7 @@ Local export currently requires Godot 4.5.1 Linux export templates installed on 
 1. `#26` Build walkable 2.5D nursery yard foundation
 2. `#27` Add in-world interaction station framework
 3. `#28` Move nursery loop into world station overlays
-4. `#29` Add Hush Arbor nursery yard art and atmosphere pass
+4. `#29` Rework Hush Arbor yard art direction and first-screen UX
 5. `#30` Polish walkable yard camera, collision, and controller feel
 6. `#31` Add sanity checks for walkable world scene
 
@@ -129,4 +131,4 @@ Local export currently requires Godot 4.5.1 Linux export templates installed on 
 
 This is a Steam Deck-first Godot cozy nursery sim. The product should be harder to break now: keep changes issue-backed, run the standard checks, open PRs, wait for CI, and squash-merge when green.
 
-Prioritize the walkable nursery body before adding more dashboard depth. Keep writing and world details specific to Hush Arbor and avoid generic cozy filler.
+Prioritize the walkable nursery body before adding more dashboard depth. The first screen needs care: composed space, readable silhouettes, tactile local details, and no visible debug copy. Keep writing and world details specific to Hush Arbor and avoid generic cozy filler.
