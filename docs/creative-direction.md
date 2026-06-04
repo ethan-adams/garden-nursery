@@ -252,6 +252,8 @@ Keep normal, familiar crops or close analogues too. The magic lands better when 
 
 Target a cozy botanical illustration style rather than default pixel art.
 
+Use `docs/art-bible.md` and `docs/visual-development-pipeline.md` as the production authority for future visual work. This section is the short creative summary; the art bible and pipeline hold the detailed acceptance bar.
+
 Direction:
 
 - 2D or 2.5D.

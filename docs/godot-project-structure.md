@@ -20,6 +20,10 @@ godot/
     dialogue/
   assets/
     art/
+      regions/
+      plants/
+      ui/
+      characters/
     audio/
     fonts/
   tests/
@@ -33,6 +37,8 @@ godot/
 - Avoid one enormous all-in-one `.tscn` scene.
 - Use clear node names for focus navigation and Steam Deck UI checks.
 - Follow `docs/steam-deck-ux-baseline.md` for resolution, text sizing, focus navigation, and input action naming.
+- Follow `docs/art-bible.md` and `docs/visual-development-pipeline.md` before adding production-facing visual assets.
+- Keep production art source notes or asset briefs close to the work when practical.
 
 ## Godot Baseline
 

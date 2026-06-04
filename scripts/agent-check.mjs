@@ -252,6 +252,42 @@ check("Steam Deck UX baseline is documented", async () => {
   }
 });
 
+check("Visual development pipeline is documented", async () => {
+  const bible = await readFile("docs/art-bible.md", "utf8");
+  const pipeline = await readFile("docs/visual-development-pipeline.md", "utf8");
+  const brief = await readFile("docs/art-asset-brief-template.md", "utf8");
+
+  for (const required of [
+    "Botanical Specificity",
+    "Steam Deck Readability",
+    "UI Rules",
+    "Asset Bar",
+    "Source And Rights Rule"
+  ]) {
+    assert(bible.includes(required), `art bible missing ${required}`);
+  }
+
+  for (const required of [
+    "Research Takeaways",
+    "Visual Brief",
+    "Reference Board",
+    "Godot Integration",
+    "AI-Assisted Art Rules",
+    "Agent Workflow"
+  ]) {
+    assert(pipeline.includes(required), `visual pipeline missing ${required}`);
+  }
+
+  for (const required of [
+    "Gameplay Job",
+    "Style Target",
+    "Production Plan",
+    "Acceptance Checks"
+  ]) {
+    assert(brief.includes(required), `art asset brief template missing ${required}`);
+  }
+});
+
 check("Starter region brief is documented", async () => {
   const doc = await readFile("docs/starter-region-brief.md", "utf8");
   for (const required of [

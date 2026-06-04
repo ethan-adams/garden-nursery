@@ -23,6 +23,8 @@ The old browser prototype in `browser-prototype/` is only a disposable design sk
 - `AGENTS.md` - agent workflow and repo rules.
 - `docs/session-handoff.md` - shortest handoff for future Codex sessions.
 - `docs/creative-direction.md` - game identity, writing pillars, regions, magic, Steam Deck constraints.
+- `docs/art-bible.md` - production visual target, palette, UI, composition, and asset acceptance bar.
+- `docs/visual-development-pipeline.md` - repeatable visual research, asset brief, production, integration, and review workflow.
 - `docs/vertical-slice-0.1.md` - first playable Godot target.
 - `docs/starter-region-brief.md` - Hush Arbor starter region brief for the vertical slice.
 - `docs/steam-deck-ux-baseline.md` - 1280x800 and controller-first UX baseline.
