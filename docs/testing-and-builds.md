@@ -18,6 +18,8 @@ npm run test:product
 
 `npm test` validates repository shape, data catalogs, the Godot scene wiring, the writing pack, and the archived browser prototype. `npm run test:product` adds a real Godot headless import so GDScript parse errors and broken resource loads fail before review.
 
+Playtest build notes for the first vertical slice live in `docs/vertical-slice-0.1-playtest-build.md`.
+
 ## Mac Test Path
 
 From the repo root:
@@ -72,7 +74,6 @@ The export job is intentionally a debug build. The goal is not distribution poli
 
 - No automated controller navigation test yet.
 - No screenshot/layout regression test yet.
-- No simulation unit tests yet; market scoring still lives in the scene script.
 - No release signing, notarization, or Steam integration.
 
 Those should be added when the vertical slice has more stable gameplay logic and UI surfaces.

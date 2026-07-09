@@ -30,6 +30,7 @@ The old browser prototype in `browser-prototype/` is only a disposable design sk
 - `docs/steam-deck-ux-baseline.md` - 1280x800 and controller-first UX baseline.
 - `docs/godot-project-structure.md` - planned Godot folder conventions.
 - `docs/testing-and-builds.md` - local, CI, Mac, and Steam Deck testing process.
+- `docs/vertical-slice-0.1-playtest-build.md` - current playtest artifact, controls, known issues, and feedback prompts.
 - `docs/decisions.md` - lightweight project decision log.
 - `docs/claude-brief-review.md` - critical review of the Claude-generated planning brief.
 - `docs/issue-backlog.md` - current issue queue.
@@ -110,6 +111,4 @@ Normal workflow:
 
 ## Current Next Work
 
-The roadmap is now issue-backed end to end. Start with `#27` to finish the in-world station framework, then proceed through the `Godot Vertical Slice 0.1` milestone in `docs/issue-backlog.md`.
-
-The immediate sequence is: `#27`, `#28`, `#30`, `#31`, then `#35` through `#41`.
+The roadmap is issue-backed end to end. After the Godot Vertical Slice 0.1 playtest build, continue into the Hush Arbor alpha tasks starting at `#42`.
