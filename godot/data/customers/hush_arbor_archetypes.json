@@ -9,7 +9,12 @@
       "garden_constraints": ["tiny back step", "morning sun", "staff forgets watering"],
       "taste": ["culinary", "forgiving", "porch-friendly"],
       "contradiction": "Mara wants perfect herbs for the cafe menu but hates admitting the alley is mostly shade.",
-      "market_hint": "If my parsley pot survives another week by the mop sink, I can sell soup without pretending garnish is optional."
+      "market_hint": "If my parsley pot survives another week by the mop sink, I can sell soup without pretending garnish is optional.",
+      "returning_beats": {
+        "trust_up": "Mara checks the herb bench first now, pretending it is only for the cafe list.",
+        "careful": "Mara asks whether last week's care warning still stands before touching a tag.",
+        "trust_down": "Mara lingers by the cheaper herbs, polite but measuring every promise."
+      }
     },
     {
       "id": "tovan_ree",
@@ -19,7 +24,12 @@
       "garden_constraints": ["children overwater", "weekend neglect", "needs stories"],
       "taste": ["hardy", "story-rich", "pollinator"],
       "contradiction": "Tovan teaches patience beautifully, then panic-buys anything that promises fast results.",
-      "market_hint": "The third-years are naming every seed tray. Please sell me something that will not break their hearts by Monday."
+      "market_hint": "The third-years are naming every seed tray. Please sell me something that will not break their hearts by Monday.",
+      "returning_beats": {
+        "trust_up": "Tovan arrives with student names for last week's plant and a notebook full of questions.",
+        "careful": "Tovan asks for the honest version first: what might fail before the children see it?",
+        "trust_down": "Tovan reads every tag twice, trying not to panic-buy hope."
+      }
     },
     {
       "id": "cilla_park",
@@ -29,7 +39,12 @@
       "garden_constraints": ["chimney shade", "clay pockets", "pride on the line"],
       "taste": ["shade", "low-effort", "porch-friendly"],
       "contradiction": "Cilla says she wants simple plants, but she keeps reaching for the fanciest tag.",
-      "market_hint": "The north side of my porch grows moss on a tin bucket. Is that a plant opinion or a personal insult?"
+      "market_hint": "The north side of my porch grows moss on a tin bucket. Is that a plant opinion or a personal insult?",
+      "returning_beats": {
+        "trust_up": "Cilla reports one new leaf like she is giving testimony in court.",
+        "careful": "Cilla asks if pretty and possible are speaking to each other this week.",
+        "trust_down": "Cilla hovers near the shade plants, proud enough to ask and not ask."
+      }
     }
   ]
 }

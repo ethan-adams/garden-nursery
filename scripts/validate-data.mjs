@@ -14,7 +14,10 @@ const catalogs = [
   {
     path: "godot/data/customers/hush_arbor_archetypes.json",
     root: "customers",
-    required: ["id", "display_name", "role", "budget", "garden_constraints", "taste", "contradiction", "market_hint"]
+    required: ["id", "display_name", "role", "budget", "garden_constraints", "taste", "contradiction", "market_hint", "returning_beats"],
+    nested: {
+      returning_beats: ["trust_up", "careful", "trust_down"]
+    }
   },
   {
     path: "godot/data/regions/hush_arbor.json",

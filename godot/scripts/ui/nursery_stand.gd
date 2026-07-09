@@ -269,8 +269,9 @@ func _render_customers() -> void:
 		var memory := _latest_relationship_note(customer.get("id", ""))
 		if not memory.is_empty():
 			label.text = "%s\nNote: %s" % [label.text, memory]
+		label.text = "%s\n%s" % [label.text, _customer_memory_text(customer)]
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.custom_minimum_size = Vector2(0, 108)
+		label.custom_minimum_size = Vector2(0, 146)
 		customer_list.add_child(label)
 
 
@@ -321,10 +322,11 @@ func _journal_customers_text() -> String:
 		var note := _latest_relationship_note(customer_id)
 		if note.is_empty():
 			note = "needs still penciled in"
-		lines.append("- %s, %s: %s." % [
+		lines.append("- %s, %s: %s %s" % [
 			customer.get("display_name", "Customer"),
 			customer.get("role", "regular"),
-			_clip_text(note, 86)
+			_clip_text(note, 86),
+			_clip_text(_customer_memory_text(customer), 120)
 		])
 	var hidden_count: int = int(max(0, run_state.customers.size() - known.size()))
 	if hidden_count > 0:
@@ -459,6 +461,10 @@ func _propagation_profile(plant: Dictionary) -> Dictionary:
 
 func _plant_care_text(plant: Dictionary) -> String:
 	return run_state.plant_care_text(plant)
+
+
+func _customer_memory_text(customer: Dictionary) -> String:
+	return run_state.customer_memory_text(customer)
 
 
 func _calendar_header_text() -> String:

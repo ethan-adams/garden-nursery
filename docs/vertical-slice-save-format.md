@@ -16,6 +16,7 @@ The current format id is `garden-nursery.save.v1`.
 - `next_propagation_tray_id`, used to keep tray ids stable inside a run
 - `propagation_tray`, retained as a compatibility snapshot of the first active tray for old vertical-slice saves
 - `customer_notes`, keyed by recurring customer id
+- `customer_memory`, keyed by recurring customer id, with visits, satisfaction, last recommendation, and unresolved hooks
 - `discoveries`
   - `plants`
   - `customers`
