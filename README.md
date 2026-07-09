@@ -110,4 +110,6 @@ Normal workflow:
 
 ## Current Next Work
 
-The first issue queue is complete. The next useful tickets should harden the playable loop: propagation queue, customer-specific recommendation outcomes, expanded Hush Arbor plant catalog, and controller/layout playtest checks.
+The roadmap is now issue-backed end to end. Start with `#27` to finish the in-world station framework, then proceed through the `Godot Vertical Slice 0.1` milestone in `docs/issue-backlog.md`.
+
+The immediate sequence is: `#27`, `#28`, `#30`, `#31`, then `#35` through `#41`.
