@@ -10,8 +10,8 @@ This file is the short "start here" note for a future Codex session. The full pl
 - Godot baseline: `4.5.1.stable.official`
 - Product path: Godot project under `godot/`
 - Archived sketch: `browser-prototype/`
-- Current phase: build `Playable Hush Arbor Alpha 0.2`
-- Current priority: make the station-based yard loop repeatable across several weeks.
+- Current phase: build `Nursery Systems Alpha 0.3`
+- Current priority: make the nursery space itself systemic through layout and bench placement.
 
 ## What Exists
 
@@ -35,12 +35,14 @@ cdsp
 Best next prompt:
 
 ```text
-Work issue #50. Follow AGENTS.md.
+Work issue #51. Follow AGENTS.md.
 ```
 
 Recommended immediate sequence:
 
-1. `#50` Replace placeholder station art with production-readable Hush Arbor assets.
+1. `#51` Add nursery layout and bench placement MVP.
+2. `#52` Add greenhouse and shade-house unlock path.
+3. `#53` Add hybridizing and variety stability model.
 
 ## Standard Checks
 

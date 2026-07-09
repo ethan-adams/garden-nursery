@@ -154,6 +154,8 @@ check("Godot walkable yard station scene is wired", async () => {
   assert(playerScene.includes('node name="Camera2D"'), "player scene must include a Camera2D");
   assert(yardScene.includes('node name="StationPrompt"'), "nursery yard must include an interaction prompt");
   assert(yardScene.includes('node name="StationOverlay"'), "nursery yard must include a station overlay layer");
+  assert(yardScene.includes('node name="StationReadabilityMarkers"'), "nursery yard must include station readability markers");
+  assert(yardScene.includes('node name="PathEdgeAccents"'), "nursery yard must include path edge readability accents");
 
   for (const [nodeName, stationId] of [
     ["SignalBoardStation", "signal_board"],
@@ -164,6 +166,17 @@ check("Godot walkable yard station scene is wired", async () => {
   ]) {
     assert(yardScene.includes(`node name="${nodeName}" type="Area2D"`), `nursery yard missing ${nodeName}`);
     assert(yardScene.includes(`station_id = "${stationId}"`), `${nodeName} must define station_id ${stationId}`);
+  }
+
+  for (const [markerName, stationLabel] of [
+    ["SignalMarker", "SIGNAL"],
+    ["PlantStandMarker", "STAND"],
+    ["PropagationMarker", "TRAYS"],
+    ["LedgerMarker", "LEDGER"],
+    ["JournalMarker", "JOURNAL"]
+  ]) {
+    assert(yardScene.includes(`node name="${markerName}"`), `nursery yard missing ${markerName}`);
+    assert(yardScene.includes(`text = "${stationLabel}"`), `${markerName} must include readable ${stationLabel} label`);
   }
 
   for (const required of [
@@ -479,6 +492,7 @@ check("Visual development pipeline is documented", async () => {
   const bible = await readFile("docs/art-bible.md", "utf8");
   const pipeline = await readFile("docs/visual-development-pipeline.md", "utf8");
   const brief = await readFile("docs/art-asset-brief-template.md", "utf8");
+  const stationBrief = await readFile("docs/visual-references/hush-arbor-station-readability-brief.md", "utf8");
 
   for (const required of [
     "Botanical Specificity",
@@ -508,6 +522,16 @@ check("Visual development pipeline is documented", async () => {
     "Acceptance Checks"
   ]) {
     assert(brief.includes(required), `art asset brief template missing ${required}`);
+  }
+
+  for (const required of [
+    "Hush Arbor Station Readability Brief",
+    "1280x800",
+    "No third-party art",
+    "Colored ground plaques",
+    "Prompt text does not cover the main silhouette"
+  ]) {
+    assert(stationBrief.includes(required), `station readability brief missing ${required}`);
   }
 });
 

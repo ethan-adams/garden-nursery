@@ -22,6 +22,7 @@ GitHub issues are the source of truth for executable tasks. This document explai
 - Restock economy: the plant stand has a supplier order action for the selected plant, with derived wholesale cost, shelf caps, margin notes, weekly restock spend, and ledger shortage/overstock reads.
 - Yard onboarding: the walkable yard now guides new players through signal board, plant stand, propagation bench, ledger, and journal using short contextual station prompts that disappear as stations are visited.
 - Seed-swap event: Hush Arbor has a small timed community event with preferred traits, etiquette text, plant contributions from inventory, deadline resolution, rewards, reputation, relationship notes, and ledger/journal consequences.
+- Station readability art: the yard has editable local station markers, material-colored plaques, and path-edge accents for the signal board, plant stand, propagation bench, ledger, and journal so the workbench loop reads before prompt text.
 - Save/load: the vertical slice auto-loads and auto-saves `user://garden_nursery_vertical_slice_save.json`; the stand header has a reset-run action for testing. Format notes live in `docs/vertical-slice-save-format.md`.
 - Discovery journal: a yard journal station renders discovered plant notes, customer memories, market reads, and ledger week reflections while hiding undiscovered information behind uncertainty counts.
 - Simulation tests: `npm test` runs dependency-light recommendation scoring rule tests covering trait matches, risk traits, budgets, constraints, and reputation outcomes.
@@ -108,15 +109,15 @@ Goal: make Hush Arbor feel like a small repeatable nursery game rather than a on
 
 Tasks:
 
-- `#42` Extract nursery simulation state from UI scenes.
-- `#43` Build multi-tray propagation queue.
-- `#44` Add plant care needs and climate-fit consequences.
-- `#45` Add season and weather calendar for Hush Arbor.
-- `#46` Add customer memory and returning relationship beats.
-- `#47` Add inventory pricing and restock economy.
-- `#48` Add yard onboarding flow.
-- `#49` Add Hush Arbor seed-swap event loop.
-- `#50` Replace placeholder station art with production-readable Hush Arbor assets.
+- `#42` Extract nursery simulation state from UI scenes. Complete.
+- `#43` Build multi-tray propagation queue. Complete.
+- `#44` Add plant care needs and climate-fit consequences. Complete.
+- `#45` Add season and weather calendar for Hush Arbor. Complete.
+- `#46` Add customer memory and returning relationship beats. Complete.
+- `#47` Add inventory pricing and restock economy. Complete.
+- `#48` Add yard onboarding flow. Complete.
+- `#49` Add Hush Arbor seed-swap event loop. Complete.
+- `#50` Replace placeholder station art with production-readable Hush Arbor assets. Complete.
 
 Exit criteria:
 
