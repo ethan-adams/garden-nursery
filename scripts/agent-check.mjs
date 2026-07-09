@@ -257,6 +257,12 @@ check("Core data catalogs are valid", async () => {
   for (const required of ["water", "light", "soil", "frost", "heat", "forgiving_traits", "risk_traits"]) {
     assert(Object.hasOwn(region.climate_profile, required), `region climate_profile missing ${required}`);
   }
+  assert(Array.isArray(region.season_calendar) && region.season_calendar.length >= 5, "region must define a season calendar");
+  for (const entry of region.season_calendar) {
+    for (const required of ["week", "season", "weather", "forecast", "points_to_traits", "risk_traits", "propagation_bonus_traits", "propagation_risk_traits", "uncertainty"]) {
+      assert(Object.hasOwn(entry, required), `season calendar week ${entry.week ?? "(missing week)"} missing ${required}`);
+    }
+  }
 });
 
 check("Writing sample pack is complete", async () => {
@@ -318,6 +324,10 @@ check("Nursery stand scene is playable shape", async () => {
     "func has_open_propagation_slot",
     "func propagation_status_lines",
     "func plant_care_text",
+    "func current_calendar_entry",
+    "func merged_signal_with_calendar",
+    "func propagation_weather_adjustment",
+    "func calendar_summary_text",
     "propagation_capacity := 3",
     "propagation_trays",
     "func advance_week",

@@ -12,12 +12,12 @@ cdsp
 Then ask Codex:
 
 ```text
-Work issue #45. Follow AGENTS.md.
+Work issue #46. Follow AGENTS.md.
 ```
 
 ## Current Next Issue
 
-- `#45` feat: Add season and weather calendar for Hush Arbor - https://github.com/ethan-adams/garden-nursery/issues/45
+- `#46` feat: Add customer memory and returning relationship beats - https://github.com/ethan-adams/garden-nursery/issues/46
 
 ## Godot Vertical Slice 0.1
 
@@ -60,10 +60,10 @@ Completed:
 - `#42` Extract nursery simulation state from UI scenes - https://github.com/ethan-adams/garden-nursery/issues/42
 - `#43` Build multi-tray propagation queue - https://github.com/ethan-adams/garden-nursery/issues/43
 - `#44` Add plant care needs and climate-fit consequences - https://github.com/ethan-adams/garden-nursery/issues/44
+- `#45` Add season and weather calendar for Hush Arbor - https://github.com/ethan-adams/garden-nursery/issues/45
 
 Open:
 
-- `#45` Add season and weather calendar for Hush Arbor - https://github.com/ethan-adams/garden-nursery/issues/45
 - `#46` Add customer memory and returning relationship beats - https://github.com/ethan-adams/garden-nursery/issues/46
 - `#47` Add inventory pricing and restock economy - https://github.com/ethan-adams/garden-nursery/issues/47
 - `#48` Add yard onboarding flow - https://github.com/ethan-adams/garden-nursery/issues/48
