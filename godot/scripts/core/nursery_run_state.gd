@@ -16,6 +16,7 @@ var propagation_trays: Array = []
 var propagation_capacity := 3
 var next_propagation_tray_id := 1
 var relationship_notes: Dictionary = {}
+var customer_memory: Dictionary = {}
 var selected_discoveries: Dictionary = {}
 var journal_week_reflections: Array[String] = []
 var weekly_customer_notes: Array[String] = []
@@ -33,6 +34,7 @@ func setup(next_plants: Array, next_customers: Array, next_region: Dictionary, n
 	region = next_region
 	dialogue = next_dialogue
 	relationship_notes = {}
+	customer_memory = {}
 	selected_discoveries = fresh_discoveries()
 	journal_week_reflections = []
 	propagation_trays = []
@@ -47,7 +49,9 @@ func setup(next_plants: Array, next_customers: Array, next_region: Dictionary, n
 	if not plants.is_empty():
 		selected_plant_id = plants[0].get("id", "")
 	for customer in customers:
-		relationship_notes[customer.get("id", "")] = []
+		var customer_id: String = customer.get("id", "")
+		relationship_notes[customer_id] = []
+		customer_memory[customer_id] = fresh_customer_memory()
 	log_lines = [
 		"Opened the roadside stand beside the wet lane.",
 		"Mara, Tovan, and Cilla all left clues before buying anything."
@@ -79,6 +83,7 @@ func recommend_plant(plant_id: String) -> Dictionary:
 		var fit := NurseryRules.score_customer_fit(plant, customer, signal_data, region)
 		var outcome := NurseryRules.customer_recommendation_outcome(plant, customer, fit, stock_available - sold_count)
 		lines.append(outcome.get("line", ""))
+		update_customer_memory(customer, plant, outcome, fit)
 		var customer_note: String = outcome.get("note", "")
 		if not customer_note.is_empty():
 			remember_customer_note(customer.get("id", ""), customer_note)
@@ -266,6 +271,7 @@ func save_state_snapshot() -> Dictionary:
 		"next_propagation_tray_id": next_propagation_tray_id,
 		"propagation_tray": legacy_propagation_tray_snapshot(),
 		"customer_notes": relationship_notes,
+		"customer_memory": customer_memory,
 		"discoveries": selected_discoveries,
 		"week_reflections": journal_week_reflections,
 		"weekly_activity": weekly_activity_snapshot()
@@ -285,6 +291,7 @@ func apply_saved_state(saved_state: Dictionary) -> bool:
 	propagation_trays = sanitize_propagation_trays(saved_state)
 	next_propagation_tray_id = max(next_propagation_tray_id, int(saved_state.get("next_propagation_tray_id", next_propagation_tray_id)))
 	relationship_notes = sanitize_relationship_notes(saved_state.get("customer_notes", {}))
+	customer_memory = sanitize_customer_memory(saved_state.get("customer_memory", {}))
 	selected_discoveries = sanitize_discoveries(saved_state.get("discoveries", {}))
 	journal_week_reflections = strings_from(saved_state.get("week_reflections", [])).slice(0, 6)
 	apply_weekly_activity(saved_state.get("weekly_activity", {}))
@@ -559,6 +566,91 @@ func sanitize_relationship_notes(value) -> Dictionary:
 	return sanitized
 
 
+func fresh_customer_memory() -> Dictionary:
+	return {
+		"visits": 0,
+		"satisfaction": 0,
+		"last_plant_id": "",
+		"last_plant_name": "",
+		"last_outcome": "new",
+		"unresolved_need": ""
+	}
+
+
+func sanitize_customer_memory(value) -> Dictionary:
+	var sanitized := {}
+	for customer in customers:
+		var customer_id: String = customer.get("id", "")
+		var memory := fresh_customer_memory()
+		if typeof(value) == TYPE_DICTIONARY and typeof(value.get(customer_id, {})) == TYPE_DICTIONARY:
+			var saved_memory: Dictionary = value.get(customer_id, {})
+			memory["visits"] = max(0, int(saved_memory.get("visits", 0)))
+			memory["satisfaction"] = clamp(int(saved_memory.get("satisfaction", 0)), -5, 8)
+			memory["last_plant_id"] = saved_memory.get("last_plant_id", "")
+			memory["last_plant_name"] = saved_memory.get("last_plant_name", "")
+			memory["last_outcome"] = saved_memory.get("last_outcome", "new")
+			memory["unresolved_need"] = saved_memory.get("unresolved_need", "")
+		sanitized[customer_id] = memory
+	return sanitized
+
+
+func update_customer_memory(customer: Dictionary, plant: Dictionary, outcome: Dictionary, fit: Dictionary) -> void:
+	var customer_id: String = customer.get("id", "")
+	if customer_id.is_empty():
+		return
+	if not customer_memory.has(customer_id):
+		customer_memory[customer_id] = fresh_customer_memory()
+	var memory: Dictionary = customer_memory[customer_id]
+	memory["visits"] = int(memory.get("visits", 0)) + 1
+	memory["last_plant_id"] = plant.get("id", "")
+	memory["last_plant_name"] = plant.get("name", "that plant")
+	var reputation_delta := int(outcome.get("reputation", 0))
+	memory["satisfaction"] = clamp(int(memory.get("satisfaction", 0)) + reputation_delta, -5, 8)
+	if bool(outcome.get("sold", false)) and reputation_delta >= 2:
+		memory["last_outcome"] = "trusted"
+		memory["unresolved_need"] = ""
+	elif bool(outcome.get("sold", false)):
+		memory["last_outcome"] = "careful"
+		memory["unresolved_need"] = fit.get("care_summary", "watch the care tag")
+	elif reputation_delta < 0:
+		memory["last_outcome"] = "strained"
+		memory["unresolved_need"] = "needs a better fit than %s" % plant.get("name", "that plant")
+	else:
+		memory["last_outcome"] = "curious"
+		memory["unresolved_need"] = "still deciding after %s" % plant.get("name", "that plant")
+	customer_memory[customer_id] = memory
+
+
+func customer_memory_text(customer: Dictionary) -> String:
+	var customer_id: String = customer.get("id", "")
+	if not customer_memory.has(customer_id):
+		return "First visit. Listen before selling."
+	var memory: Dictionary = customer_memory[customer_id]
+	var visits := int(memory.get("visits", 0))
+	if visits <= 0:
+		return "First visit. Listen before selling."
+	var beat_key := "careful"
+	var satisfaction := int(memory.get("satisfaction", 0))
+	if satisfaction >= 3:
+		beat_key = "trust_up"
+	elif satisfaction < 0:
+		beat_key = "trust_down"
+	var beats: Dictionary = customer.get("returning_beats", {})
+	var beat: String = beats.get(beat_key, "They remember last week's recommendation.")
+	var unresolved: String = memory.get("unresolved_need", "")
+	var plant_name: String = memory.get("last_plant_name", "")
+	var text := "Memory %+d after %d visit%s. Last: %s. %s" % [
+		satisfaction,
+		visits,
+		plural_suffix(visits),
+		plant_name,
+		beat
+	]
+	if not unresolved.is_empty():
+		text = "%s Hook: %s." % [text, unresolved]
+	return text
+
+
 func sanitize_discoveries(value) -> Dictionary:
 	var sanitized := fresh_discoveries()
 	if typeof(value) != TYPE_DICTIONARY:
@@ -691,9 +783,18 @@ func market_learning_text() -> String:
 
 func relationship_summary() -> String:
 	if weekly_customer_notes.is_empty():
-		return "No new regular notes."
+		return "No new regular notes. %s" % customer_trust_summary()
 	var clipped := weekly_customer_notes.slice(0, min(2, weekly_customer_notes.size()))
-	return " | ".join(clipped)
+	return "%s | %s" % [" | ".join(clipped), customer_trust_summary()]
+
+
+func customer_trust_summary() -> String:
+	var lines: Array[String] = []
+	for customer in customers:
+		var customer_id: String = customer.get("id", "")
+		var memory: Dictionary = customer_memory.get(customer_id, fresh_customer_memory())
+		lines.append("%s %+d" % [customer.get("display_name", "Customer"), int(memory.get("satisfaction", 0))])
+	return "Trust: %s." % ", ".join(lines)
 
 
 func recommendation_summary() -> String:

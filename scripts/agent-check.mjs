@@ -240,8 +240,11 @@ check("Core data catalogs are valid", async () => {
   assert(Array.isArray(customerCatalog.customers), "customer catalog must include customers array");
   assert(customerCatalog.customers.length >= 2, "customer catalog must include at least 2 customers");
   for (const customer of customerCatalog.customers) {
-    for (const required of ["id", "display_name", "role", "budget", "garden_constraints", "taste", "contradiction", "market_hint"]) {
+    for (const required of ["id", "display_name", "role", "budget", "garden_constraints", "taste", "contradiction", "market_hint", "returning_beats"]) {
       assert(Object.hasOwn(customer, required), `customer ${customer.id ?? "(missing id)"} missing ${required}`);
+    }
+    for (const required of ["trust_up", "careful", "trust_down"]) {
+      assert(Object.hasOwn(customer.returning_beats, required), `customer ${customer.id} returning_beats missing ${required}`);
     }
   }
 
@@ -324,6 +327,9 @@ check("Nursery stand scene is playable shape", async () => {
     "func has_open_propagation_slot",
     "func propagation_status_lines",
     "func plant_care_text",
+    "func update_customer_memory",
+    "func customer_memory_text",
+    "customer_memory",
     "func current_calendar_entry",
     "func merged_signal_with_calendar",
     "func propagation_weather_adjustment",
@@ -350,6 +356,7 @@ check("Vertical slice save format is documented", async () => {
     "propagation_trays",
     "propagation_capacity",
     "customer_notes",
+    "customer_memory",
     "week_reflections",
     "weekly_activity",
     "Reset Run"
@@ -373,6 +380,7 @@ check("Vertical slice save format is documented", async () => {
     "legacy_propagation_tray_snapshot",
     "inventory_stock",
     "customer_notes",
+    "customer_memory",
     "weekly_activity"
   ]) {
     assert(runStateScript.includes(required), `save state model missing ${required}`);
