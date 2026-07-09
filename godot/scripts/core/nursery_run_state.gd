@@ -17,6 +17,8 @@ var propagation_capacity := 3
 var next_propagation_tray_id := 1
 var relationship_notes: Dictionary = {}
 var customer_memory: Dictionary = {}
+var event_contributions: Dictionary = {}
+var resolved_events: Array[String] = []
 var selected_discoveries: Dictionary = {}
 var journal_week_reflections: Array[String] = []
 var weekly_customer_notes: Array[String] = []
@@ -37,6 +39,8 @@ func setup(next_plants: Array, next_customers: Array, next_region: Dictionary, n
 	dialogue = next_dialogue
 	relationship_notes = {}
 	customer_memory = {}
+	event_contributions = {}
+	resolved_events = []
 	selected_discoveries = fresh_discoveries()
 	journal_week_reflections = []
 	propagation_trays = []
@@ -198,6 +202,54 @@ func restock_selected_plant() -> Dictionary:
 	}
 
 
+func active_community_event() -> Dictionary:
+	for event in region.get("community_events", []):
+		var event_id: String = event.get("id", "")
+		if resolved_events.has(event_id):
+			continue
+		if week >= int(event.get("start_week", 1)) and week <= int(event.get("deadline_week", 1)):
+			return event
+	return {}
+
+
+func can_contribute_selected_plant_to_event() -> bool:
+	var event := active_community_event()
+	if event.is_empty():
+		return false
+	var plant := find_plant(selected_plant_id)
+	return not plant.is_empty() and int(plant.get("starting_stock", 0)) > 0
+
+
+func contribute_selected_plant_to_event() -> Dictionary:
+	var event := active_community_event()
+	var plant := find_plant(selected_plant_id)
+	if event.is_empty() or plant.is_empty():
+		return {}
+	if int(plant.get("starting_stock", 0)) <= 0:
+		return {
+			"outcome_text": "The seed-swap table needs real starts, not just a good tag."
+		}
+	var event_id: String = event.get("id", "")
+	if not event_contributions.has(event_id):
+		event_contributions[event_id] = {}
+	var contributions: Dictionary = event_contributions[event_id]
+	var plant_id: String = plant.get("id", "")
+	plant["starting_stock"] = int(plant.get("starting_stock", 0)) - 1
+	contributions[plant_id] = int(contributions.get(plant_id, 0)) + 1
+	event_contributions[event_id] = contributions
+	remember_discovery("plants", plant_id)
+	var match_count := NurseryRules.trait_score(plant.get("traits", []), event.get("preferred_traits", []))
+	return {
+		"outcome_text": "Set aside 1 %s for %s. %s\nEtiquette: %s" % [
+			plant.get("name", "plant"),
+			event.get("name", "the event"),
+			"Good local fit." if match_count > 0 else "Useful, though not what the table asked for first.",
+			event.get("etiquette", "Label it honestly.")
+		],
+		"log": "Prepared %s for %s." % [plant.get("name", "plant"), event.get("name", "event")]
+	}
+
+
 func advance_week() -> Dictionary:
 	var closing_week := week
 	var cash_before_ledger := cash
@@ -207,8 +259,13 @@ func advance_week() -> Dictionary:
 	var propagation_text := process_propagation_week()
 	var market_cash_bonus := int(outcome.get("cash_bonus", 0))
 	var market_reputation_bonus := int(outcome.get("reputation_bonus", 0))
+	var event_result := resolve_due_community_events(closing_week)
+	var event_cash_bonus := int(event_result.get("cash", 0))
+	var event_reputation_bonus := int(event_result.get("reputation", 0))
 	cash += market_cash_bonus
+	cash += event_cash_bonus
 	reputation += market_reputation_bonus
+	reputation += event_reputation_bonus
 	var text := ledger_text(
 		closing_week,
 		cash_before_ledger,
@@ -216,7 +273,8 @@ func advance_week() -> Dictionary:
 		market_cash_bonus,
 		market_reputation_bonus,
 		outcome,
-		propagation_text
+		propagation_text,
+		event_result
 	)
 	remember_week_reflection(closing_week, outcome)
 	week += 1
@@ -224,6 +282,53 @@ func advance_week() -> Dictionary:
 	return {
 		"outcome_text": text,
 		"log": "Ledger closed week %d: %s" % [closing_week, outcome.get("id", "quiet_week")]
+	}
+
+
+func resolve_due_community_events(closing_week: int) -> Dictionary:
+	var lines: Array[String] = []
+	var cash_bonus := 0
+	var reputation_bonus := 0
+	for event in region.get("community_events", []):
+		var event_id: String = event.get("id", "")
+		if resolved_events.has(event_id) or closing_week < int(event.get("deadline_week", 1)):
+			continue
+		var contributions: Dictionary = event_contributions.get(event_id, {})
+		var score := 0
+		var count := 0
+		for plant_id in contributions.keys():
+			var plant := find_plant(plant_id)
+			var amount := int(contributions.get(plant_id, 0))
+			count += amount
+			score += amount * max(1, NurseryRules.trait_score(plant.get("traits", []), event.get("preferred_traits", [])))
+		if count <= 0:
+			reputation_bonus -= 1
+			lines.append("%s passed with an empty corner where your labels should have been." % event.get("name", "The event"))
+		else:
+			var earned_cash := int(event.get("cash_reward", 0))
+			var earned_rep := int(event.get("reputation_reward", 0))
+			if score < 3:
+				earned_cash = int(round(float(earned_cash) * 0.5))
+				earned_rep = max(1, earned_rep - 2)
+			cash_bonus += earned_cash
+			reputation_bonus += earned_rep
+			lines.append("%s accepted %d contribution%s. Score %d; +$%d, %+d reputation." % [
+				event.get("name", "Event"),
+				count,
+				plural_suffix(count),
+				score,
+				earned_cash,
+				earned_rep
+			])
+			for customer in customers:
+				remember_customer_note(customer.get("id", ""), event.get("relationship_note", "helped the seed swap"))
+		resolved_events.append(event_id)
+	if lines.is_empty():
+		return {}
+	return {
+		"cash": cash_bonus,
+		"reputation": reputation_bonus,
+		"text": " ".join(lines)
 	}
 
 
@@ -301,6 +406,8 @@ func save_state_snapshot() -> Dictionary:
 		"propagation_tray": legacy_propagation_tray_snapshot(),
 		"customer_notes": relationship_notes,
 		"customer_memory": customer_memory,
+		"event_contributions": event_contributions,
+		"resolved_events": resolved_events,
 		"discoveries": selected_discoveries,
 		"week_reflections": journal_week_reflections,
 		"weekly_activity": weekly_activity_snapshot()
@@ -321,6 +428,8 @@ func apply_saved_state(saved_state: Dictionary) -> bool:
 	next_propagation_tray_id = max(next_propagation_tray_id, int(saved_state.get("next_propagation_tray_id", next_propagation_tray_id)))
 	relationship_notes = sanitize_relationship_notes(saved_state.get("customer_notes", {}))
 	customer_memory = sanitize_customer_memory(saved_state.get("customer_memory", {}))
+	event_contributions = sanitize_dictionary(saved_state.get("event_contributions", {}))
+	resolved_events = strings_from(saved_state.get("resolved_events", []))
 	selected_discoveries = sanitize_discoveries(saved_state.get("discoveries", {}))
 	journal_week_reflections = strings_from(saved_state.get("week_reflections", [])).slice(0, 6)
 	apply_weekly_activity(saved_state.get("weekly_activity", {}))
@@ -824,25 +933,28 @@ func recommendation_text(plant: Dictionary, signal_data: Dictionary, lines: Arra
 	]
 
 
-func ledger_text(closing_week: int, cash_before_ledger: int, reputation_before_ledger: int, market_cash_bonus: int, market_reputation_bonus: int, outcome: Dictionary, propagation_text: String) -> String:
+func ledger_text(closing_week: int, cash_before_ledger: int, reputation_before_ledger: int, market_cash_bonus: int, market_reputation_bonus: int, outcome: Dictionary, propagation_text: String, event_result: Dictionary = {}) -> String:
 	var cash_delta := cash - cash_before_ledger
 	var reputation_delta := reputation - reputation_before_ledger
 	var propagation_summary := propagation_text
 	if propagation_summary.is_empty():
 		propagation_summary = propagation_ledger_status()
+	var event_summary: String = event_result.get("text", active_event_status_text())
 	var consequence: String = outcome.get("text", "The week ended quietly. The ledger learned less than you did.")
-	return "Week %d Ledger\nCash: $%d now (%+d close, $%d sales, $%d market, $%d bench spend, $%d restock).\nReputation: %d now (%+d close, %+d customer trust, %+d market).\nInventory: %d saleable plants after %d sold and %d restocked.\nStock read: %s\nMarket learning: %s\nCustomer notes: %s\n%s\nPropagation: %s\nHush Arbor: %s" % [
+	return "Week %d Ledger\nCash: $%d now (%+d close, $%d sales, $%d market, $%d event, $%d bench spend, $%d restock).\nReputation: %d now (%+d close, %+d customer trust, %+d market, %+d event).\nInventory: %d saleable plants after %d sold and %d restocked.\nStock read: %s\nMarket learning: %s\nCustomer notes: %s\n%s\nPropagation: %s\nSeed Swap: %s\nHush Arbor: %s" % [
 		closing_week,
 		cash,
 		cash_delta,
 		weekly_cash_from_sales,
 		market_cash_bonus,
+		int(event_result.get("cash", 0)),
 		weekly_bench_spend,
 		weekly_restock_spend,
 		reputation,
 		reputation_delta,
 		weekly_reputation_delta,
 		market_reputation_bonus,
+		int(event_result.get("reputation", 0)),
 		inventory_total(),
 		weekly_plants_sold,
 		weekly_restocked_plants,
@@ -851,7 +963,25 @@ func ledger_text(closing_week: int, cash_before_ledger: int, reputation_before_l
 		relationship_summary(),
 		recommendation_summary(),
 		propagation_summary,
+		event_summary,
 		consequence
+	]
+
+
+func active_event_status_text() -> String:
+	var event := active_community_event()
+	if event.is_empty():
+		return "No active community table."
+	var contributions: Dictionary = event_contributions.get(event.get("id", ""), {})
+	var count := 0
+	for amount in contributions.values():
+		count += int(amount)
+	return "%s due week %d: %d contribution%s prepared. %s" % [
+		event.get("name", "Event"),
+		int(event.get("deadline_week", week)),
+		count,
+		plural_suffix(count),
+		event.get("request", "")
 	]
 
 

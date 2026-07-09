@@ -75,6 +75,20 @@
       "uncertainty": 0.3
     }
   ],
+  "community_events": [
+    {
+      "id": "first_seed_swap",
+      "name": "First Seed Swap",
+      "start_week": 2,
+      "deadline_week": 3,
+      "request": "Bring sturdy starts with a story, label them honestly, and do not make newcomers feel small.",
+      "preferred_traits": ["hardy", "story-rich", "pollinator", "culinary"],
+      "etiquette": "Every contribution needs a plain care note and one useful local warning.",
+      "cash_reward": 16,
+      "reputation_reward": 4,
+      "relationship_note": "showed up for the seed-swap table with useful, honest labels"
+    }
+  ],
   "market_signals": [
     {
       "id": "weather_board_frost",
