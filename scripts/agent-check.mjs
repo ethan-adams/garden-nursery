@@ -428,6 +428,20 @@ check("Testing and build docs are present", async () => {
   }
 });
 
+check("Vertical slice playtest build notes are documented", async () => {
+  const doc = await readFile("docs/vertical-slice-0.1-playtest-build.md", "utf8");
+  for (const required of [
+    "garden-nursery-steamdeck-debug",
+    "GardenNursery.x86_64",
+    "Controls",
+    "Known Limitations",
+    "Feedback Needed",
+    "save/load"
+  ]) {
+    assert(doc.includes(required), `playtest build doc missing ${required}`);
+  }
+});
+
 let failed = false;
 for (const item of checks) {
   try {

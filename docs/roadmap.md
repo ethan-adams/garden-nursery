@@ -19,6 +19,7 @@ GitHub issues are the source of truth for executable tasks. This document explai
 - Save/load: the vertical slice auto-loads and auto-saves `user://garden_nursery_vertical_slice_save.json`; the stand header has a reset-run action for testing. Format notes live in `docs/vertical-slice-save-format.md`.
 - Discovery journal: a yard journal station renders discovered plant notes, customer memories, market reads, and ledger week reflections while hiding undiscovered information behind uncertainty counts.
 - Simulation tests: `npm test` runs dependency-light recommendation scoring rule tests covering trait matches, risk traits, budgets, constraints, and reputation outcomes.
+- Playtest build notes: `docs/vertical-slice-0.1-playtest-build.md` points testers to the `garden-nursery-steamdeck-debug` GitHub Actions artifact and names controls, known limits, and feedback prompts.
 - Docs: creative direction, starter region, Steam Deck UX baseline, art bible, visual pipeline, testing/builds, and issue backlog are in `docs/`.
 - Harness: `npm test` validates data and dependency-light repo shape; `npm run test:product` adds Godot headless smoke.
 - CI: GitHub Actions sanity checks and Steam Deck/Linux debug export artifacts are in place.
@@ -68,10 +69,11 @@ Completed foundation:
 - `#38` Add save and load for vertical-slice state.
 - `#39` Add discovery journal MVP.
 - `#40` Add simulation rule tests for market and recommendation scoring.
+- `#41` Cut Godot Vertical Slice 0.1 playtest build.
 
 Remaining tasks:
 
-- `#41` Cut Godot Vertical Slice 0.1 playtest build.
+- None. Continue with Milestone 2 once the playtest build PR is merged and checked.
 
 Exit criteria:
 
