@@ -168,6 +168,9 @@ check("Godot walkable yard station scene is wired", async () => {
 
   for (const required of [
     "station_activated",
+    "ONBOARDING_FLOW",
+    "_current_onboarding_step",
+    "_station_direction_text",
     "open_station",
     "get_prompt_text",
     "ui_confirm",

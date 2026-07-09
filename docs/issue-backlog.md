@@ -12,12 +12,12 @@ cdsp
 Then ask Codex:
 
 ```text
-Work issue #48. Follow AGENTS.md.
+Work issue #49. Follow AGENTS.md.
 ```
 
 ## Current Next Issue
 
-- `#48` feat: Add yard onboarding flow - https://github.com/ethan-adams/garden-nursery/issues/48
+- `#49` feat: Add Hush Arbor seed-swap event loop - https://github.com/ethan-adams/garden-nursery/issues/49
 
 ## Godot Vertical Slice 0.1
 
@@ -63,10 +63,10 @@ Completed:
 - `#45` Add season and weather calendar for Hush Arbor - https://github.com/ethan-adams/garden-nursery/issues/45
 - `#46` Add customer memory and returning relationship beats - https://github.com/ethan-adams/garden-nursery/issues/46
 - `#47` Add inventory pricing and restock economy - https://github.com/ethan-adams/garden-nursery/issues/47
+- `#48` Add yard onboarding flow - https://github.com/ethan-adams/garden-nursery/issues/48
 
 Open:
 
-- `#48` Add yard onboarding flow - https://github.com/ethan-adams/garden-nursery/issues/48
 - `#49` Add Hush Arbor seed-swap event loop - https://github.com/ethan-adams/garden-nursery/issues/49
 - `#50` Replace placeholder station art with production-readable Hush Arbor assets - https://github.com/ethan-adams/garden-nursery/issues/50
 
