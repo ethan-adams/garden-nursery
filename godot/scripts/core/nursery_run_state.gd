@@ -24,6 +24,8 @@ var weekly_recommendations: Array[String] = []
 var weekly_cash_from_sales := 0
 var weekly_reputation_delta := 0
 var weekly_bench_spend := 0
+var weekly_restock_spend := 0
+var weekly_restocked_plants := 0
 var weekly_plants_sold := 0
 var log_lines: Array[String] = []
 
@@ -169,6 +171,33 @@ func start_propagation() -> Dictionary:
 	}
 
 
+func restock_selected_plant() -> Dictionary:
+	var plant := find_plant(selected_plant_id)
+	if plant.is_empty():
+		return {}
+	var quote := restock_quote(plant)
+	if not bool(quote.get("can_order", false)):
+		return {
+			"outcome_text": quote.get("reason", "The supplier order did not go through.")
+		}
+	var cost := int(quote.get("cost", 0))
+	var quantity := int(quote.get("quantity", 0))
+	cash -= cost
+	plant["starting_stock"] = int(plant.get("starting_stock", 0)) + quantity
+	weekly_restock_spend += cost
+	weekly_restocked_plants += quantity
+	return {
+		"outcome_text": "Ordered %d %s for $%d wholesale. Shelf stock is now %d, with about $%d margin if demand holds." % [
+			quantity,
+			plant.get("name", "plant"),
+			cost,
+			int(plant.get("starting_stock", 0)),
+			max(0, (int(plant.get("price", 0)) * quantity) - cost)
+		],
+		"log": "Restocked %s: +%d for $%d." % [plant.get("name", "plant"), quantity, cost]
+	}
+
+
 func advance_week() -> Dictionary:
 	var closing_week := week
 	var cash_before_ledger := cash
@@ -307,6 +336,8 @@ func reset_week_tracking() -> void:
 	weekly_cash_from_sales = 0
 	weekly_reputation_delta = 0
 	weekly_bench_spend = 0
+	weekly_restock_spend = 0
+	weekly_restocked_plants = 0
 	weekly_plants_sold = 0
 
 
@@ -396,6 +427,59 @@ func find_signal(signal_id: String) -> Dictionary:
 
 func propagation_profile(plant: Dictionary) -> Dictionary:
 	return plant.get("propagation", {})
+
+
+func restock_quote(plant: Dictionary) -> Dictionary:
+	var stock := int(plant.get("starting_stock", 0))
+	var limit := stock_limit_for(plant)
+	var quantity: int = min(restock_quantity_for(plant), max(0, limit - stock))
+	var cost := restock_cost_for(plant, quantity)
+	if quantity <= 0:
+		return {
+			"can_order": false,
+			"quantity": 0,
+			"cost": 0,
+			"reason": "%s is already at the shelf cap of %d. More would be overstock." % [plant.get("name", "This plant"), limit]
+		}
+	if cash < cost:
+		return {
+			"can_order": false,
+			"quantity": quantity,
+			"cost": cost,
+			"reason": "The supplier wants $%d for %d %s. Cash on hand is $%d." % [cost, quantity, plant.get("name", "plants"), cash]
+		}
+	return {
+		"can_order": true,
+		"quantity": quantity,
+		"cost": cost,
+		"limit": limit
+	}
+
+
+func restock_cost_for(plant: Dictionary, quantity: int) -> int:
+	var unit_cost := int(max(2, round(float(plant.get("price", 0)) * 0.55)))
+	return unit_cost * quantity
+
+
+func restock_quantity_for(plant: Dictionary) -> int:
+	if plant.get("traits", []).has("quick-crop"):
+		return 4
+	return 3
+
+
+func stock_limit_for(plant: Dictionary) -> int:
+	if plant.get("traits", []).has("tender"):
+		return 8
+	if plant.get("traits", []).has("low-effort"):
+		return 14
+	return 12
+
+
+func restock_margin_text(plant: Dictionary) -> String:
+	var quantity := restock_quantity_for(plant)
+	var cost := restock_cost_for(plant, quantity)
+	var margin: int = max(0, (int(plant.get("price", 0)) * quantity) - cost)
+	return "Restock %d/$%d margin $%d cap %d" % [quantity, cost, margin, stock_limit_for(plant)]
 
 
 func plant_care_text(plant: Dictionary) -> String:
@@ -533,6 +617,8 @@ func weekly_activity_snapshot() -> Dictionary:
 		"cash_from_sales": weekly_cash_from_sales,
 		"reputation_delta": weekly_reputation_delta,
 		"bench_spend": weekly_bench_spend,
+		"restock_spend": weekly_restock_spend,
+		"restocked_plants": weekly_restocked_plants,
 		"plants_sold": weekly_plants_sold
 	}
 
@@ -545,6 +631,8 @@ func apply_weekly_activity(activity_data) -> void:
 	weekly_cash_from_sales = int(activity_data.get("cash_from_sales", 0))
 	weekly_reputation_delta = int(activity_data.get("reputation_delta", 0))
 	weekly_bench_spend = int(activity_data.get("bench_spend", 0))
+	weekly_restock_spend = int(activity_data.get("restock_spend", 0))
+	weekly_restocked_plants = int(activity_data.get("restocked_plants", 0))
 	weekly_plants_sold = int(activity_data.get("plants_sold", 0))
 
 
@@ -743,25 +831,51 @@ func ledger_text(closing_week: int, cash_before_ledger: int, reputation_before_l
 	if propagation_summary.is_empty():
 		propagation_summary = propagation_ledger_status()
 	var consequence: String = outcome.get("text", "The week ended quietly. The ledger learned less than you did.")
-	return "Week %d Ledger\nCash: $%d now (%+d close, $%d sales, $%d market, $%d bench spend).\nReputation: %d now (%+d close, %+d customer trust, %+d market).\nInventory: %d saleable plants after %d sold.\nMarket learning: %s\nCustomer notes: %s\n%s\nPropagation: %s\nHush Arbor: %s" % [
+	return "Week %d Ledger\nCash: $%d now (%+d close, $%d sales, $%d market, $%d bench spend, $%d restock).\nReputation: %d now (%+d close, %+d customer trust, %+d market).\nInventory: %d saleable plants after %d sold and %d restocked.\nStock read: %s\nMarket learning: %s\nCustomer notes: %s\n%s\nPropagation: %s\nHush Arbor: %s" % [
 		closing_week,
 		cash,
 		cash_delta,
 		weekly_cash_from_sales,
 		market_cash_bonus,
 		weekly_bench_spend,
+		weekly_restock_spend,
 		reputation,
 		reputation_delta,
 		weekly_reputation_delta,
 		market_reputation_bonus,
 		inventory_total(),
 		weekly_plants_sold,
+		weekly_restocked_plants,
+		inventory_economy_text(),
 		market_learning_text(),
 		relationship_summary(),
 		recommendation_summary(),
 		propagation_summary,
 		consequence
 	]
+
+
+func inventory_economy_text() -> String:
+	var shortages: Array[String] = []
+	var overstock: Array[String] = []
+	var signal_data := current_signal()
+	for plant in plants:
+		var stock := int(plant.get("starting_stock", 0))
+		var demand := NurseryRules.trait_score(plant.get("traits", []), signal_data.get("points_to_traits", []))
+		if stock <= 1 and demand > 0:
+			shortages.append(plant.get("name", "plant"))
+		if stock >= stock_limit_for(plant):
+			overstock.append(plant.get("name", "plant"))
+	var parts: Array[String] = []
+	if shortages.is_empty():
+		parts.append("no urgent signal shortages")
+	else:
+		parts.append("short on %s" % ", ".join(shortages.slice(0, 3)))
+	if overstock.is_empty():
+		parts.append("no benches over cap")
+	else:
+		parts.append("overstock risk on %s" % ", ".join(overstock.slice(0, 3)))
+	return "; ".join(parts)
 
 
 func market_learning_text() -> String:

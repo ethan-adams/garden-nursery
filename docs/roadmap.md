@@ -19,6 +19,7 @@ GitHub issues are the source of truth for executable tasks. This document explai
 - Care/climate fit: Hush Arbor has a readable climate profile for water, light, soil, frost, and heat. Plant care now affects recommendation quality, propagation odds, plant cards, and journal notes without making the starter region punitive.
 - Season/weather calendar: Hush Arbor has weekly beats from early spring frost through damp autumn. Forecasts merge into market signals, affect demand traits, adjust propagation outcomes, and appear in station headers and ledger summaries.
 - Customer memory: recurring customers now track visits, satisfaction, prior recommendations, last plants, and unresolved needs. Returning beats show in customer cards, journal notes, and ledger trust summaries.
+- Restock economy: the plant stand has a supplier order action for the selected plant, with derived wholesale cost, shelf caps, margin notes, weekly restock spend, and ledger shortage/overstock reads.
 - Save/load: the vertical slice auto-loads and auto-saves `user://garden_nursery_vertical_slice_save.json`; the stand header has a reset-run action for testing. Format notes live in `docs/vertical-slice-save-format.md`.
 - Discovery journal: a yard journal station renders discovered plant notes, customer memories, market reads, and ledger week reflections while hiding undiscovered information behind uncertainty counts.
 - Simulation tests: `npm test` runs dependency-light recommendation scoring rule tests covering trait matches, risk traits, budgets, constraints, and reputation outcomes.

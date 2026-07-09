@@ -295,6 +295,7 @@ check("Nursery stand scene is playable shape", async () => {
     "NextSignalButton",
     "StartPropagationButton",
     "AdvanceWeekButton",
+    "RestockButton",
     "ResetRunButton",
     "focus_mode = 2"
   ]) {
@@ -308,6 +309,7 @@ check("Nursery stand scene is playable shape", async () => {
     "run_state",
     "_recommend_plant",
     "_on_start_propagation_button_pressed",
+    "_on_restock_button_pressed",
     "_on_advance_week_button_pressed",
     "_load_saved_state",
     "_save_run_state",
@@ -330,6 +332,9 @@ check("Nursery stand scene is playable shape", async () => {
     "func update_customer_memory",
     "func customer_memory_text",
     "customer_memory",
+    "func restock_selected_plant",
+    "func restock_quote",
+    "func inventory_economy_text",
     "func current_calendar_entry",
     "func merged_signal_with_calendar",
     "func propagation_weather_adjustment",
@@ -406,6 +411,18 @@ check("Propagation bench supports multiple trays", async () => {
     "partly rooted"
   ]) {
     assert(runStateScript.includes(required), `propagation queue model missing ${required}`);
+  }
+});
+
+check("Inventory economy supports restocking", async () => {
+  const scene = await readFile("godot/scenes/nursery/nursery_stand.tscn", "utf8");
+  const script = await readFile("godot/scripts/ui/nursery_stand.gd", "utf8");
+  const runStateScript = await readFile("godot/scripts/core/nursery_run_state.gd", "utf8");
+  for (const required of ["RestockButton", "_on_restock_button_pressed", "Order %d for $%d"]) {
+    assert(scene.includes(required) || script.includes(required), `restock UI missing ${required}`);
+  }
+  for (const required of ["restock_selected_plant", "restock_quote", "stock_limit_for", "restock_margin_text", "weekly_restock_spend", "inventory_economy_text"]) {
+    assert(runStateScript.includes(required), `restock economy model missing ${required}`);
   }
 });
 
