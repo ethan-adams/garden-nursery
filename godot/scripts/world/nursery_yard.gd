@@ -5,6 +5,35 @@ signal station_activated(station_id: String)
 var nearby_stations: Array[Area2D] = []
 var current_station: Area2D
 var overlay_open := false
+var onboarding_seen := {}
+
+const ONBOARDING_FLOW := [
+	{
+		"station_id": "signal_board",
+		"title": "Read the weather and town gossip first.",
+		"hint": "The signal board tells you what Hush Arbor wants this week."
+	},
+	{
+		"station_id": "plant_stand",
+		"title": "Choose a plant for the regulars.",
+		"hint": "Plant cards show price, stock, care, and local fit."
+	},
+	{
+		"station_id": "propagation_bench",
+		"title": "Start or check nursery trays.",
+		"hint": "Propagation and restock choices prepare future stock."
+	},
+	{
+		"station_id": "ledger",
+		"title": "Close the week when the yard work is done.",
+		"hint": "The ledger turns sales, weather, stock, and trust into consequences."
+	},
+	{
+		"station_id": "journal",
+		"title": "Check the notebook for what you learned.",
+		"hint": "The journal keeps plant notes, customer memory, and market reads."
+	}
+]
 
 @onready var player: CharacterBody2D = $Player
 @onready var station_overlay: Control = $StationOverlay/NurseryStand
@@ -76,10 +105,25 @@ func _refresh_station_focus() -> void:
 
 
 func _update_prompt() -> void:
-	if overlay_open or current_station == null:
+	if overlay_open:
 		prompt_container.visible = false
 		return
-	prompt_label.text = current_station.get_prompt_text()
+	var onboarding_step := _current_onboarding_step()
+	if current_station == null:
+		if onboarding_step.is_empty():
+			prompt_container.visible = false
+			return
+		prompt_label.text = "%s\n%s" % [onboarding_step.get("title", ""), _station_direction_text(onboarding_step.get("station_id", ""))]
+		prompt_container.global_position = Vector2(360, 96)
+		prompt_container.visible = true
+		return
+	var prompt_text: String = current_station.get_prompt_text()
+	if not onboarding_step.is_empty():
+		if current_station.get_station_id() == onboarding_step.get("station_id", ""):
+			prompt_text = "%s\n%s" % [onboarding_step.get("hint", ""), prompt_text]
+		else:
+			prompt_text = "%s\nNext: %s" % [prompt_text, onboarding_step.get("title", "")]
+	prompt_label.text = prompt_text
 	prompt_container.global_position = current_station.get_prompt_position()
 	prompt_container.visible = true
 
@@ -89,6 +133,7 @@ func _activate_current_station() -> void:
 		return
 	var station_id: String = current_station.get_station_id()
 	var station_name: String = current_station.get_station_name()
+	onboarding_seen[station_id] = true
 	overlay_open = true
 	prompt_container.visible = false
 	if player.has_method("set_movement_enabled"):
@@ -106,3 +151,27 @@ func _on_station_overlay_closed() -> void:
 		player.set_movement_enabled(true)
 	_refresh_station_focus()
 	_update_prompt()
+
+
+func _current_onboarding_step() -> Dictionary:
+	for step in ONBOARDING_FLOW:
+		var station_id: String = step.get("station_id", "")
+		if not bool(onboarding_seen.get(station_id, false)):
+			return step
+	return {}
+
+
+func _station_direction_text(station_id: String) -> String:
+	match station_id:
+		"signal_board":
+			return "Walk to the posted board on the left and press Confirm."
+		"plant_stand":
+			return "Walk to the middle tables and press Confirm."
+		"propagation_bench":
+			return "Walk to the right-hand bench and press Confirm."
+		"ledger":
+			return "Walk down to the ledger table and press Confirm."
+		"journal":
+			return "Walk to the notebook by the lower tables and press Confirm."
+		_:
+			return "Walk to the next station and press Confirm."

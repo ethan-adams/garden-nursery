@@ -35,14 +35,13 @@ cdsp
 Best next prompt:
 
 ```text
-Work issue #48. Follow AGENTS.md.
+Work issue #49. Follow AGENTS.md.
 ```
 
 Recommended immediate sequence:
 
-1. `#48` Add yard onboarding flow.
-2. `#49` Add Hush Arbor seed-swap event loop.
-3. `#50` Replace placeholder station art with production-readable Hush Arbor assets.
+1. `#49` Add Hush Arbor seed-swap event loop.
+2. `#50` Replace placeholder station art with production-readable Hush Arbor assets.
 
 ## Standard Checks
 
