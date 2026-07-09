@@ -192,6 +192,7 @@ check("Godot walkable yard station scene is wired", async () => {
   for (const required of [
     "class_name NurseryRules",
     "score_customer_fit",
+    "care_climate_fit",
     "customer_recommendation_outcome",
     "best_outcome_for",
     "trait_score"
@@ -251,6 +252,10 @@ check("Core data catalogs are valid", async () => {
     for (const required of ["id", "source", "text", "points_to_traits", "risk_traits", "uncertainty"]) {
       assert(Object.hasOwn(signal, required), `signal ${signal.id ?? "(missing id)"} missing ${required}`);
     }
+  }
+  assert(Object.hasOwn(region, "climate_profile"), "region missing climate_profile");
+  for (const required of ["water", "light", "soil", "frost", "heat", "forgiving_traits", "risk_traits"]) {
+    assert(Object.hasOwn(region.climate_profile, required), `region climate_profile missing ${required}`);
   }
 });
 
@@ -312,6 +317,7 @@ check("Nursery stand scene is playable shape", async () => {
     "func active_propagation_count",
     "func has_open_propagation_slot",
     "func propagation_status_lines",
+    "func plant_care_text",
     "propagation_capacity := 3",
     "propagation_trays",
     "func advance_week",
