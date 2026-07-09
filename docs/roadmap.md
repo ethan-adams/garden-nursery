@@ -20,6 +20,7 @@ GitHub issues are the source of truth for executable tasks. This document explai
 - Discovery journal: a yard journal station renders discovered plant notes, customer memories, market reads, and ledger week reflections while hiding undiscovered information behind uncertainty counts.
 - Simulation tests: `npm test` runs dependency-light recommendation scoring rule tests covering trait matches, risk traits, budgets, constraints, and reputation outcomes.
 - Playtest build notes: `docs/vertical-slice-0.1-playtest-build.md` points testers to the `garden-nursery-steamdeck-debug` GitHub Actions artifact and names controls, known limits, and feedback prompts.
+- Refactor track: Godot recommendation scoring rules now live in `godot/scripts/core/nursery_rules.gd`; the remaining `#42` work is to move saveable run state out of the stand scene.
 - Docs: creative direction, starter region, Steam Deck UX baseline, art bible, visual pipeline, testing/builds, and issue backlog are in `docs/`.
 - Harness: `npm test` validates data and dependency-light repo shape; `npm run test:product` adds Godot headless smoke.
 - CI: GitHub Actions sanity checks and Steam Deck/Linux debug export artifacts are in place.
