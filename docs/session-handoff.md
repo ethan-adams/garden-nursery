@@ -10,8 +10,8 @@ This file is the short "start here" note for a future Codex session. The full pl
 - Godot baseline: `4.5.1.stable.official`
 - Product path: Godot project under `godot/`
 - Archived sketch: `browser-prototype/`
-- Current phase: finish `Godot Vertical Slice 0.1`
-- Current priority: broaden the station-based yard loop into a one-week vertical-slice build.
+- Current phase: build `Playable Hush Arbor Alpha 0.2`
+- Current priority: make the station-based yard loop repeatable across several weeks.
 
 ## What Exists
 
@@ -19,7 +19,7 @@ This file is the short "start here" note for a future Codex session. The full pl
 - `godot/scenes/nursery/nursery_yard.tscn` has the Hush Arbor yard art, player, camera, and interactive stations.
 - `godot/scenes/nursery/nursery_stand.tscn` contains the playable market/recommendation/propagation/week loop as station overlays.
 - JSON catalogs live under `godot/data/`.
-- Current content size: 6 plants, 3 customers, 4 market signals, and 3 week outcomes.
+- Current content size: 16 plants, 3 customers, 4 market signals, and 3 week outcomes.
 - `npm test` and `npm run test:product` are the standard local checks.
 - GitHub milestones now cover the end-to-end path from Vertical Slice 0.1 through Production Beta 0.8.
 
@@ -35,18 +35,20 @@ cdsp
 Best next prompt:
 
 ```text
-Work issue #35. Follow AGENTS.md.
+Work issue #42. Follow AGENTS.md.
 ```
 
 Recommended immediate sequence:
 
-1. `#35` Expand Hush Arbor starter plant catalog to vertical-slice size.
-2. `#36` Add customer-specific recommendation outcomes.
-3. `#37` Add end-of-week ledger with relationship notes.
-4. `#38` Add save and load for vertical-slice state.
-5. `#39` Add discovery journal MVP.
-6. `#40` Add simulation rule tests for market and recommendation scoring.
-7. `#41` Cut Godot Vertical Slice 0.1 playtest build.
+1. `#42` Extract nursery simulation state from UI scenes.
+2. `#43` Build multi-tray propagation queue.
+3. `#44` Add plant care needs and climate-fit consequences.
+4. `#45` Add season and weather calendar for Hush Arbor.
+5. `#46` Add customer memory and returning relationship beats.
+6. `#47` Add inventory pricing and restock economy.
+7. `#48` Add yard onboarding flow.
+8. `#49` Add Hush Arbor seed-swap event loop.
+9. `#50` Replace placeholder station art with production-readable Hush Arbor assets.
 
 ## Standard Checks
 
