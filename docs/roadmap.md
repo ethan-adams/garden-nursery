@@ -16,6 +16,7 @@ GitHub issues are the source of truth for executable tasks. This document explai
 - Recommendations: plants score against each recurring customer's budget, site constraints, taste, and current market signal; outcomes can differ by customer and create relationship notes for the current run.
 - Ledger: week close summarizes cash, reputation, inventory, propagation progress, market learning, Hush Arbor consequences, and recent customer notes.
 - Propagation: one active tray with plant-specific method, cost, time, yield, and success chance.
+- Save/load: the vertical slice auto-loads and auto-saves `user://garden_nursery_vertical_slice_save.json`; the stand header has a reset-run action for testing. Format notes live in `docs/vertical-slice-save-format.md`.
 - Docs: creative direction, starter region, Steam Deck UX baseline, art bible, visual pipeline, testing/builds, and issue backlog are in `docs/`.
 - Harness: `npm test` validates data and dependency-light repo shape; `npm run test:product` adds Godot headless smoke.
 - CI: GitHub Actions sanity checks and Steam Deck/Linux debug export artifacts are in place.
@@ -62,10 +63,10 @@ Completed foundation:
 - `#35` Expand Hush Arbor starter plant catalog to vertical-slice size.
 - `#36` Add customer-specific recommendation outcomes.
 - `#37` Add end-of-week ledger with relationship notes.
+- `#38` Add save and load for vertical-slice state.
 
 Remaining tasks:
 
-- `#38` Add save and load for vertical-slice state.
 - `#39` Add discovery journal MVP.
 - `#40` Add simulation rule tests for market and recommendation scoring.
 - `#41` Cut Godot Vertical Slice 0.1 playtest build.

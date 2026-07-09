@@ -6,6 +6,9 @@ const PLANTS_PATH := "res://data/plants/starter_plants.json"
 const CUSTOMERS_PATH := "res://data/customers/hush_arbor_archetypes.json"
 const REGION_PATH := "res://data/regions/hush_arbor.json"
 const DIALOGUE_PATH := "res://data/dialogue/writing_sample_pack.json"
+const SAVE_FILE_NAME := "garden_nursery_vertical_slice_save.json"
+const SAVE_PATH := "user://%s" % SAVE_FILE_NAME
+const SAVE_FORMAT := "garden-nursery.save.v1"
 
 var plants: Array = []
 var customers: Array = []
@@ -18,6 +21,7 @@ var selected_signal_index := 0
 var selected_plant_id := ""
 var propagation_tray: Dictionary = {}
 var relationship_notes: Dictionary = {}
+var selected_discoveries: Dictionary = {}
 var weekly_customer_notes: Array[String] = []
 var weekly_recommendations: Array[String] = []
 var weekly_cash_from_sales := 0
@@ -43,6 +47,7 @@ var station_mode := "all"
 @onready var log_label: Label = %LogText
 @onready var next_signal_button: Button = %NextSignalButton
 @onready var advance_week_button: Button = %AdvanceWeekButton
+@onready var reset_run_button: Button = %ResetRunButton
 @onready var close_button: Button = %CloseButton
 @onready var signal_panel: PanelContainer = %SignalPanel
 @onready var inventory_panel: PanelContainer = %InventoryPanel
@@ -55,6 +60,7 @@ var station_mode := "all"
 
 func _ready() -> void:
 	_load_data()
+	_load_saved_state()
 	_setup_focus()
 	_refresh_all()
 	_apply_station_mode()
@@ -73,6 +79,7 @@ func open_station(next_station_mode: String, station_name: String = "") -> void:
 
 
 func close_station() -> void:
+	_save_run_state()
 	visible = false
 	closed.emit()
 
@@ -86,6 +93,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _load_data() -> void:
+	relationship_notes = {}
+	selected_discoveries = _fresh_discoveries()
+	propagation_tray = {}
+	_reset_week_tracking()
 	region = _read_json(REGION_PATH)
 	dialogue = _read_json(DIALOGUE_PATH)
 	plants = _read_json(PLANTS_PATH).get("plants", [])
@@ -121,6 +132,7 @@ func _setup_focus() -> void:
 	next_signal_button.focus_mode = Control.FOCUS_ALL
 	start_propagation_button.focus_mode = Control.FOCUS_ALL
 	advance_week_button.focus_mode = Control.FOCUS_ALL
+	reset_run_button.focus_mode = Control.FOCUS_ALL
 	close_button.focus_mode = Control.FOCUS_ALL
 
 
@@ -293,10 +305,13 @@ func _recommend_plant(plant_id: String) -> void:
 	if plant.is_empty():
 		return
 	var signal_data := _current_signal()
+	_remember_discovery("plants", plant.get("id", ""))
+	_remember_discovery("signals", signal_data.get("id", ""))
 	var stock_available := int(plant.get("starting_stock", 0))
 	if stock_available <= 0:
 		outcome_label.text = "%s has an empty bench tag. The regulars noticed the idea, but no sale happened." % plant.get("name", "That plant")
 		_add_log("Recommended an empty %s bench; no one could buy it." % plant.get("name", "plant"))
+		_save_run_state()
 		_refresh_all()
 		return
 
@@ -305,6 +320,7 @@ func _recommend_plant(plant_id: String) -> void:
 	var sale_total := 0
 	var reputation_total := 0
 	for customer in customers:
+		_remember_discovery("customers", customer.get("id", ""))
 		var fit := _score_customer_fit(plant, customer, signal_data)
 		var outcome := _customer_recommendation_outcome(plant, customer, fit, stock_available - sold_count)
 		lines.append(outcome.get("line", ""))
@@ -337,6 +353,7 @@ func _recommend_plant(plant_id: String) -> void:
 		_plural_suffix(sold_count),
 		reputation_total
 	])
+	_save_run_state()
 	_refresh_all()
 
 
@@ -438,6 +455,8 @@ func _on_next_signal_button_pressed() -> void:
 	if signals.is_empty():
 		return
 	selected_signal_index = (selected_signal_index + 1) % signals.size()
+	_remember_discovery("signals", _current_signal().get("id", ""))
+	_save_run_state()
 	_render_signal()
 
 
@@ -464,6 +483,7 @@ func _on_advance_week_button_pressed() -> void:
 	_add_log("Ledger closed week %d: %s" % [closing_week, outcome.get("id", "quiet_week")])
 	week += 1
 	_reset_week_tracking()
+	_save_run_state()
 	_refresh_all()
 
 
@@ -493,6 +513,7 @@ func _on_start_propagation_button_pressed() -> void:
 		_plural_suffix(int(propagation_tray.get("weeks_remaining", 1)))
 	]
 	_add_log("Started %s by %s for $%d." % [plant.get("name", "a plant"), propagation_tray.get("method", "propagation"), cost])
+	_save_run_state()
 	_refresh_all()
 
 
@@ -619,6 +640,154 @@ func _reset_week_tracking() -> void:
 	weekly_plants_sold = 0
 
 
+func _load_saved_state() -> void:
+	if not FileAccess.file_exists(SAVE_PATH):
+		return
+	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	if file == null:
+		_add_log("Save data could not be opened, so a new run is ready.")
+		return
+	var parsed = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY or parsed.get("format", "") != SAVE_FORMAT:
+		_add_log("Save data looked wrong, so a new run is ready.")
+		return
+	var saved_state: Dictionary = parsed.get("state", {})
+	if saved_state.is_empty():
+		_add_log("Save data was empty, so a new run is ready.")
+		return
+
+	week = max(1, int(saved_state.get("week", week)))
+	cash = int(saved_state.get("cash", cash))
+	reputation = int(saved_state.get("reputation", reputation))
+	selected_signal_index = max(0, int(saved_state.get("selected_signal_index", selected_signal_index)))
+	selected_plant_id = saved_state.get("selected_plant_id", selected_plant_id)
+	_apply_inventory_stock(saved_state.get("inventory_stock", {}))
+	propagation_tray = _sanitize_dictionary(saved_state.get("propagation_tray", {}))
+	relationship_notes = _sanitize_relationship_notes(saved_state.get("customer_notes", {}))
+	selected_discoveries = _sanitize_discoveries(saved_state.get("discoveries", {}))
+	_apply_weekly_activity(saved_state.get("weekly_activity", {}))
+	if _find_plant(selected_plant_id).is_empty() and not plants.is_empty():
+		selected_plant_id = plants[0].get("id", "")
+	_add_log("Loaded saved vertical-slice run from week %d." % week)
+
+
+func _save_run_state() -> void:
+	var save_data := {
+		"format": SAVE_FORMAT,
+		"saved_at_unix": int(Time.get_unix_time_from_system()),
+		"state": {
+			"week": week,
+			"cash": cash,
+			"reputation": reputation,
+			"selected_signal_index": selected_signal_index,
+			"selected_plant_id": selected_plant_id,
+			"inventory_stock": _inventory_stock_snapshot(),
+			"propagation_tray": propagation_tray,
+			"customer_notes": relationship_notes,
+			"discoveries": selected_discoveries,
+			"weekly_activity": _weekly_activity_snapshot()
+		}
+	}
+	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	if file == null:
+		push_warning("Could not write save file: %s" % SAVE_PATH)
+		return
+	file.store_string(JSON.stringify(save_data, "\t"))
+
+
+func _inventory_stock_snapshot() -> Dictionary:
+	var snapshot := {}
+	for plant in plants:
+		snapshot[plant.get("id", "")] = int(plant.get("starting_stock", 0))
+	return snapshot
+
+
+func _apply_inventory_stock(stock_data) -> void:
+	if typeof(stock_data) != TYPE_DICTIONARY:
+		return
+	for plant in plants:
+		var plant_id: String = plant.get("id", "")
+		if stock_data.has(plant_id):
+			plant["starting_stock"] = max(0, int(stock_data.get(plant_id, plant.get("starting_stock", 0))))
+
+
+func _weekly_activity_snapshot() -> Dictionary:
+	return {
+		"customer_notes": weekly_customer_notes,
+		"recommendations": weekly_recommendations,
+		"cash_from_sales": weekly_cash_from_sales,
+		"reputation_delta": weekly_reputation_delta,
+		"bench_spend": weekly_bench_spend,
+		"plants_sold": weekly_plants_sold
+	}
+
+
+func _apply_weekly_activity(activity_data) -> void:
+	if typeof(activity_data) != TYPE_DICTIONARY:
+		return
+	weekly_customer_notes = _strings_from(activity_data.get("customer_notes", []))
+	weekly_recommendations = _strings_from(activity_data.get("recommendations", []))
+	weekly_cash_from_sales = int(activity_data.get("cash_from_sales", 0))
+	weekly_reputation_delta = int(activity_data.get("reputation_delta", 0))
+	weekly_bench_spend = int(activity_data.get("bench_spend", 0))
+	weekly_plants_sold = int(activity_data.get("plants_sold", 0))
+
+
+func _sanitize_dictionary(value) -> Dictionary:
+	if typeof(value) == TYPE_DICTIONARY:
+		return value
+	return {}
+
+
+func _sanitize_relationship_notes(value) -> Dictionary:
+	var sanitized := {}
+	for customer in customers:
+		var customer_id: String = customer.get("id", "")
+		sanitized[customer_id] = []
+	if typeof(value) != TYPE_DICTIONARY:
+		return sanitized
+	for customer_id in value.keys():
+		sanitized[customer_id] = _strings_from(value.get(customer_id, [])).slice(0, 3)
+	return sanitized
+
+
+func _sanitize_discoveries(value) -> Dictionary:
+	var sanitized := _fresh_discoveries()
+	if typeof(value) != TYPE_DICTIONARY:
+		return sanitized
+	for kind in sanitized.keys():
+		sanitized[kind] = _strings_from(value.get(kind, []))
+	return sanitized
+
+
+func _fresh_discoveries() -> Dictionary:
+	return {
+		"plants": [],
+		"customers": [],
+		"signals": []
+	}
+
+
+func _strings_from(value) -> Array[String]:
+	var strings: Array[String] = []
+	if typeof(value) != TYPE_ARRAY:
+		return strings
+	for item in value:
+		strings.append(str(item))
+	return strings
+
+
+func _remember_discovery(kind: String, id: String) -> void:
+	if id.is_empty():
+		return
+	if not selected_discoveries.has(kind):
+		selected_discoveries[kind] = []
+	var known: Array = selected_discoveries[kind]
+	if not known.has(id):
+		known.append(id)
+	selected_discoveries[kind] = known
+
+
 func _current_signal() -> Dictionary:
 	var signals: Array = region.get("market_signals", [])
 	if signals.is_empty():
@@ -723,6 +892,18 @@ func _latest_relationship_note(customer_id: String) -> String:
 	if notes.is_empty():
 		return ""
 	return notes[0]
+
+
+func _on_reset_run_button_pressed() -> void:
+	var dir := DirAccess.open("user://")
+	if dir != null and dir.file_exists(SAVE_FILE_NAME):
+		dir.remove(SAVE_FILE_NAME)
+	_load_data()
+	outcome_label.text = "New run started. The old ledger page is cleared for testing."
+	_add_log("Reset vertical-slice save data.")
+	_save_run_state()
+	_refresh_all()
+	_grab_station_focus()
 
 
 func _on_close_button_pressed() -> void:

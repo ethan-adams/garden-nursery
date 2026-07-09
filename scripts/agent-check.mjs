@@ -260,6 +260,7 @@ check("Nursery stand scene is playable shape", async () => {
     "NextSignalButton",
     "StartPropagationButton",
     "AdvanceWeekButton",
+    "ResetRunButton",
     "focus_mode = 2"
   ]) {
     assert(scene.includes(required), `nursery stand scene missing ${required}`);
@@ -272,9 +273,37 @@ check("Nursery stand scene is playable shape", async () => {
     "_on_start_propagation_button_pressed",
     "_process_propagation_week",
     "_on_advance_week_button_pressed",
+    "_load_saved_state",
+    "_save_run_state",
+    "_on_reset_run_button_pressed",
+    "SAVE_FORMAT",
     "_trait_score"
   ]) {
     assert(script.includes(required), `nursery stand script missing ${required}`);
+  }
+});
+
+check("Vertical slice save format is documented", async () => {
+  const doc = await readFile("docs/vertical-slice-save-format.md", "utf8");
+  const script = await readFile("godot/scripts/ui/nursery_stand.gd", "utf8");
+  for (const required of [
+    "garden_nursery_vertical_slice_save.json",
+    "garden-nursery.save.v1",
+    "inventory_stock",
+    "customer_notes",
+    "weekly_activity",
+    "Reset Run"
+  ]) {
+    assert(doc.includes(required), `save format doc missing ${required}`);
+  }
+  for (const required of [
+    "SAVE_PATH",
+    "inventory_stock",
+    "customer_notes",
+    "weekly_activity",
+    "FileAccess.WRITE"
+  ]) {
+    assert(script.includes(required), `save implementation missing ${required}`);
   }
 });
 
