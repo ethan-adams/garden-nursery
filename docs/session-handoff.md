@@ -35,20 +35,18 @@ cdsp
 Best next prompt:
 
 ```text
-Work issue #42. Follow AGENTS.md.
+Work issue #44. Follow AGENTS.md.
 ```
 
 Recommended immediate sequence:
 
-1. `#42` Extract nursery simulation state from UI scenes.
-2. `#43` Build multi-tray propagation queue.
-3. `#44` Add plant care needs and climate-fit consequences.
-4. `#45` Add season and weather calendar for Hush Arbor.
-5. `#46` Add customer memory and returning relationship beats.
-6. `#47` Add inventory pricing and restock economy.
-7. `#48` Add yard onboarding flow.
-8. `#49` Add Hush Arbor seed-swap event loop.
-9. `#50` Replace placeholder station art with production-readable Hush Arbor assets.
+1. `#44` Add plant care needs and climate-fit consequences.
+2. `#45` Add season and weather calendar for Hush Arbor.
+3. `#46` Add customer memory and returning relationship beats.
+4. `#47` Add inventory pricing and restock economy.
+5. `#48` Add yard onboarding flow.
+6. `#49` Add Hush Arbor seed-swap event loop.
+7. `#50` Replace placeholder station art with production-readable Hush Arbor assets.
 
 ## Standard Checks
 
