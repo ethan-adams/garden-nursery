@@ -12,12 +12,12 @@ cdsp
 Then ask Codex:
 
 ```text
-Work issue #27. Follow AGENTS.md.
+Work issue #35. Follow AGENTS.md.
 ```
 
 ## Current Next Issue
 
-- `#27` feat: Add in-world interaction station framework - https://github.com/ethan-adams/garden-nursery/issues/27
+- `#35` feat: Expand Hush Arbor starter plant catalog to vertical-slice size - https://github.com/ethan-adams/garden-nursery/issues/35
 
 ## Godot Vertical Slice 0.1
 
@@ -34,14 +34,14 @@ Completed:
 - `#12` Add Godot CI sanity check - https://github.com/ethan-adams/garden-nursery/issues/12
 - `#13` Create writing sample pack - https://github.com/ethan-adams/garden-nursery/issues/13
 - `#26` Build walkable 2.5D nursery yard foundation - https://github.com/ethan-adams/garden-nursery/issues/26
+- `#27` Add in-world interaction station framework - https://github.com/ethan-adams/garden-nursery/issues/27
+- `#28` Move nursery loop into world station overlays - https://github.com/ethan-adams/garden-nursery/issues/28
 - `#29` Rework Hush Arbor yard art direction and first-screen UX - https://github.com/ethan-adams/garden-nursery/issues/29
+- `#30` Polish walkable yard camera, collision, and controller feel - https://github.com/ethan-adams/garden-nursery/issues/30
+- `#31` Add sanity checks for walkable world scene - https://github.com/ethan-adams/garden-nursery/issues/31
 
 Open:
 
-- `#27` Add in-world interaction station framework - https://github.com/ethan-adams/garden-nursery/issues/27
-- `#28` Move nursery loop into world station overlays - https://github.com/ethan-adams/garden-nursery/issues/28
-- `#30` Polish walkable yard camera, collision, and controller feel - https://github.com/ethan-adams/garden-nursery/issues/30
-- `#31` Add sanity checks for walkable world scene - https://github.com/ethan-adams/garden-nursery/issues/31
 - `#35` Expand Hush Arbor starter plant catalog to vertical-slice size - https://github.com/ethan-adams/garden-nursery/issues/35
 - `#36` Add customer-specific recommendation outcomes - https://github.com/ethan-adams/garden-nursery/issues/36
 - `#37` Add end-of-week ledger with relationship notes - https://github.com/ethan-adams/garden-nursery/issues/37
