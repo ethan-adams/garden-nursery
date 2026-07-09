@@ -144,6 +144,7 @@ check("Godot walkable yard station scene is wired", async () => {
   const stationScript = await readFile("godot/scripts/world/station_interactable.gd", "utf8");
   const playerScript = await readFile("godot/scripts/player/player_controller.gd", "utf8");
   const standScript = await readFile("godot/scripts/ui/nursery_stand.gd", "utf8");
+  const rulesScript = await readFile("godot/scripts/core/nursery_rules.gd", "utf8");
 
   assert(mainScene.includes('path="res://scenes/nursery/nursery_yard.tscn"'), "main scene must instance the walkable nursery yard");
   assert(yardScene.includes('path="res://scripts/world/nursery_yard.gd"'), "nursery yard must use the yard interaction controller");
@@ -186,6 +187,16 @@ check("Godot walkable yard station scene is wired", async () => {
 
   for (const required of ["signal closed", "func open_station", "station_mode", "ui_cancel"]) {
     assert(standScript.includes(required), `nursery stand overlay missing ${required}`);
+  }
+
+  for (const required of [
+    "class_name NurseryRules",
+    "score_customer_fit",
+    "customer_recommendation_outcome",
+    "best_outcome_for",
+    "trait_score"
+  ]) {
+    assert(rulesScript.includes(required), `nursery rules script missing ${required}`);
   }
 
   for (const action of ["ui_confirm", "ui_cancel", "ui_details", "ui_tab_next", "ui_tab_previous"]) {
