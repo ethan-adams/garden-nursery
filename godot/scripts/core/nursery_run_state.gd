@@ -137,7 +137,7 @@ func start_propagation() -> Dictionary:
 		}
 	var care_fit := NurseryRules.care_climate_fit(plant, region, current_signal())
 	var climate_score := int(care_fit.get("score", 0))
-	var adjusted_success = clamp(float(profile.get("success_chance", 0.75)) + (float(climate_score) * 0.03), 0.45, 0.98)
+	var adjusted_success: float = clamp(float(profile.get("success_chance", 0.75)) + (float(climate_score) * 0.03), 0.45, 0.98)
 	cash -= cost
 	weekly_bench_spend += cost
 	var tray := {
@@ -219,7 +219,8 @@ func process_propagation_week() -> String:
 
 func complete_propagation_tray(tray: Dictionary, plant: Dictionary) -> Dictionary:
 	var yield_count := int(tray.get("yield", 1))
-	var success_chance := float(tray.get("success_chance", 0.75))
+	var weather_adjustment := propagation_weather_adjustment(plant)
+	var success_chance: float = clamp(float(tray.get("success_chance", 0.75)) + weather_adjustment, 0.35, 0.98)
 	var roll := randf()
 	var rooted_count := 0
 	var result_label := "failed"
@@ -234,17 +235,21 @@ func complete_propagation_tray(tray: Dictionary, plant: Dictionary) -> Dictionar
 		add_log("Propagation finished: %s added %d stock." % [plant.get("name", "tray"), rooted_count])
 		return {
 			"rooted": rooted_count,
-			"text": "%s tray %s: %d of %d starts joined inventory." % [
+			"text": "%s tray %s: %d of %d starts joined inventory. %s" % [
 				plant.get("name", "Propagation"),
 				result_label,
 				rooted_count,
-				yield_count
+				yield_count,
+				weather_propagation_text(weather_adjustment)
 			]
 		}
 	add_log("Propagation failed before saleable stock.")
 	return {
 		"rooted": 0,
-		"text": "%s tray failed gently: green at the edges, but not saleable yet." % plant.get("name", "Propagation")
+		"text": "%s tray failed gently: green at the edges, but not saleable yet. %s" % [
+			plant.get("name", "Propagation"),
+			weather_propagation_text(weather_adjustment)
+		]
 	}
 
 
@@ -301,8 +306,64 @@ func reset_week_tracking() -> void:
 func current_signal() -> Dictionary:
 	var signals: Array = region.get("market_signals", [])
 	if signals.is_empty():
+		return current_calendar_signal()
+	return merged_signal_with_calendar(signals[selected_signal_index % signals.size()])
+
+
+func current_calendar_entry() -> Dictionary:
+	var calendar: Array = region.get("season_calendar", [])
+	if calendar.is_empty():
 		return {}
-	return signals[selected_signal_index % signals.size()]
+	var index := int(clamp(week - 1, 0, calendar.size() - 1))
+	return calendar[index]
+
+
+func current_calendar_signal() -> Dictionary:
+	var entry := current_calendar_entry()
+	if entry.is_empty():
+		return {}
+	return {
+		"id": "calendar_week_%d" % week,
+		"source": "%s forecast" % entry.get("weather", "weather"),
+		"text": entry.get("forecast", ""),
+		"points_to_traits": entry.get("points_to_traits", []),
+		"risk_traits": entry.get("risk_traits", []),
+		"uncertainty": float(entry.get("uncertainty", 0.25))
+	}
+
+
+func merged_signal_with_calendar(signal_data: Dictionary) -> Dictionary:
+	var entry := current_calendar_entry()
+	if entry.is_empty():
+		return signal_data
+	var merged := signal_data.duplicate(true)
+	merged["source"] = "%s + %s" % [signal_data.get("source", "market signal"), entry.get("weather", "forecast")]
+	merged["text"] = "%s\nForecast: %s" % [signal_data.get("text", ""), entry.get("forecast", "")]
+	merged["points_to_traits"] = _unique_strings(signal_data.get("points_to_traits", []) + entry.get("points_to_traits", []))
+	merged["risk_traits"] = _unique_strings(signal_data.get("risk_traits", []) + entry.get("risk_traits", []))
+	merged["uncertainty"] = max(float(signal_data.get("uncertainty", 0.0)), float(entry.get("uncertainty", 0.0)))
+	return merged
+
+
+func propagation_weather_adjustment(plant: Dictionary) -> float:
+	var entry := current_calendar_entry()
+	if entry.is_empty():
+		return 0.0
+	var traits: Array = plant.get("traits", [])
+	var bonus := NurseryRules.trait_score(traits, entry.get("propagation_bonus_traits", []))
+	var risk := NurseryRules.trait_score(traits, entry.get("propagation_risk_traits", []))
+	return clamp((float(bonus) * 0.04) - (float(risk) * 0.06), -0.18, 0.16)
+
+
+func weather_propagation_text(adjustment: float) -> String:
+	var entry := current_calendar_entry()
+	if entry.is_empty():
+		return ""
+	if adjustment > 0.01:
+		return "%s helped the tray." % entry.get("weather", "weather")
+	if adjustment < -0.01:
+		return "%s made the tray work harder." % entry.get("weather", "weather")
+	return "%s kept conditions even." % entry.get("weather", "weather")
 
 
 func find_plant(plant_id: String) -> Dictionary:
@@ -338,6 +399,18 @@ func plant_care_text(plant: Dictionary) -> String:
 		care_needs.get("light", "mixed"),
 		care_needs.get("difficulty", "moderate"),
 		care_fit.get("summary", "")
+	]
+
+
+func calendar_summary_text() -> String:
+	var entry := current_calendar_entry()
+	if entry.is_empty():
+		return "No forecast posted."
+	return "%s, %s: %s (%d%% uncertain)." % [
+		entry.get("season", region.get("season", "season")),
+		entry.get("weather", "weather"),
+		entry.get("forecast", ""),
+		int(float(entry.get("uncertainty", 0.0)) * 100.0)
 	]
 
 
@@ -432,6 +505,18 @@ func _repair_next_propagation_tray_id() -> void:
 	for tray in propagation_trays:
 		if typeof(tray) == TYPE_DICTIONARY:
 			next_propagation_tray_id = max(next_propagation_tray_id, int(tray.get("id", 0)) + 1)
+
+
+func _unique_strings(values: Array) -> Array[String]:
+	var seen := {}
+	var unique: Array[String] = []
+	for value in values:
+		var text := str(value)
+		if text.is_empty() or seen.has(text):
+			continue
+		seen[text] = true
+		unique.append(text)
+	return unique
 
 
 func weekly_activity_snapshot() -> Dictionary:
@@ -597,7 +682,11 @@ func market_learning_text() -> String:
 	]
 	if not risks.is_empty():
 		text = "%s and warned against %s" % [text, ", ".join(risks)]
-	return "%s (%d%% uncertain)." % [text, int(float(signal_data.get("uncertainty", 0.0)) * 100.0)]
+	return "%s (%d%% uncertain). Weather: %s" % [
+		text,
+		int(float(signal_data.get("uncertainty", 0.0)) * 100.0),
+		calendar_summary_text()
+	]
 
 
 func relationship_summary() -> String:

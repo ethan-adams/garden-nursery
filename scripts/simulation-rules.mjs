@@ -111,6 +111,35 @@ export function recommendPlantToCustomers(plant, customers, signal, startingStoc
   return { sold, cash, reputation, outcomes };
 }
 
+export function calendarEntryForWeek(region, week) {
+  const calendar = region.season_calendar ?? [];
+  if (calendar.length === 0) return null;
+  const index = Math.max(0, Math.min(calendar.length - 1, Number(week ?? 1) - 1));
+  return calendar[index];
+}
+
+export function mergeSignalWithCalendar(signal, region, week) {
+  const entry = calendarEntryForWeek(region, week);
+  if (!entry) return { ...signal };
+  return {
+    ...signal,
+    source: `${signal.source ?? "market signal"} + ${entry.weather ?? "forecast"}`,
+    text: `${signal.text ?? ""}\nForecast: ${entry.forecast ?? ""}`,
+    points_to_traits: uniqueStrings([...(signal.points_to_traits ?? []), ...(entry.points_to_traits ?? [])]),
+    risk_traits: uniqueStrings([...(signal.risk_traits ?? []), ...(entry.risk_traits ?? [])]),
+    uncertainty: Math.max(Number(signal.uncertainty ?? 0), Number(entry.uncertainty ?? 0))
+  };
+}
+
+export function propagationWeatherAdjustment(plant, region, week) {
+  const entry = calendarEntryForWeek(region, week);
+  if (!entry) return 0;
+  const traits = plant.traits ?? [];
+  const bonus = traitScore(traits, entry.propagation_bonus_traits ?? []);
+  const risk = traitScore(traits, entry.propagation_risk_traits ?? []);
+  return Math.max(-0.18, Math.min(0.16, (bonus * 0.04) - (risk * 0.06)));
+}
+
 export function careClimateFit(plant, region = {}, signal = {}) {
   const traits = plant.traits ?? [];
   const climateFit = plant.climate_fit ?? [];
@@ -189,4 +218,8 @@ function matchesRegionTrait(values, regionTraits) {
     const normalized = String(value).replaceAll("-", " ").toLowerCase();
     return regionTraits.some((trait) => String(trait).toLowerCase().includes(normalized));
   });
+}
+
+function uniqueStrings(values) {
+  return [...new Set(values.filter(Boolean).map(String))];
 }

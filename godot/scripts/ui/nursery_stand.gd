@@ -109,6 +109,7 @@ func _refresh_all() -> void:
 	week_label.text = str(run_state.week)
 	cash_label.text = "$%d" % run_state.cash
 	reputation_label.text = str(run_state.reputation)
+	region_label.text = "Hush Arbor roadside yard | %s" % _calendar_header_text()
 	_render_signal()
 	_render_inventory()
 	_render_customers()
@@ -458,6 +459,13 @@ func _propagation_profile(plant: Dictionary) -> Dictionary:
 
 func _plant_care_text(plant: Dictionary) -> String:
 	return run_state.plant_care_text(plant)
+
+
+func _calendar_header_text() -> String:
+	var entry := run_state.current_calendar_entry()
+	if entry.is_empty():
+		return "weather unposted"
+	return "%s, %s" % [entry.get("season", "season"), entry.get("weather", "weather")]
 
 
 func _clip_text(text: String, max_length: int) -> String:

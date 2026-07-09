@@ -20,9 +20,12 @@ const catalogs = [
     path: "godot/data/regions/hush_arbor.json",
     root: "market_signals",
     required: ["id", "source", "text", "points_to_traits", "risk_traits", "uncertainty"],
-    documentRequired: ["climate_profile"],
+    documentRequired: ["climate_profile", "season_calendar"],
     documentNested: {
       climate_profile: ["water", "light", "soil", "frost", "heat", "forgiving_traits", "risk_traits"]
+    },
+    arrays: {
+      season_calendar: ["week", "season", "weather", "forecast", "points_to_traits", "risk_traits", "propagation_bonus_traits", "propagation_risk_traits", "uncertainty"]
     }
   },
   {
@@ -63,6 +66,20 @@ for (const catalog of catalogs) {
         fail(`${catalog.path}: ${field} missing required field "${nestedField}"`);
       }
     }
+  }
+  for (const [field, requiredFields] of Object.entries(catalog.arrays ?? {})) {
+    const values = parsed[field];
+    if (!Array.isArray(values) || values.length === 0) {
+      fail(`${catalog.path}: expected non-empty array "${field}"`);
+      continue;
+    }
+    values.forEach((entry, index) => {
+      for (const requiredField of requiredFields) {
+        if (!Object.hasOwn(entry, requiredField)) {
+          fail(`${catalog.path}: ${field}[${index}] missing required field "${requiredField}"`);
+        }
+      }
+    });
   }
 
   if (!Array.isArray(entries)) {

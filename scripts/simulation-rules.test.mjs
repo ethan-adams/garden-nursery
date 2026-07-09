@@ -2,8 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import {
   careClimateFit,
+  calendarEntryForWeek,
   constraintScore,
   customerRecommendationOutcome,
+  mergeSignalWithCalendar,
+  propagationWeatherAdjustment,
   recommendPlantToCustomers,
   scoreCustomerFitForRegion,
   scoreCustomerFit,
@@ -24,6 +27,13 @@ const mara = byId(customers, "mara_lye");
 const cilla = byId(customers, "cilla_park");
 const frostSignal = byId(region.market_signals, "weather_board_frost");
 const shadeSignal = byId(region.market_signals, "porch_chatter_shade");
+const weekOneWeather = calendarEntryForWeek(region, 1);
+const mergedFrostSignal = mergeSignalWithCalendar(frostSignal, region, 1);
+
+assert.equal(weekOneWeather.weather, "mild frost", "week one should start with the Hush Arbor frost beat");
+assert.ok(mergedFrostSignal.points_to_traits.includes("cool-spring"), "calendar forecasts should add demand traits to market signals");
+assert.ok(mergedFrostSignal.risk_traits.includes("warmth-loving"), "calendar forecasts should add weather risk traits to market signals");
+assert.ok(mergedFrostSignal.text.includes("Forecast:"), "merged market signals should show forecast uncertainty in-world");
 
 assert.equal(traitScore(hushChives.traits, frostSignal.points_to_traits), 2, "hardy early-spring plants should match frost signal traits");
 assert.equal(traitScore(lanternTomato.traits, frostSignal.risk_traits), 2, "tender warmth-loving plants should hit frost risk traits");
@@ -42,6 +52,10 @@ assert.ok(tomatoCare.warnings.length > 0, "climate-risk plants should explain wh
 const regionalChivesForMara = scoreCustomerFitForRegion(hushChives, mara, frostSignal, region);
 const regionalTomatoForMara = scoreCustomerFitForRegion(lanternTomato, mara, frostSignal, region);
 assert.ok(regionalChivesForMara.climate > regionalTomatoForMara.climate, "regional scoring should include care and climate fit");
+assert.ok(
+  propagationWeatherAdjustment(hushChives, region, 1) > propagationWeatherAdjustment(lanternTomato, region, 1),
+  "mild frost should help hardy propagation more than tender warm-season trays"
+);
 
 const fernForCilla = scoreCustomerFit(chimneyFern, cilla, shadeSignal);
 const aloeForCilla = scoreCustomerFit(thresholdAloe, cilla, shadeSignal);

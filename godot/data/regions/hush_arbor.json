@@ -18,6 +18,63 @@
     "cash": 120,
     "reputation": 12
   },
+  "season_calendar": [
+    {
+      "week": 1,
+      "season": "early spring",
+      "weather": "mild frost",
+      "forecast": "Mist in the low lane could clear into one silver-edged frost before market day.",
+      "points_to_traits": ["hardy", "early-spring", "cool-spring"],
+      "risk_traits": ["tender", "warmth-loving"],
+      "propagation_bonus_traits": ["hardy", "cool-spring"],
+      "propagation_risk_traits": ["tender", "warmth-loving"],
+      "uncertainty": 0.28
+    },
+    {
+      "week": 2,
+      "season": "mid spring",
+      "weather": "orchard bloom",
+      "forecast": "Old pear bloom has bees working every warm hour between showers.",
+      "points_to_traits": ["pollinator", "story-rich", "porch-friendly"],
+      "risk_traits": [],
+      "propagation_bonus_traits": ["pollinator", "damp-tolerant"],
+      "propagation_risk_traits": [],
+      "uncertainty": 0.2
+    },
+    {
+      "week": 3,
+      "season": "late spring",
+      "weather": "warm spell",
+      "forecast": "Three bright afternoons are likely, though the creek still cools the night air.",
+      "points_to_traits": ["culinary", "warmth-loving", "porch-friendly"],
+      "risk_traits": ["shade"],
+      "propagation_bonus_traits": ["warmth-loving", "culinary"],
+      "propagation_risk_traits": ["cool-spring"],
+      "uncertainty": 0.34
+    },
+    {
+      "week": 4,
+      "season": "early summer",
+      "weather": "wet lanes",
+      "forecast": "Rain keeps the lane soft; north porches smell like moss and wet stone.",
+      "points_to_traits": ["damp-tolerant", "shade", "low-effort"],
+      "risk_traits": ["drought-tolerant"],
+      "propagation_bonus_traits": ["damp-tolerant", "shade"],
+      "propagation_risk_traits": ["drought-tolerant"],
+      "uncertainty": 0.24
+    },
+    {
+      "week": 5,
+      "season": "late autumn",
+      "weather": "damp autumn",
+      "forecast": "Fog hangs in the orchard rows and customers ask what will settle in before cold.",
+      "points_to_traits": ["hardy", "soil-builder", "old-orchards"],
+      "risk_traits": ["tender", "warmth-loving"],
+      "propagation_bonus_traits": ["hardy", "soil-builder"],
+      "propagation_risk_traits": ["tender"],
+      "uncertainty": 0.3
+    }
+  ],
   "market_signals": [
     {
       "id": "weather_board_frost",
