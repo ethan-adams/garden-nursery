@@ -12,7 +12,9 @@ var cash := 120
 var reputation := 12
 var selected_signal_index := 0
 var selected_plant_id := ""
-var propagation_tray: Dictionary = {}
+var propagation_trays: Array = []
+var propagation_capacity := 3
+var next_propagation_tray_id := 1
 var relationship_notes: Dictionary = {}
 var selected_discoveries: Dictionary = {}
 var journal_week_reflections: Array[String] = []
@@ -33,7 +35,9 @@ func setup(next_plants: Array, next_customers: Array, next_region: Dictionary, n
 	relationship_notes = {}
 	selected_discoveries = fresh_discoveries()
 	journal_week_reflections = []
-	propagation_tray = {}
+	propagation_trays = []
+	propagation_capacity = 3
+	next_propagation_tray_id = 1
 	reset_week_tracking()
 	var starting_state: Dictionary = region.get("starting_state", {})
 	week = int(starting_state.get("week", week))
@@ -118,8 +122,10 @@ func next_signal() -> bool:
 
 
 func start_propagation() -> Dictionary:
-	if not propagation_tray.is_empty():
-		return {}
+	if active_propagation_count() >= propagation_capacity:
+		return {
+			"outcome_text": "Every bench slot is full. Close a week to move the trays along before starting another."
+		}
 	var plant := find_plant(selected_plant_id)
 	var profile := propagation_profile(plant)
 	if plant.is_empty() or profile.is_empty():
@@ -131,20 +137,25 @@ func start_propagation() -> Dictionary:
 		}
 	cash -= cost
 	weekly_bench_spend += cost
-	propagation_tray = {
+	var tray := {
+		"id": next_propagation_tray_id,
 		"plant_id": plant.get("id", ""),
 		"method": profile.get("method", "propagation"),
 		"weeks_remaining": int(profile.get("weeks", 1)),
 		"yield": int(profile.get("yield", 1)),
 		"success_chance": float(profile.get("success_chance", 0.75))
 	}
+	next_propagation_tray_id += 1
+	propagation_trays.append(tray)
 	return {
-		"outcome_text": "You set a %s tray on the bench. It will need %d week%s before it can join inventory." % [
+		"outcome_text": "You set a %s tray in slot %d of %d. It will need %d week%s before it can join inventory." % [
 			plant.get("name", "plant"),
-			int(propagation_tray.get("weeks_remaining", 1)),
-			plural_suffix(int(propagation_tray.get("weeks_remaining", 1)))
+			active_propagation_count(),
+			propagation_capacity,
+			int(tray.get("weeks_remaining", 1)),
+			plural_suffix(int(tray.get("weeks_remaining", 1)))
 		],
-		"log": "Started %s by %s for $%d." % [plant.get("name", "a plant"), propagation_tray.get("method", "propagation"), cost]
+		"log": "Started %s by %s for $%d." % [plant.get("name", "a plant"), tray.get("method", "propagation"), cost]
 	}
 
 
@@ -178,30 +189,58 @@ func advance_week() -> Dictionary:
 
 
 func process_propagation_week() -> String:
-	if propagation_tray.is_empty():
+	if propagation_trays.is_empty():
 		return ""
-	propagation_tray["weeks_remaining"] = int(propagation_tray.get("weeks_remaining", 0)) - 1
-	if int(propagation_tray.get("weeks_remaining", 0)) > 0:
-		var growing_plant := find_plant(propagation_tray.get("plant_id", ""))
-		return "The %s tray held steady on the bench. %d week%s left." % [
-			growing_plant.get("name", "propagation"),
-			int(propagation_tray.get("weeks_remaining", 0)),
-			plural_suffix(int(propagation_tray.get("weeks_remaining", 0)))
-		]
-	var plant := find_plant(propagation_tray.get("plant_id", ""))
-	var yield_count := int(propagation_tray.get("yield", 1))
-	var success_chance := float(propagation_tray.get("success_chance", 0.75))
-	var succeeded := randf() <= success_chance
-	propagation_tray = {}
-	if succeeded:
-		plant["starting_stock"] = int(plant.get("starting_stock", 0)) + yield_count
-		add_log("Propagation finished: %s added %d stock." % [plant.get("name", "tray"), yield_count])
-		return "The bench paid off: %d %s starts rooted cleanly and joined inventory." % [
-			yield_count,
-			plant.get("name", "plant")
-		]
+	var remaining_trays: Array = []
+	var lines: Array[String] = []
+	for tray in propagation_trays:
+		if typeof(tray) != TYPE_DICTIONARY:
+			continue
+		tray["weeks_remaining"] = int(tray.get("weeks_remaining", 0)) - 1
+		var plant := find_plant(tray.get("plant_id", ""))
+		if int(tray.get("weeks_remaining", 0)) > 0:
+			remaining_trays.append(tray)
+			lines.append("%s tray held steady: %d week%s left." % [
+				plant.get("name", "Propagation"),
+				int(tray.get("weeks_remaining", 0)),
+				plural_suffix(int(tray.get("weeks_remaining", 0)))
+			])
+			continue
+		var result := complete_propagation_tray(tray, plant)
+		lines.append(result.get("text", "A tray finished quietly."))
+	propagation_trays = remaining_trays
+	return " ".join(lines)
+
+
+func complete_propagation_tray(tray: Dictionary, plant: Dictionary) -> Dictionary:
+	var yield_count := int(tray.get("yield", 1))
+	var success_chance := float(tray.get("success_chance", 0.75))
+	var roll := randf()
+	var rooted_count := 0
+	var result_label := "failed"
+	if roll <= success_chance:
+		rooted_count = yield_count
+		result_label = "rooted cleanly"
+	elif roll <= min(0.98, success_chance + 0.25):
+		rooted_count = max(1, int(ceil(float(yield_count) * 0.45)))
+		result_label = "partly rooted"
+	if rooted_count > 0:
+		plant["starting_stock"] = int(plant.get("starting_stock", 0)) + rooted_count
+		add_log("Propagation finished: %s added %d stock." % [plant.get("name", "tray"), rooted_count])
+		return {
+			"rooted": rooted_count,
+			"text": "%s tray %s: %d of %d starts joined inventory." % [
+				plant.get("name", "Propagation"),
+				result_label,
+				rooted_count,
+				yield_count
+			]
+		}
 	add_log("Propagation failed before saleable stock.")
-	return "The bench disappointed you this week. The tray stayed green at the edges, then gave up before it became saleable."
+	return {
+		"rooted": 0,
+		"text": "%s tray failed gently: green at the edges, but not saleable yet." % plant.get("name", "Propagation")
+	}
 
 
 func save_state_snapshot() -> Dictionary:
@@ -212,7 +251,10 @@ func save_state_snapshot() -> Dictionary:
 		"selected_signal_index": selected_signal_index,
 		"selected_plant_id": selected_plant_id,
 		"inventory_stock": inventory_stock_snapshot(),
-		"propagation_tray": propagation_tray,
+		"propagation_trays": propagation_trays,
+		"propagation_capacity": propagation_capacity,
+		"next_propagation_tray_id": next_propagation_tray_id,
+		"propagation_tray": legacy_propagation_tray_snapshot(),
 		"customer_notes": relationship_notes,
 		"discoveries": selected_discoveries,
 		"week_reflections": journal_week_reflections,
@@ -229,13 +271,16 @@ func apply_saved_state(saved_state: Dictionary) -> bool:
 	selected_signal_index = max(0, int(saved_state.get("selected_signal_index", selected_signal_index)))
 	selected_plant_id = saved_state.get("selected_plant_id", selected_plant_id)
 	apply_inventory_stock(saved_state.get("inventory_stock", {}))
-	propagation_tray = sanitize_dictionary(saved_state.get("propagation_tray", {}))
+	propagation_capacity = max(1, int(saved_state.get("propagation_capacity", propagation_capacity)))
+	propagation_trays = sanitize_propagation_trays(saved_state)
+	next_propagation_tray_id = max(next_propagation_tray_id, int(saved_state.get("next_propagation_tray_id", next_propagation_tray_id)))
 	relationship_notes = sanitize_relationship_notes(saved_state.get("customer_notes", {}))
 	selected_discoveries = sanitize_discoveries(saved_state.get("discoveries", {}))
 	journal_week_reflections = strings_from(saved_state.get("week_reflections", [])).slice(0, 6)
 	apply_weekly_activity(saved_state.get("weekly_activity", {}))
 	if find_plant(selected_plant_id).is_empty() and not plants.is_empty():
 		selected_plant_id = plants[0].get("id", "")
+	_repair_next_propagation_tray_id()
 	return true
 
 
@@ -301,6 +346,75 @@ func apply_inventory_stock(stock_data) -> void:
 		var plant_id: String = plant.get("id", "")
 		if stock_data.has(plant_id):
 			plant["starting_stock"] = max(0, int(stock_data.get(plant_id, plant.get("starting_stock", 0))))
+
+
+func active_propagation_count() -> int:
+	return propagation_trays.size()
+
+
+func has_open_propagation_slot() -> bool:
+	return active_propagation_count() < propagation_capacity
+
+
+func propagation_slots_label() -> String:
+	return "%d/%d tray slots full" % [active_propagation_count(), propagation_capacity]
+
+
+func propagation_status_lines() -> Array[String]:
+	var lines: Array[String] = []
+	for index in range(propagation_trays.size()):
+		var tray: Dictionary = propagation_trays[index]
+		var plant := find_plant(tray.get("plant_id", ""))
+		lines.append("Slot %d: %s by %s, %d week%s left, yield %d, %d%% success." % [
+			index + 1,
+			plant.get("name", "Propagation"),
+			tray.get("method", "propagation"),
+			int(tray.get("weeks_remaining", 0)),
+			plural_suffix(int(tray.get("weeks_remaining", 0))),
+			int(tray.get("yield", 1)),
+			int(round(float(tray.get("success_chance", 0.0)) * 100.0))
+		])
+	return lines
+
+
+func legacy_propagation_tray_snapshot() -> Dictionary:
+	if propagation_trays.is_empty():
+		return {}
+	return propagation_trays[0]
+
+
+func sanitize_propagation_trays(saved_state: Dictionary) -> Array:
+	var source = saved_state.get("propagation_trays", [])
+	if typeof(source) != TYPE_ARRAY:
+		var legacy_tray := sanitize_dictionary(saved_state.get("propagation_tray", {}))
+		if legacy_tray.is_empty():
+			return []
+		source = [legacy_tray]
+	var trays: Array = []
+	for raw_tray in source:
+		if typeof(raw_tray) != TYPE_DICTIONARY:
+			continue
+		var plant_id: String = raw_tray.get("plant_id", "")
+		if plant_id.is_empty() or find_plant(plant_id).is_empty():
+			continue
+		var tray := {
+			"id": max(1, int(raw_tray.get("id", next_propagation_tray_id))),
+			"plant_id": plant_id,
+			"method": raw_tray.get("method", "propagation"),
+			"weeks_remaining": max(1, int(raw_tray.get("weeks_remaining", 1))),
+			"yield": max(1, int(raw_tray.get("yield", 1))),
+			"success_chance": clamp(float(raw_tray.get("success_chance", 0.75)), 0.0, 1.0)
+		}
+		trays.append(tray)
+		if trays.size() >= propagation_capacity:
+			break
+	return trays
+
+
+func _repair_next_propagation_tray_id() -> void:
+	for tray in propagation_trays:
+		if typeof(tray) == TYPE_DICTIONARY:
+			next_propagation_tray_id = max(next_propagation_tray_id, int(tray.get("id", 0)) + 1)
 
 
 func weekly_activity_snapshot() -> Dictionary:
@@ -483,14 +597,9 @@ func recommendation_summary() -> String:
 
 
 func propagation_ledger_status() -> String:
-	if propagation_tray.is_empty():
+	if propagation_trays.is_empty():
 		return "bench idle."
-	var plant := find_plant(propagation_tray.get("plant_id", ""))
-	return "%s tray has %d week%s left." % [
-		plant.get("name", "active"),
-		int(propagation_tray.get("weeks_remaining", 0)),
-		plural_suffix(int(propagation_tray.get("weeks_remaining", 0)))
-	]
+	return "%s: %s" % [propagation_slots_label(), " | ".join(propagation_status_lines().slice(0, 3))]
 
 
 func clip_text(text: String, max_length: int) -> String:

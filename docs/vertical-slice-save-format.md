@@ -11,7 +11,10 @@ The current format id is `garden-nursery.save.v1`.
 - `week`, `cash`, and `reputation`
 - `selected_signal_index` and `selected_plant_id`
 - `inventory_stock`, keyed by plant id
-- `propagation_tray`, copied from the active bench tray state
+- `propagation_trays`, copied from the active bench queue
+- `propagation_capacity`, the current bench slot count
+- `next_propagation_tray_id`, used to keep tray ids stable inside a run
+- `propagation_tray`, retained as a compatibility snapshot of the first active tray for old vertical-slice saves
 - `customer_notes`, keyed by recurring customer id
 - `discoveries`
   - `plants`
@@ -24,7 +27,7 @@ The current format id is `garden-nursery.save.v1`.
 
 The stand overlay attempts to load the save after base Hush Arbor data is loaded. Missing, malformed, empty, or mismatched-format saves leave the game in a fresh run and add a short nursery log note when useful.
 
-The save is intentionally local to the current UI-owned vertical slice. Issue `#42` can move this into a dedicated simulation state owner without changing the visible player contract.
+The save is owned by the `NurseryRunState` model. Saves from the older single-tray prototype still load by converting `propagation_tray` into the new `propagation_trays` queue.
 
 ## Reset Behavior
 

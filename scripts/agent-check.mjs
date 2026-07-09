@@ -309,6 +309,11 @@ check("Nursery stand scene is playable shape", async () => {
     "func recommend_plant",
     "func start_propagation",
     "func process_propagation_week",
+    "func active_propagation_count",
+    "func has_open_propagation_slot",
+    "func propagation_status_lines",
+    "propagation_capacity := 3",
+    "propagation_trays",
     "func advance_week",
     "func save_state_snapshot",
     "func apply_saved_state",
@@ -326,6 +331,8 @@ check("Vertical slice save format is documented", async () => {
     "garden_nursery_vertical_slice_save.json",
     "garden-nursery.save.v1",
     "inventory_stock",
+    "propagation_trays",
+    "propagation_capacity",
     "customer_notes",
     "week_reflections",
     "weekly_activity",
@@ -342,11 +349,39 @@ check("Vertical slice save format is documented", async () => {
     assert(script.includes(required), `save implementation missing ${required}`);
   }
   for (const required of [
+    "propagation_trays",
+    "propagation_capacity",
+    "next_propagation_tray_id",
+    "propagation_tray",
+    "sanitize_propagation_trays",
+    "legacy_propagation_tray_snapshot",
     "inventory_stock",
     "customer_notes",
     "weekly_activity"
   ]) {
     assert(runStateScript.includes(required), `save state model missing ${required}`);
+  }
+});
+
+check("Propagation bench supports multiple trays", async () => {
+  const script = await readFile("godot/scripts/ui/nursery_stand.gd", "utf8");
+  const runStateScript = await readFile("godot/scripts/core/nursery_run_state.gd", "utf8");
+  for (const required of [
+    "propagation_slots_label",
+    "propagation_status_lines",
+    "has_open_propagation_slot",
+    "Start Tray (%d/%d)"
+  ]) {
+    assert(script.includes(required), `propagation bench UI missing ${required}`);
+  }
+  for (const required of [
+    "propagation_capacity := 3",
+    "active_propagation_count() >= propagation_capacity",
+    "remaining_trays",
+    "complete_propagation_tray",
+    "partly rooted"
+  ]) {
+    assert(runStateScript.includes(required), `propagation queue model missing ${required}`);
   }
 });
 

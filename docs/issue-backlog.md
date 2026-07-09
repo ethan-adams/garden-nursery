@@ -12,12 +12,12 @@ cdsp
 Then ask Codex:
 
 ```text
-Work issue #42. Follow AGENTS.md.
+Work issue #44. Follow AGENTS.md.
 ```
 
 ## Current Next Issue
 
-- `#42` refactor: Extract nursery simulation state from UI scenes - https://github.com/ethan-adams/garden-nursery/issues/42
+- `#44` feat: Add plant care needs and climate-fit consequences - https://github.com/ethan-adams/garden-nursery/issues/44
 
 ## Godot Vertical Slice 0.1
 
@@ -55,8 +55,13 @@ Open:
 
 Goal: make Hush Arbor a repeatable small nursery game with richer stock, care, weather, customer memory, onboarding, events, and production-readable yard assets.
 
+Completed:
+
 - `#42` Extract nursery simulation state from UI scenes - https://github.com/ethan-adams/garden-nursery/issues/42
 - `#43` Build multi-tray propagation queue - https://github.com/ethan-adams/garden-nursery/issues/43
+
+Open:
+
 - `#44` Add plant care needs and climate-fit consequences - https://github.com/ethan-adams/garden-nursery/issues/44
 - `#45` Add season and weather calendar for Hush Arbor - https://github.com/ethan-adams/garden-nursery/issues/45
 - `#46` Add customer memory and returning relationship beats - https://github.com/ethan-adams/garden-nursery/issues/46

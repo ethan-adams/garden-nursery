@@ -224,37 +224,32 @@ func _render_inventory() -> void:
 
 
 func _render_propagation_bench() -> void:
-	if run_state.propagation_tray.is_empty():
-		var plant := _find_plant(run_state.selected_plant_id)
-		var profile := _propagation_profile(plant)
-		if plant.is_empty() or profile.is_empty():
-			propagation_status_label.text = "Bench idle. Choose a plant to see propagation options."
-			start_propagation_button.disabled = true
-			return
-		propagation_status_label.text = "Bench idle. Start %s by %s: %d week%s, $%d, yields %d, %d%% success.\n%s" % [
-			plant.get("name", "a plant"),
-			profile.get("method", "propagation"),
-			int(profile.get("weeks", 1)),
-			_plural_suffix(int(profile.get("weeks", 1))),
-			int(profile.get("cost", 0)),
-			int(profile.get("yield", 1)),
-			int(round(float(profile.get("success_chance", 0.0)) * 100.0)),
-			profile.get("notes", "")
-		]
-		start_propagation_button.disabled = run_state.cash < int(profile.get("cost", 0))
-		start_propagation_button.text = "Start Bench Tray"
+	var lines: Array[String] = ["Propagation queue: %s." % run_state.propagation_slots_label()]
+	lines.append_array(run_state.propagation_status_lines())
+	var plant := _find_plant(run_state.selected_plant_id)
+	var profile := _propagation_profile(plant)
+	if plant.is_empty() or profile.is_empty():
+		lines.append("Choose a plant to see propagation options.")
+		propagation_status_label.text = "\n".join(lines)
+		start_propagation_button.disabled = true
 		return
-	var plant_in_tray := _find_plant(run_state.propagation_tray.get("plant_id", ""))
-	propagation_status_label.text = "%s tray: %s, %d week%s left. Expected yield %d; success chance %d%%." % [
-		plant_in_tray.get("name", "Propagation"),
-		run_state.propagation_tray.get("method", "propagation"),
-		int(run_state.propagation_tray.get("weeks_remaining", 0)),
-		_plural_suffix(int(run_state.propagation_tray.get("weeks_remaining", 0))),
-		int(run_state.propagation_tray.get("yield", 1)),
-		int(round(float(run_state.propagation_tray.get("success_chance", 0.0)) * 100.0))
+	lines.append("Ready: %s by %s: %d week%s, $%d, yields %d, %d%% success.\n%s" % [
+		plant.get("name", "a plant"),
+		profile.get("method", "propagation"),
+		int(profile.get("weeks", 1)),
+		_plural_suffix(int(profile.get("weeks", 1))),
+		int(profile.get("cost", 0)),
+		int(profile.get("yield", 1)),
+		int(round(float(profile.get("success_chance", 0.0)) * 100.0)),
+		profile.get("notes", "")
+	])
+	propagation_status_label.text = "\n".join(lines)
+	var cost := int(profile.get("cost", 0))
+	start_propagation_button.disabled = run_state.cash < cost or not run_state.has_open_propagation_slot()
+	start_propagation_button.text = "Start Tray (%d/%d)" % [
+		run_state.active_propagation_count(),
+		run_state.propagation_capacity
 	]
-	start_propagation_button.disabled = true
-	start_propagation_button.text = "Bench Busy"
 
 
 func _render_customers() -> void:
