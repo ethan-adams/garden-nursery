@@ -271,6 +271,7 @@ check("Writing sample pack is complete", async () => {
 check("Nursery stand scene is playable shape", async () => {
   const scene = await readFile("godot/scenes/nursery/nursery_stand.tscn", "utf8");
   const script = await readFile("godot/scripts/ui/nursery_stand.gd", "utf8");
+  const runStateScript = await readFile("godot/scripts/core/nursery_run_state.gd", "utf8");
   for (const required of [
     "Market Signal Board",
     "Inventory Recommendations",
@@ -289,26 +290,38 @@ check("Nursery stand scene is playable shape", async () => {
     "PLANTS_PATH",
     "CUSTOMERS_PATH",
     "REGION_PATH",
+    "NurseryRunState",
+    "run_state",
     "_recommend_plant",
     "_on_start_propagation_button_pressed",
-    "_process_propagation_week",
     "_on_advance_week_button_pressed",
     "_load_saved_state",
     "_save_run_state",
     "_on_reset_run_button_pressed",
     "_render_journal",
     "_journal_plants_text",
-    "_remember_week_reflection",
-    "SAVE_FORMAT",
-    "_trait_score"
+    "SAVE_FORMAT"
   ]) {
     assert(script.includes(required), `nursery stand script missing ${required}`);
+  }
+  for (const required of [
+    "class_name NurseryRunState",
+    "func recommend_plant",
+    "func start_propagation",
+    "func process_propagation_week",
+    "func advance_week",
+    "func save_state_snapshot",
+    "func apply_saved_state",
+    "func remember_week_reflection"
+  ]) {
+    assert(runStateScript.includes(required), `nursery run state script missing ${required}`);
   }
 });
 
 check("Vertical slice save format is documented", async () => {
   const doc = await readFile("docs/vertical-slice-save-format.md", "utf8");
   const script = await readFile("godot/scripts/ui/nursery_stand.gd", "utf8");
+  const runStateScript = await readFile("godot/scripts/core/nursery_run_state.gd", "utf8");
   for (const required of [
     "garden_nursery_vertical_slice_save.json",
     "garden-nursery.save.v1",
@@ -322,12 +335,18 @@ check("Vertical slice save format is documented", async () => {
   }
   for (const required of [
     "SAVE_PATH",
-    "inventory_stock",
-    "customer_notes",
-    "weekly_activity",
+    "save_state_snapshot",
+    "apply_saved_state",
     "FileAccess.WRITE"
   ]) {
     assert(script.includes(required), `save implementation missing ${required}`);
+  }
+  for (const required of [
+    "inventory_stock",
+    "customer_notes",
+    "weekly_activity"
+  ]) {
+    assert(runStateScript.includes(required), `save state model missing ${required}`);
   }
 });
 

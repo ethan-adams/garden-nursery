@@ -44,6 +44,17 @@ The roadmap is organized as playable milestones, not departments. Each milestone
 5. Expand to a multi-region campaign structure.
 6. Harden the game for Steam Deck beta and release candidate work.
 
+## Milestone Ladder
+
+This is the explicit long-term path. Completing Milestone 2 does not finish the game; it turns the first region into a repeatable alpha loop.
+
+- `0.1 Vertical Slice`: prove the walkable yard, station overlays, market reading, recommendations, propagation, ledger, save/load, and journal.
+- `0.2 Hush Arbor Alpha`: make one starter region playable for several weeks with stateful simulation, propagation capacity, weather, care, memory, economy, onboarding, seed-swap play, and readable station art.
+- `0.3 Nursery Systems Alpha`: make the nursery itself systemic through layout, structures, hybridizing, cultivar records, suppliers, competitors, water, soil, and local pressure.
+- `0.4 Living Hush Arbor Alpha`: make the starter region emotionally and seasonally alive through character arcs, festivals, seasonal presentation, mastery evaluation, and accessibility/settings.
+- `0.5 Multi-Region Campaign Alpha`: prove that regional play changes strategy with a country map, travel, specialty unlocks, hot/dry and cold/hard regions, and cross-region adaptation.
+- `0.8 Production Beta`: harden Steam Deck performance, input, save migration, economy pacing, content balance, and release-candidate process.
+
 ## Milestone 1: Godot Vertical Slice 0.1
 
 Goal: prove the core loop as a Steam Deck-first Godot game: walk around the nursery, read local signals, use in-world stations, prepare stock, serve customers, close the week, and see consequences.

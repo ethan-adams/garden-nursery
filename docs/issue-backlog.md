@@ -12,12 +12,12 @@ cdsp
 Then ask Codex:
 
 ```text
-Work issue #35. Follow AGENTS.md.
+Work issue #42. Follow AGENTS.md.
 ```
 
 ## Current Next Issue
 
-- `#35` feat: Expand Hush Arbor starter plant catalog to vertical-slice size - https://github.com/ethan-adams/garden-nursery/issues/35
+- `#42` refactor: Extract nursery simulation state from UI scenes - https://github.com/ethan-adams/garden-nursery/issues/42
 
 ## Godot Vertical Slice 0.1
 
@@ -39,9 +39,6 @@ Completed:
 - `#29` Rework Hush Arbor yard art direction and first-screen UX - https://github.com/ethan-adams/garden-nursery/issues/29
 - `#30` Polish walkable yard camera, collision, and controller feel - https://github.com/ethan-adams/garden-nursery/issues/30
 - `#31` Add sanity checks for walkable world scene - https://github.com/ethan-adams/garden-nursery/issues/31
-
-Open:
-
 - `#35` Expand Hush Arbor starter plant catalog to vertical-slice size - https://github.com/ethan-adams/garden-nursery/issues/35
 - `#36` Add customer-specific recommendation outcomes - https://github.com/ethan-adams/garden-nursery/issues/36
 - `#37` Add end-of-week ledger with relationship notes - https://github.com/ethan-adams/garden-nursery/issues/37
@@ -49,6 +46,10 @@ Open:
 - `#39` Add discovery journal MVP - https://github.com/ethan-adams/garden-nursery/issues/39
 - `#40` Add simulation rule tests for market and recommendation scoring - https://github.com/ethan-adams/garden-nursery/issues/40
 - `#41` Cut Godot Vertical Slice 0.1 playtest build - https://github.com/ethan-adams/garden-nursery/issues/41
+
+Open:
+
+- None. Continue with `Playable Hush Arbor Alpha 0.2`.
 
 ## Playable Hush Arbor Alpha 0.2
 
