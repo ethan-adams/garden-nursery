@@ -17,6 +17,7 @@ The current format id is `garden-nursery.save.v1`.
   - `plants`
   - `customers`
   - `signals`
+- `week_reflections`, the latest ledger-written journal reflections
 - `weekly_activity`, used by the ledger if the player quits before closing the week
 
 ## Load Behavior
