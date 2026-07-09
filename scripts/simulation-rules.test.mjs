@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import {
+  careClimateFit,
   constraintScore,
   customerRecommendationOutcome,
   recommendPlantToCustomers,
+  scoreCustomerFitForRegion,
   scoreCustomerFit,
   traitScore
 } from "./simulation-rules.mjs";
@@ -31,6 +33,15 @@ const tomatoForMara = scoreCustomerFit(lanternTomato, mara, frostSignal);
 assert.ok(chivesForMara.total > tomatoForMara.total, "risk traits should make early tomatoes score worse than hardy chives during frost gossip");
 assert.ok(chivesForMara.taste > 0, "customer taste should contribute to recommendation fit");
 assert.ok(chivesForMara.constraints > 0, "garden constraints should contribute to recommendation fit");
+
+const chivesCare = careClimateFit(hushChives, region, frostSignal);
+const tomatoCare = careClimateFit(lanternTomato, region, frostSignal);
+assert.ok(chivesCare.score > 0, "hardy cool-spring herbs should fit Hush Arbor's early climate");
+assert.ok(tomatoCare.score < chivesCare.score, "tender warmth-loving tomatoes should carry more climate risk during frost gossip");
+assert.ok(tomatoCare.warnings.length > 0, "climate-risk plants should explain why they may struggle");
+const regionalChivesForMara = scoreCustomerFitForRegion(hushChives, mara, frostSignal, region);
+const regionalTomatoForMara = scoreCustomerFitForRegion(lanternTomato, mara, frostSignal, region);
+assert.ok(regionalChivesForMara.climate > regionalTomatoForMara.climate, "regional scoring should include care and climate fit");
 
 const fernForCilla = scoreCustomerFit(chimneyFern, cilla, shadeSignal);
 const aloeForCilla = scoreCustomerFit(thresholdAloe, cilla, shadeSignal);

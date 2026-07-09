@@ -209,15 +209,16 @@ func _render_inventory() -> void:
 		child.queue_free()
 	for plant in run_state.plants:
 		var button := Button.new()
-		button.text = "%s  $%d  Stock %d\n%s" % [
+		button.text = "%s  $%d  Stock %d\n%s\n%s" % [
 			plant.get("name", "Unnamed plant"),
 			int(plant.get("price", 0)),
 			int(plant.get("starting_stock", 0)),
-			", ".join(plant.get("traits", []))
+			", ".join(plant.get("traits", [])),
+			_plant_care_text(plant)
 		]
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		button.custom_minimum_size = Vector2(0, 76)
+		button.custom_minimum_size = Vector2(0, 96)
 		button.focus_mode = Control.FOCUS_ALL
 		button.pressed.connect(_recommend_plant.bind(plant.get("id", "")))
 		inventory_list.add_child(button)
@@ -292,9 +293,10 @@ func _journal_plants_text() -> String:
 		var plant: Dictionary = _find_plant(plant_id)
 		if plant.is_empty():
 			continue
-		lines.append("- %s: %s. %s" % [
+		lines.append("- %s: %s. %s %s" % [
 			plant.get("name", "Unknown plant"),
 			", ".join(plant.get("traits", [])),
+			_plant_care_text(plant),
 			_clip_text(plant.get("market_notes", "Notes still uncertain."), 92)
 		])
 		shown += 1
@@ -452,6 +454,10 @@ func _find_signal(signal_id: String) -> Dictionary:
 
 func _propagation_profile(plant: Dictionary) -> Dictionary:
 	return run_state.propagation_profile(plant)
+
+
+func _plant_care_text(plant: Dictionary) -> String:
+	return run_state.plant_care_text(plant)
 
 
 func _clip_text(text: String, max_length: int) -> String:

@@ -19,7 +19,11 @@ const catalogs = [
   {
     path: "godot/data/regions/hush_arbor.json",
     root: "market_signals",
-    required: ["id", "source", "text", "points_to_traits", "risk_traits", "uncertainty"]
+    required: ["id", "source", "text", "points_to_traits", "risk_traits", "uncertainty"],
+    documentRequired: ["climate_profile"],
+    documentNested: {
+      climate_profile: ["water", "light", "soil", "frost", "heat", "forgiving_traits", "risk_traits"]
+    }
   },
   {
     path: "godot/data/dialogue/writing_sample_pack.json",
@@ -43,6 +47,24 @@ for (const catalog of catalogs) {
   }
 
   const entries = parsed[catalog.root];
+  for (const field of catalog.documentRequired ?? []) {
+    if (!Object.hasOwn(parsed, field)) {
+      fail(`${catalog.path}: missing required field "${field}"`);
+    }
+  }
+  for (const [field, requiredFields] of Object.entries(catalog.documentNested ?? {})) {
+    const value = parsed[field];
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      fail(`${catalog.path}: missing required object "${field}"`);
+      continue;
+    }
+    for (const nestedField of requiredFields) {
+      if (!Object.hasOwn(value, nestedField)) {
+        fail(`${catalog.path}: ${field} missing required field "${nestedField}"`);
+      }
+    }
+  }
+
   if (!Array.isArray(entries)) {
     fail(`${catalog.path}: expected array at "${catalog.root}"`);
     continue;

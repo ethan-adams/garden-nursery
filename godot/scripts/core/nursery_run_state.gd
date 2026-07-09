@@ -76,7 +76,7 @@ func recommend_plant(plant_id: String) -> Dictionary:
 	var reputation_total := 0
 	for customer in customers:
 		remember_discovery("customers", customer.get("id", ""))
-		var fit := NurseryRules.score_customer_fit(plant, customer, signal_data)
+		var fit := NurseryRules.score_customer_fit(plant, customer, signal_data, region)
 		var outcome := NurseryRules.customer_recommendation_outcome(plant, customer, fit, stock_available - sold_count)
 		lines.append(outcome.get("line", ""))
 		var customer_note: String = outcome.get("note", "")
@@ -135,6 +135,9 @@ func start_propagation() -> Dictionary:
 		return {
 			"outcome_text": "The bench stayed empty. You need $%d to start %s." % [cost, plant.get("name", "that tray")]
 		}
+	var care_fit := NurseryRules.care_climate_fit(plant, region, current_signal())
+	var climate_score := int(care_fit.get("score", 0))
+	var adjusted_success = clamp(float(profile.get("success_chance", 0.75)) + (float(climate_score) * 0.03), 0.45, 0.98)
 	cash -= cost
 	weekly_bench_spend += cost
 	var tray := {
@@ -143,17 +146,19 @@ func start_propagation() -> Dictionary:
 		"method": profile.get("method", "propagation"),
 		"weeks_remaining": int(profile.get("weeks", 1)),
 		"yield": int(profile.get("yield", 1)),
-		"success_chance": float(profile.get("success_chance", 0.75))
+		"success_chance": adjusted_success,
+		"care_summary": care_fit.get("summary", "")
 	}
 	next_propagation_tray_id += 1
 	propagation_trays.append(tray)
 	return {
-		"outcome_text": "You set a %s tray in slot %d of %d. It will need %d week%s before it can join inventory." % [
+		"outcome_text": "You set a %s tray in slot %d of %d. It will need %d week%s before it can join inventory.\n%s" % [
 			plant.get("name", "plant"),
 			active_propagation_count(),
 			propagation_capacity,
 			int(tray.get("weeks_remaining", 1)),
-			plural_suffix(int(tray.get("weeks_remaining", 1)))
+			plural_suffix(int(tray.get("weeks_remaining", 1))),
+			care_fit.get("summary", "")
 		],
 		"log": "Started %s by %s for $%d." % [plant.get("name", "a plant"), tray.get("method", "propagation"), cost]
 	}
@@ -325,6 +330,17 @@ func propagation_profile(plant: Dictionary) -> Dictionary:
 	return plant.get("propagation", {})
 
 
+func plant_care_text(plant: Dictionary) -> String:
+	var care_needs: Dictionary = plant.get("care_needs", {})
+	var care_fit := NurseryRules.care_climate_fit(plant, region, current_signal())
+	return "Care: %s water, %s light, %s. %s" % [
+		care_needs.get("water", "steady"),
+		care_needs.get("light", "mixed"),
+		care_needs.get("difficulty", "moderate"),
+		care_fit.get("summary", "")
+	]
+
+
 func inventory_total() -> int:
 	var total := 0
 	for plant in plants:
@@ -403,7 +419,8 @@ func sanitize_propagation_trays(saved_state: Dictionary) -> Array:
 			"method": raw_tray.get("method", "propagation"),
 			"weeks_remaining": max(1, int(raw_tray.get("weeks_remaining", 1))),
 			"yield": max(1, int(raw_tray.get("yield", 1))),
-			"success_chance": clamp(float(raw_tray.get("success_chance", 0.75)), 0.0, 1.0)
+			"success_chance": clamp(float(raw_tray.get("success_chance", 0.75)), 0.0, 1.0),
+			"care_summary": raw_tray.get("care_summary", "")
 		}
 		trays.append(tray)
 		if trays.size() >= propagation_capacity:

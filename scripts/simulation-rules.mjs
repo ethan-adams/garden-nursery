@@ -35,6 +35,10 @@ export function hintTraitScore(plantTraits, hint) {
 }
 
 export function scoreCustomerFit(plant, customer, signal) {
+  return scoreCustomerFitForRegion(plant, customer, signal, {});
+}
+
+export function scoreCustomerFitForRegion(plant, customer, signal, region) {
   const traits = plant.traits ?? [];
   const price = Number(plant.price ?? 0);
   const budget = Number(customer.budget ?? 0);
@@ -43,6 +47,7 @@ export function scoreCustomerFit(plant, customer, signal) {
   const market = traitScore(traits, signal.points_to_traits ?? []);
   const risk = traitScore(traits, signal.risk_traits ?? []);
   const hint = hintTraitScore(traits, customer.market_hint ?? "");
+  const care = careClimateFit(plant, region, signal);
   let budgetScore = -3;
   if (price <= budget) {
     budgetScore = 2;
@@ -51,13 +56,16 @@ export function scoreCustomerFit(plant, customer, signal) {
   }
 
   return {
-    total: (taste * 2) + (constraints * 2) + market + hint + budgetScore - (risk * 2),
+    total: (taste * 2) + (constraints * 2) + market + hint + budgetScore + care.score - (risk * 2),
     taste,
     constraints,
     market,
     risk,
     hint,
-    budget: budgetScore
+    budget: budgetScore,
+    climate: care.score,
+    careSummary: care.summary,
+    careWarnings: care.warnings
   };
 }
 
@@ -103,6 +111,82 @@ export function recommendPlantToCustomers(plant, customers, signal, startingStoc
   return { sold, cash, reputation, outcomes };
 }
 
+export function careClimateFit(plant, region = {}, signal = {}) {
+  const traits = plant.traits ?? [];
+  const climateFit = plant.climate_fit ?? [];
+  const care = plant.care_needs ?? {};
+  const profile = region.climate_profile ?? {};
+  if (Object.keys(profile).length === 0) {
+    return { score: 0, summary: "Care fit not yet read.", warnings: [], boosts: [] };
+  }
+  const regionTraits = region.traits ?? [];
+  const warnings = [];
+  const boosts = [];
+  let score = 0;
+
+  const soilMatches = traitScore(climateFit, profile.soil ?? []);
+  if (soilMatches > 0) {
+    score += Math.min(2, soilMatches);
+    boosts.push("local soil/season fit");
+  }
+  if (climateFit.includes("temperate") || matchesRegionTrait(climateFit, regionTraits)) {
+    score += 1;
+    boosts.push("temperate valley fit");
+  }
+
+  const water = String(care.water ?? "").toLowerCase();
+  if ((profile.water ?? []).some((value) => String(value).toLowerCase() === water)) {
+    score += 1;
+  } else if (["light", "dry"].includes(water)) {
+    score -= 1;
+    warnings.push("prefers drier watering than Hush Arbor gives easily");
+  }
+
+  const light = String(care.light ?? "").toLowerCase();
+  if ((profile.light ?? []).some((value) => String(value).toLowerCase() === light)) {
+    score += 1;
+  } else if (light.includes("afternoon") || light === "sun") {
+    score -= 1;
+    warnings.push("needs brighter protection than many porch sites offer");
+  }
+
+  const signalRisk = traitScore(traits, signal.risk_traits ?? []);
+  if (signalRisk > 0) {
+    score -= signalRisk;
+    warnings.push("current signal warns against this plant");
+  }
+
+  if (traitScore(traits, ["tender", "warmth-loving"]) > 0 && String(profile.frost ?? "").includes("frost")) {
+    score -= 1;
+    warnings.push("late frost can check it");
+  }
+
+  const forgiving = traitScore(traits, profile.forgiving_traits ?? []);
+  if (forgiving > 0) {
+    score += Math.min(2, forgiving);
+    boosts.push("forgiving Hush Arbor habit");
+  }
+
+  score = Math.max(-3, Math.min(5, score));
+  let summary = "Care fit steady.";
+  if (score >= 4) {
+    summary = `Care fit is strong: ${boosts.slice(0, 2).join(", ")}.`;
+  } else if (score >= 1) {
+    summary = "Care fit is workable with a clear tag.";
+  } else if (warnings.length > 0) {
+    summary = `Care warning: ${warnings[0]}.`;
+  }
+
+  return { score, summary, warnings, boosts };
+}
+
 function hasAny(text, needles) {
   return needles.some((needle) => text.includes(needle));
+}
+
+function matchesRegionTrait(values, regionTraits) {
+  return values.some((value) => {
+    const normalized = String(value).replaceAll("-", " ").toLowerCase();
+    return regionTraits.some((trait) => String(trait).toLowerCase().includes(normalized));
+  });
 }

@@ -35,18 +35,17 @@ cdsp
 Best next prompt:
 
 ```text
-Work issue #44. Follow AGENTS.md.
+Work issue #45. Follow AGENTS.md.
 ```
 
 Recommended immediate sequence:
 
-1. `#44` Add plant care needs and climate-fit consequences.
-2. `#45` Add season and weather calendar for Hush Arbor.
-3. `#46` Add customer memory and returning relationship beats.
-4. `#47` Add inventory pricing and restock economy.
-5. `#48` Add yard onboarding flow.
-6. `#49` Add Hush Arbor seed-swap event loop.
-7. `#50` Replace placeholder station art with production-readable Hush Arbor assets.
+1. `#45` Add season and weather calendar for Hush Arbor.
+2. `#46` Add customer memory and returning relationship beats.
+3. `#47` Add inventory pricing and restock economy.
+4. `#48` Add yard onboarding flow.
+5. `#49` Add Hush Arbor seed-swap event loop.
+6. `#50` Replace placeholder station art with production-readable Hush Arbor assets.
 
 ## Standard Checks
 

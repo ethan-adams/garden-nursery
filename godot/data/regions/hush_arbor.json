@@ -4,6 +4,15 @@
   "name": "Hush Arbor",
   "season": "early spring",
   "traits": ["temperate valley", "wet lanes", "old orchards", "porch pride", "late-frost gossip"],
+  "climate_profile": {
+    "water": ["steady", "moist", "moderate"],
+    "light": ["shade", "part-shade", "part-sun", "morning-sun", "mixed"],
+    "soil": ["damp-loam", "damp-shade", "wet-lanes", "old-orchards", "sheltered-porch", "cool-spring", "temperate"],
+    "frost": "mild late-frost risk",
+    "heat": "brief warm spells, cool nights",
+    "forgiving_traits": ["hardy", "damp-tolerant", "cool-spring", "early-spring", "porch-friendly"],
+    "risk_traits": ["tender", "warmth-loving", "drought-tolerant"]
+  },
   "starting_state": {
     "week": 1,
     "cash": 120,
