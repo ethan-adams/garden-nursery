@@ -68,6 +68,14 @@ async function readJson(path) {
 
 check("JavaScript parses", async () => {
   await run("node", ["--check", "browser-prototype/game.js"]);
+  await run("node", ["--check", "scripts/simulation-rules.mjs"]);
+  await run("node", ["--check", "scripts/simulation-rules.test.mjs"]);
+});
+
+check("Simulation rule tests are wired into npm test", async () => {
+  const pkg = await readJson("package.json");
+  assert(pkg.scripts["test:rules"] === "node scripts/simulation-rules.test.mjs", "package.json must define test:rules");
+  assert(pkg.scripts.test.includes("npm run test:rules"), "npm test must run simulation rule tests");
 });
 
 check("Browser entrypoint is wired", async () => {
