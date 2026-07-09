@@ -12,12 +12,12 @@ cdsp
 Then ask Codex:
 
 ```text
-Work issue #50. Follow AGENTS.md.
+Work issue #51. Follow AGENTS.md.
 ```
 
 ## Current Next Issue
 
-- `#50` feat: Replace placeholder station art with production-readable Hush Arbor assets - https://github.com/ethan-adams/garden-nursery/issues/50
+- `#51` feat: Add nursery layout and bench placement MVP - https://github.com/ethan-adams/garden-nursery/issues/51
 
 ## Godot Vertical Slice 0.1
 
@@ -65,10 +65,11 @@ Completed:
 - `#47` Add inventory pricing and restock economy - https://github.com/ethan-adams/garden-nursery/issues/47
 - `#48` Add yard onboarding flow - https://github.com/ethan-adams/garden-nursery/issues/48
 - `#49` Add Hush Arbor seed-swap event loop - https://github.com/ethan-adams/garden-nursery/issues/49
+- `#50` Replace placeholder station art with production-readable Hush Arbor assets - https://github.com/ethan-adams/garden-nursery/issues/50
 
 Open:
 
-- `#50` Replace placeholder station art with production-readable Hush Arbor assets - https://github.com/ethan-adams/garden-nursery/issues/50
+- None. Continue with `Nursery Systems Alpha 0.3`.
 
 ## Nursery Systems Alpha 0.3
 
