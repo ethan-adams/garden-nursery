@@ -23,12 +23,13 @@ const catalogs = [
     path: "godot/data/regions/hush_arbor.json",
     root: "market_signals",
     required: ["id", "source", "text", "points_to_traits", "risk_traits", "uncertainty"],
-    documentRequired: ["climate_profile", "season_calendar"],
+    documentRequired: ["climate_profile", "season_calendar", "community_events"],
     documentNested: {
       climate_profile: ["water", "light", "soil", "frost", "heat", "forgiving_traits", "risk_traits"]
     },
     arrays: {
-      season_calendar: ["week", "season", "weather", "forecast", "points_to_traits", "risk_traits", "propagation_bonus_traits", "propagation_risk_traits", "uncertainty"]
+      season_calendar: ["week", "season", "weather", "forecast", "points_to_traits", "risk_traits", "propagation_bonus_traits", "propagation_risk_traits", "uncertainty"],
+      community_events: ["id", "name", "start_week", "deadline_week", "request", "preferred_traits", "etiquette", "cash_reward", "reputation_reward", "relationship_note"]
     }
   },
   {

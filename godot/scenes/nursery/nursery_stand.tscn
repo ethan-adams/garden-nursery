@@ -301,6 +301,13 @@ custom_minimum_size = Vector2(0, 50)
 focus_mode = 2
 text = "Order Stock"
 
+[node name="EventButton" type="Button" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+focus_mode = 2
+text = "Seed Swap"
+
 [node name="LogText" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -318,6 +325,7 @@ text = "Close Ledger Week"
 [connection signal="pressed" from="SafeArea/RootStack/BoardRow/SignalPanel/SignalMargin/SignalStack/NextSignalButton" to="." method="_on_next_signal_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/StartPropagationButton" to="." method="_on_start_propagation_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/RestockButton" to="." method="_on_restock_button_pressed"]
+[connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/EventButton" to="." method="_on_event_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/AdvanceWeekButton" to="." method="_on_advance_week_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/ResetRunButton" to="." method="_on_reset_run_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/CloseButton" to="." method="_on_close_button_pressed"]

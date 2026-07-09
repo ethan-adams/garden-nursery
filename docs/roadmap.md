@@ -21,6 +21,7 @@ GitHub issues are the source of truth for executable tasks. This document explai
 - Customer memory: recurring customers now track visits, satisfaction, prior recommendations, last plants, and unresolved needs. Returning beats show in customer cards, journal notes, and ledger trust summaries.
 - Restock economy: the plant stand has a supplier order action for the selected plant, with derived wholesale cost, shelf caps, margin notes, weekly restock spend, and ledger shortage/overstock reads.
 - Yard onboarding: the walkable yard now guides new players through signal board, plant stand, propagation bench, ledger, and journal using short contextual station prompts that disappear as stations are visited.
+- Seed-swap event: Hush Arbor has a small timed community event with preferred traits, etiquette text, plant contributions from inventory, deadline resolution, rewards, reputation, relationship notes, and ledger/journal consequences.
 - Save/load: the vertical slice auto-loads and auto-saves `user://garden_nursery_vertical_slice_save.json`; the stand header has a reset-run action for testing. Format notes live in `docs/vertical-slice-save-format.md`.
 - Discovery journal: a yard journal station renders discovered plant notes, customer memories, market reads, and ledger week reflections while hiding undiscovered information behind uncertainty counts.
 - Simulation tests: `npm test` runs dependency-light recommendation scoring rule tests covering trait matches, risk traits, budgets, constraints, and reputation outcomes.

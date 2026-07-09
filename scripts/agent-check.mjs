@@ -269,6 +269,12 @@ check("Core data catalogs are valid", async () => {
       assert(Object.hasOwn(entry, required), `season calendar week ${entry.week ?? "(missing week)"} missing ${required}`);
     }
   }
+  assert(Array.isArray(region.community_events) && region.community_events.length >= 1, "region must define community events");
+  for (const event of region.community_events) {
+    for (const required of ["id", "name", "start_week", "deadline_week", "request", "preferred_traits", "etiquette", "cash_reward", "reputation_reward", "relationship_note"]) {
+      assert(Object.hasOwn(event, required), `community event ${event.id ?? "(missing id)"} missing ${required}`);
+    }
+  }
 });
 
 check("Writing sample pack is complete", async () => {
@@ -299,6 +305,7 @@ check("Nursery stand scene is playable shape", async () => {
     "StartPropagationButton",
     "AdvanceWeekButton",
     "RestockButton",
+    "EventButton",
     "ResetRunButton",
     "focus_mode = 2"
   ]) {
@@ -313,6 +320,7 @@ check("Nursery stand scene is playable shape", async () => {
     "_recommend_plant",
     "_on_start_propagation_button_pressed",
     "_on_restock_button_pressed",
+    "_on_event_button_pressed",
     "_on_advance_week_button_pressed",
     "_load_saved_state",
     "_save_run_state",
@@ -335,6 +343,11 @@ check("Nursery stand scene is playable shape", async () => {
     "func update_customer_memory",
     "func customer_memory_text",
     "customer_memory",
+    "event_contributions",
+    "resolved_events",
+    "func active_community_event",
+    "func contribute_selected_plant_to_event",
+    "func resolve_due_community_events",
     "func restock_selected_plant",
     "func restock_quote",
     "func inventory_economy_text",
@@ -365,6 +378,8 @@ check("Vertical slice save format is documented", async () => {
     "propagation_capacity",
     "customer_notes",
     "customer_memory",
+    "event_contributions",
+    "resolved_events",
     "week_reflections",
     "weekly_activity",
     "Reset Run"

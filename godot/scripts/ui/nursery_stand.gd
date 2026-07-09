@@ -28,6 +28,7 @@ var station_mode := "all"
 @onready var propagation_status_label: Label = %PropagationStatus
 @onready var start_propagation_button: Button = %StartPropagationButton
 @onready var restock_button: Button = %RestockButton
+@onready var event_button: Button = %EventButton
 @onready var log_label: Label = %LogText
 @onready var next_signal_button: Button = %NextSignalButton
 @onready var advance_week_button: Button = %AdvanceWeekButton
@@ -102,6 +103,7 @@ func _setup_focus() -> void:
 	next_signal_button.focus_mode = Control.FOCUS_ALL
 	start_propagation_button.focus_mode = Control.FOCUS_ALL
 	restock_button.focus_mode = Control.FOCUS_ALL
+	event_button.focus_mode = Control.FOCUS_ALL
 	advance_week_button.focus_mode = Control.FOCUS_ALL
 	reset_run_button.focus_mode = Control.FOCUS_ALL
 	close_button.focus_mode = Control.FOCUS_ALL
@@ -138,6 +140,7 @@ func _apply_station_mode() -> void:
 	next_signal_button.visible = is_signal
 	start_propagation_button.visible = is_bench or station_mode == "all"
 	restock_button.visible = is_stand or station_mode == "all"
+	event_button.visible = is_stand or station_mode == "all"
 	propagation_heading.visible = is_bench or station_mode == "all"
 	propagation_status_label.visible = is_bench or station_mode == "all"
 	advance_week_button.visible = is_ledger or station_mode == "all"
@@ -258,6 +261,7 @@ func _render_propagation_bench() -> void:
 		run_state.propagation_capacity
 	]
 	_render_restock_button()
+	_render_event_button()
 
 
 func _render_customers() -> void:
@@ -422,6 +426,18 @@ func _on_restock_button_pressed() -> void:
 	_refresh_all()
 
 
+func _on_event_button_pressed() -> void:
+	var result := run_state.contribute_selected_plant_to_event()
+	if result.is_empty():
+		return
+	outcome_label.text = result.get("outcome_text", "")
+	var log_line: String = result.get("log", "")
+	if not log_line.is_empty():
+		_add_log(log_line)
+	_save_run_state()
+	_refresh_all()
+
+
 func _load_saved_state() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		return
@@ -486,6 +502,16 @@ func _render_restock_button() -> void:
 	var quote := run_state.restock_quote(plant)
 	restock_button.text = "Order %d for $%d" % [int(quote.get("quantity", 0)), int(quote.get("cost", 0))]
 	restock_button.disabled = not bool(quote.get("can_order", false))
+
+
+func _render_event_button() -> void:
+	var event := run_state.active_community_event()
+	if event.is_empty():
+		event_button.text = "Seed Swap"
+		event_button.disabled = true
+		return
+	event_button.text = "Contribute: %s" % event.get("name", "Event")
+	event_button.disabled = not run_state.can_contribute_selected_plant_to_event()
 
 
 func _plant_care_text(plant: Dictionary) -> String:
