@@ -27,6 +27,7 @@ var station_mode := "all"
 @onready var outcome_label: Label = %OutcomeText
 @onready var propagation_status_label: Label = %PropagationStatus
 @onready var start_propagation_button: Button = %StartPropagationButton
+@onready var restock_button: Button = %RestockButton
 @onready var log_label: Label = %LogText
 @onready var next_signal_button: Button = %NextSignalButton
 @onready var advance_week_button: Button = %AdvanceWeekButton
@@ -100,6 +101,7 @@ func _setup_focus() -> void:
 	next_signal_button.grab_focus()
 	next_signal_button.focus_mode = Control.FOCUS_ALL
 	start_propagation_button.focus_mode = Control.FOCUS_ALL
+	restock_button.focus_mode = Control.FOCUS_ALL
 	advance_week_button.focus_mode = Control.FOCUS_ALL
 	reset_run_button.focus_mode = Control.FOCUS_ALL
 	close_button.focus_mode = Control.FOCUS_ALL
@@ -114,6 +116,7 @@ func _refresh_all() -> void:
 	_render_inventory()
 	_render_customers()
 	_render_propagation_bench()
+	_render_restock_button()
 	_render_log()
 	_apply_station_mode()
 
@@ -134,6 +137,7 @@ func _apply_station_mode() -> void:
 
 	next_signal_button.visible = is_signal
 	start_propagation_button.visible = is_bench or station_mode == "all"
+	restock_button.visible = is_stand or station_mode == "all"
 	propagation_heading.visible = is_bench or station_mode == "all"
 	propagation_status_label.visible = is_bench or station_mode == "all"
 	advance_week_button.visible = is_ledger or station_mode == "all"
@@ -210,10 +214,11 @@ func _render_inventory() -> void:
 		child.queue_free()
 	for plant in run_state.plants:
 		var button := Button.new()
-		button.text = "%s  $%d  Stock %d\n%s\n%s" % [
+		button.text = "%s  $%d  Stock %d  %s\n%s\n%s" % [
 			plant.get("name", "Unnamed plant"),
 			int(plant.get("price", 0)),
 			int(plant.get("starting_stock", 0)),
+			run_state.restock_margin_text(plant),
 			", ".join(plant.get("traits", [])),
 			_plant_care_text(plant)
 		]
@@ -252,6 +257,7 @@ func _render_propagation_bench() -> void:
 		run_state.active_propagation_count(),
 		run_state.propagation_capacity
 	]
+	_render_restock_button()
 
 
 func _render_customers() -> void:
@@ -404,6 +410,18 @@ func _on_start_propagation_button_pressed() -> void:
 	_refresh_all()
 
 
+func _on_restock_button_pressed() -> void:
+	var result := run_state.restock_selected_plant()
+	if result.is_empty():
+		return
+	outcome_label.text = result.get("outcome_text", "")
+	var log_line: String = result.get("log", "")
+	if not log_line.is_empty():
+		_add_log(log_line)
+	_save_run_state()
+	_refresh_all()
+
+
 func _load_saved_state() -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
 		return
@@ -457,6 +475,17 @@ func _find_signal(signal_id: String) -> Dictionary:
 
 func _propagation_profile(plant: Dictionary) -> Dictionary:
 	return run_state.propagation_profile(plant)
+
+
+func _render_restock_button() -> void:
+	var plant := _find_plant(run_state.selected_plant_id)
+	if plant.is_empty():
+		restock_button.disabled = true
+		restock_button.text = "Order Stock"
+		return
+	var quote := run_state.restock_quote(plant)
+	restock_button.text = "Order %d for $%d" % [int(quote.get("quantity", 0)), int(quote.get("cost", 0))]
+	restock_button.disabled = not bool(quote.get("can_order", false))
 
 
 func _plant_care_text(plant: Dictionary) -> String:
