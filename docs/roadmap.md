@@ -12,7 +12,7 @@ GitHub issues are the source of truth for executable tasks. This document explai
 - Yard: walkable 2.5D Hush Arbor nursery first screen with player movement, camera, local yard art, and interactive stations for signal board, plant stand, propagation bench, and ledger.
 - Existing playable loop: `godot/scenes/nursery/nursery_stand.tscn` holds the market-reading, recommendation, propagation, and week-advance prototype as station-focused overlays launched from the yard.
 - Data: JSON catalogs for starter plants, Hush Arbor customers, region signals/outcomes, and dialogue samples.
-- Content size: 6 starter plants, 3 recurring customers, 4 market signals, and 3 week outcomes.
+- Content size: 16 starter plants, 3 recurring customers, 4 market signals, and 3 week outcomes.
 - Propagation: one active tray with plant-specific method, cost, time, yield, and success chance.
 - Docs: creative direction, starter region, Steam Deck UX baseline, art bible, visual pipeline, testing/builds, and issue backlog are in `docs/`.
 - Harness: `npm test` validates data and dependency-light repo shape; `npm run test:product` adds Godot headless smoke.
@@ -57,10 +57,10 @@ Completed foundation:
 - `#29` Rework Hush Arbor yard art direction and first-screen UX.
 - `#30` Polish walkable yard camera, collision, and controller feel.
 - `#31` Add sanity checks for walkable world scene.
+- `#35` Expand Hush Arbor starter plant catalog to vertical-slice size.
 
 Remaining tasks:
 
-- `#35` Expand Hush Arbor starter plant catalog to vertical-slice size.
 - `#36` Add customer-specific recommendation outcomes.
 - `#37` Add end-of-week ledger with relationship notes.
 - `#38` Add save and load for vertical-slice state.

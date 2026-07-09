@@ -138,6 +138,236 @@
         "notes": "Works if you ask politely and do not count the roots aloud."
       },
       "market_notes": "A conversation plant: profitable with regulars, confusing for hurried newcomers."
+    },
+    {
+      "id": "mosswell_mint",
+      "name": "Mosswell Mint",
+      "category": "herb",
+      "price": 9,
+      "starting_stock": 6,
+      "traits": ["culinary", "damp-tolerant", "shade", "low-effort"],
+      "climate_fit": ["temperate", "damp-shade", "wet-lanes"],
+      "care_needs": {
+        "water": "moist",
+        "light": "part-shade",
+        "difficulty": "easy but spreading"
+      },
+      "propagation": {
+        "method": "runner cuttings",
+        "weeks": 1,
+        "cost": 4,
+        "yield": 4,
+        "success_chance": 0.92,
+        "notes": "Runners root almost too eagerly if pinned into damp compost."
+      },
+      "market_notes": "A strong answer for cafe cooks with shade, but fussy gardeners may need a warning about pots."
+    },
+    {
+      "id": "stoop_rosemary",
+      "name": "Stoop Rosemary",
+      "category": "herb",
+      "price": 13,
+      "starting_stock": 4,
+      "traits": ["culinary", "porch-friendly", "drought-tolerant", "giftable"],
+      "climate_fit": ["temperate", "sheltered-porch", "warm-spell"],
+      "care_needs": {
+        "water": "light",
+        "light": "sun",
+        "difficulty": "watch the cold"
+      },
+      "propagation": {
+        "method": "heel cuttings",
+        "weeks": 3,
+        "cost": 8,
+        "yield": 3,
+        "success_chance": 0.64,
+        "notes": "Needs bright cover and patience; the slow roots are worth the bench space."
+      },
+      "market_notes": "Good for porch pride and cooks, but risky when late-frost gossip dominates."
+    },
+    {
+      "id": "rainbarrel_lettuce",
+      "name": "Rainbarrel Lettuce",
+      "category": "vegetable",
+      "price": 10,
+      "starting_stock": 7,
+      "traits": ["culinary", "cool-spring", "quick-crop", "low-effort"],
+      "climate_fit": ["temperate", "cool-spring", "damp-loam"],
+      "care_needs": {
+        "water": "steady",
+        "light": "morning-sun",
+        "difficulty": "easy early"
+      },
+      "propagation": {
+        "method": "shallow seed tray",
+        "weeks": 1,
+        "cost": 5,
+        "yield": 5,
+        "success_chance": 0.86,
+        "notes": "Sprouts quickly in cool light if the tray is watered with a gentle hand."
+      },
+      "market_notes": "A dependable early sale for cooks and first-time gardeners who want visible progress."
+    },
+    {
+      "id": "porch_snap_pea",
+      "name": "Porch Snap Pea",
+      "category": "vegetable",
+      "price": 12,
+      "starting_stock": 5,
+      "traits": ["culinary", "climber", "porch-friendly", "early-spring"],
+      "climate_fit": ["temperate", "cool-spring", "sheltered-porch"],
+      "care_needs": {
+        "water": "steady",
+        "light": "morning-sun",
+        "difficulty": "needs string"
+      },
+      "propagation": {
+        "method": "deep plug tray",
+        "weeks": 1,
+        "cost": 6,
+        "yield": 4,
+        "success_chance": 0.82,
+        "notes": "Deep plugs keep the roots calm until someone gives them twine."
+      },
+      "market_notes": "Bridges cafe demand and porch gardening, especially when customers want food without a full bed."
+    },
+    {
+      "id": "millstone_foxglove",
+      "name": "Millstone Foxglove",
+      "category": "flower",
+      "price": 15,
+      "starting_stock": 3,
+      "traits": ["shade", "pollinator", "story-rich", "tall"],
+      "climate_fit": ["temperate", "damp-shade", "old-orchards"],
+      "care_needs": {
+        "water": "moderate",
+        "light": "part-shade",
+        "difficulty": "mind the label"
+      },
+      "propagation": {
+        "method": "surface seed pan",
+        "weeks": 3,
+        "cost": 7,
+        "yield": 5,
+        "success_chance": 0.7,
+        "notes": "Tiny seed wants light, patience, and a tag no child can mistake for salad."
+      },
+      "market_notes": "Beautiful for shady fences and school stories, but the care tag matters."
+    },
+    {
+      "id": "orchard_bee_balm",
+      "name": "Orchard Bee Balm",
+      "category": "flower",
+      "price": 13,
+      "starting_stock": 5,
+      "traits": ["pollinator", "old-orchard", "story-rich", "hardy"],
+      "climate_fit": ["temperate", "old-orchards", "damp-loam"],
+      "care_needs": {
+        "water": "moderate",
+        "light": "sun",
+        "difficulty": "forgiving with space"
+      },
+      "propagation": {
+        "method": "crown division",
+        "weeks": 2,
+        "cost": 7,
+        "yield": 3,
+        "success_chance": 0.84,
+        "notes": "Divisions settle well if the crowns are not buried too deep."
+      },
+      "market_notes": "A smart sell for school gardens, orchard keepers, and anyone listening for bees under old trees."
+    },
+    {
+      "id": "chimney_fern",
+      "name": "Chimney Fern",
+      "category": "foliage",
+      "price": 10,
+      "starting_stock": 5,
+      "traits": ["shade", "porch-friendly", "damp-tolerant", "low-effort"],
+      "climate_fit": ["temperate", "damp-shade", "wet-lanes"],
+      "care_needs": {
+        "water": "moist",
+        "light": "shade",
+        "difficulty": "gentle"
+      },
+      "propagation": {
+        "method": "rhizome division",
+        "weeks": 2,
+        "cost": 6,
+        "yield": 3,
+        "success_chance": 0.78,
+        "notes": "A clean rhizome slice and a cool corner usually do the work."
+      },
+      "market_notes": "Tailor-made for north porches, mossy buckets, and gardeners who want green without drama."
+    },
+    {
+      "id": "bluegate_thyme",
+      "name": "Bluegate Thyme",
+      "category": "herb",
+      "price": 11,
+      "starting_stock": 6,
+      "traits": ["culinary", "pollinator", "drought-tolerant", "porch-friendly"],
+      "climate_fit": ["temperate", "sheltered-porch", "warm-spell"],
+      "care_needs": {
+        "water": "light",
+        "light": "sun",
+        "difficulty": "easy if not soaked"
+      },
+      "propagation": {
+        "method": "tip cuttings",
+        "weeks": 2,
+        "cost": 5,
+        "yield": 4,
+        "success_chance": 0.76,
+        "notes": "Cuttings root best in gritty mix away from the wettest bench corner."
+      },
+      "market_notes": "Good for sunny stoops and cooks; a poor answer for damp shade despite its tidy manners."
+    },
+    {
+      "id": "widowlight_aster",
+      "name": "Widowlight Aster",
+      "category": "flower",
+      "price": 14,
+      "starting_stock": 4,
+      "traits": ["magical", "pollinator", "late-color", "old-orchard"],
+      "climate_fit": ["temperate", "old-orchards", "damp-loam"],
+      "care_needs": {
+        "water": "moderate",
+        "light": "sun",
+        "difficulty": "steady"
+      },
+      "propagation": {
+        "method": "basal cuttings",
+        "weeks": 2,
+        "cost": 8,
+        "yield": 3,
+        "success_chance": 0.74,
+        "notes": "Best taken before the stems remember where last autumn's light fell."
+      },
+      "market_notes": "A restrained magical perennial for regulars who want bees, memory, and a little late-season glow."
+    },
+    {
+      "id": "threshold_aloe",
+      "name": "Threshold Aloe",
+      "category": "porch plant",
+      "price": 16,
+      "starting_stock": 3,
+      "traits": ["magical", "porch-friendly", "drought-tolerant", "warmth-loving"],
+      "climate_fit": ["sheltered-porch", "warm-spell", "bright-window"],
+      "care_needs": {
+        "water": "rare",
+        "light": "bright-indirect",
+        "difficulty": "frost tender"
+      },
+      "propagation": {
+        "method": "pup division",
+        "weeks": 2,
+        "cost": 9,
+        "yield": 2,
+        "success_chance": 0.72,
+        "notes": "Offsets need a dry heel before they forgive the move."
+      },
+      "market_notes": "A high-margin porch charm for careful customers, but a bad bet during frost talk."
     }
   ]
 }
