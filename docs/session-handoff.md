@@ -11,13 +11,13 @@ This file is the short "start here" note for a future Codex session. The full pl
 - Product path: Godot project under `godot/`
 - Archived sketch: `browser-prototype/`
 - Current phase: finish `Godot Vertical Slice 0.1`
-- Current priority: complete the walkable-yard station loop, then broaden the vertical slice into a one-week playable build.
+- Current priority: broaden the station-based yard loop into a one-week vertical-slice build.
 
 ## What Exists
 
 - `godot/scenes/main/main.tscn` loads the walkable yard scene.
-- `godot/scenes/nursery/nursery_yard.tscn` has the Hush Arbor yard art, player, camera, and station placeholders.
-- `godot/scenes/nursery/nursery_stand.tscn` still contains the playable market/recommendation/propagation/week loop.
+- `godot/scenes/nursery/nursery_yard.tscn` has the Hush Arbor yard art, player, camera, and interactive stations.
+- `godot/scenes/nursery/nursery_stand.tscn` contains the playable market/recommendation/propagation/week loop as station overlays.
 - JSON catalogs live under `godot/data/`.
 - Current content size: 6 plants, 3 customers, 4 market signals, and 3 week outcomes.
 - `npm test` and `npm run test:product` are the standard local checks.
@@ -35,22 +35,18 @@ cdsp
 Best next prompt:
 
 ```text
-Work issue #27. Follow AGENTS.md.
+Work issue #35. Follow AGENTS.md.
 ```
 
 Recommended immediate sequence:
 
-1. `#27` Add in-world interaction station framework.
-2. `#28` Move nursery loop into world station overlays.
-3. `#30` Polish walkable yard camera, collision, and controller feel.
-4. `#31` Add sanity checks for walkable world scene.
-5. `#35` Expand Hush Arbor starter plant catalog to vertical-slice size.
-6. `#36` Add customer-specific recommendation outcomes.
-7. `#37` Add end-of-week ledger with relationship notes.
-8. `#38` Add save and load for vertical-slice state.
-9. `#39` Add discovery journal MVP.
-10. `#40` Add simulation rule tests for market and recommendation scoring.
-11. `#41` Cut Godot Vertical Slice 0.1 playtest build.
+1. `#35` Expand Hush Arbor starter plant catalog to vertical-slice size.
+2. `#36` Add customer-specific recommendation outcomes.
+3. `#37` Add end-of-week ledger with relationship notes.
+4. `#38` Add save and load for vertical-slice state.
+5. `#39` Add discovery journal MVP.
+6. `#40` Add simulation rule tests for market and recommendation scoring.
+7. `#41` Cut Godot Vertical Slice 0.1 playtest build.
 
 ## Standard Checks
 
@@ -96,6 +92,6 @@ Local export currently requires Godot 4.5.1 Linux export templates installed on 
 
 ## Important Direction
 
-Do not stack more dashboard depth onto the old stand scene until the yard station loop works. The player should feel like they are walking up to nursery objects and doing nursery work there.
+Keep new systems anchored in the walkable yard and station overlays. The player should feel like they are walking up to nursery objects and doing nursery work there.
 
 Keep all ordinary work issue-backed, branch-based, PR-first, and checked through `npm test`. Use `npm run test:product` for Godot scene/script/resource work.
