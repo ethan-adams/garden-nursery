@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://garden_nursery_yard"]
+[gd_scene load_steps=11 format=3 uid="uid://garden_nursery_yard"]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="Script" path="res://scripts/world/local_texture_sprite.gd" id="2_texture_loader"]
@@ -17,6 +17,9 @@ size = Vector2(230, 150)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ledger"]
 size = Vector2(170, 140)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_journal"]
+size = Vector2(180, 130)
 
 [node name="NurseryYard" type="Node2D"]
 script = ExtResource("4_yard")
@@ -69,6 +72,17 @@ prompt_offset = Vector2(-170, -148)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LedgerStation"]
 shape = SubResource("RectangleShape2D_ledger")
+
+[node name="JournalStation" type="Area2D" parent="."]
+position = Vector2(716, 534)
+script = ExtResource("3_station")
+station_id = "journal"
+station_name = "Discovery Journal"
+action_label = "open the notebook"
+prompt_offset = Vector2(-170, -148)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="JournalStation"]
+shape = SubResource("RectangleShape2D_journal")
 
 [node name="Player" parent="." instance=ExtResource("1_player")]
 

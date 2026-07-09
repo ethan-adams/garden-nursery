@@ -22,6 +22,7 @@ var selected_plant_id := ""
 var propagation_tray: Dictionary = {}
 var relationship_notes: Dictionary = {}
 var selected_discoveries: Dictionary = {}
+var journal_week_reflections: Array[String] = []
 var weekly_customer_notes: Array[String] = []
 var weekly_recommendations: Array[String] = []
 var weekly_cash_from_sales := 0
@@ -95,6 +96,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _load_data() -> void:
 	relationship_notes = {}
 	selected_discoveries = _fresh_discoveries()
+	journal_week_reflections = []
 	propagation_tray = {}
 	_reset_week_tracking()
 	region = _read_json(REGION_PATH)
@@ -153,11 +155,12 @@ func _apply_station_mode() -> void:
 	var is_stand := station_mode == "plant_stand" or station_mode == "all"
 	var is_bench := station_mode == "propagation_bench" or station_mode == "all"
 	var is_ledger := station_mode == "ledger" or station_mode == "all"
+	var is_journal := station_mode == "journal"
 
 	signal_panel.visible = is_signal
 	inventory_panel.visible = is_stand or is_bench
 	customer_panel.visible = is_stand
-	outcome_panel.visible = is_bench or is_ledger or station_mode == "all"
+	outcome_panel.visible = is_bench or is_ledger or is_journal or station_mode == "all"
 	board_row.visible = signal_panel.visible or inventory_panel.visible
 	lower_row.visible = customer_panel.visible or outcome_panel.visible
 
@@ -167,10 +170,14 @@ func _apply_station_mode() -> void:
 	propagation_status_label.visible = is_bench or station_mode == "all"
 	advance_week_button.visible = is_ledger or station_mode == "all"
 	outcome_heading.text = "Ledger"
-	if is_bench and not is_ledger:
+	if is_journal:
+		outcome_heading.text = "Discovery Journal"
+	elif is_bench and not is_ledger:
 		outcome_heading.text = "Propagation Bench"
 	elif station_mode == "all":
 		outcome_heading.text = "Week Outcome"
+	if is_journal:
+		_render_journal()
 
 
 func _grab_station_focus() -> void:
@@ -186,6 +193,8 @@ func _grab_station_focus() -> void:
 				_grab_first_inventory_focus()
 		"ledger":
 			advance_week_button.grab_focus()
+		"journal":
+			close_button.grab_focus()
 		_:
 			next_signal_button.grab_focus()
 
@@ -208,6 +217,8 @@ func _station_title(id: String) -> String:
 			return "Propagation Bench"
 		"ledger":
 			return "Ledger"
+		"journal":
+			return "Discovery Journal"
 		_:
 			return "Foothill Plant House"
 
@@ -297,6 +308,92 @@ func _render_customers() -> void:
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		label.custom_minimum_size = Vector2(0, 108)
 		customer_list.add_child(label)
+
+
+func _render_journal() -> void:
+	var sections: Array[String] = [
+		_journal_plants_text(),
+		_journal_customers_text(),
+		_journal_signals_text(),
+		_journal_reflections_text()
+	]
+	outcome_label.text = "\n\n".join(sections)
+
+
+func _journal_plants_text() -> String:
+	var known := _known_discoveries("plants")
+	if known.is_empty():
+		return "Plants\n- No plant tags studied yet. Recommend a plant to ink the first note."
+	var lines: Array[String] = ["Plants"]
+	var shown := 0
+	for plant_id in known:
+		var plant: Dictionary = _find_plant(plant_id)
+		if plant.is_empty():
+			continue
+		lines.append("- %s: %s. %s" % [
+			plant.get("name", "Unknown plant"),
+			", ".join(plant.get("traits", [])),
+			_clip_text(plant.get("market_notes", "Notes still uncertain."), 92)
+		])
+		shown += 1
+		if shown >= 4:
+			break
+	var hidden_count: int = int(max(0, plants.size() - known.size()))
+	if hidden_count > 0:
+		lines.append("- %d plant tag%s still just look like handwriting and hope." % [hidden_count, _plural_suffix(hidden_count)])
+	return "\n".join(lines)
+
+
+func _journal_customers_text() -> String:
+	var known := _known_discoveries("customers")
+	if known.is_empty():
+		return "Customers\n- The regulars are only names so far. Recommend a plant to learn what matters."
+	var lines: Array[String] = ["Customers"]
+	for customer_id in known:
+		var customer: Dictionary = _find_customer(customer_id)
+		if customer.is_empty():
+			continue
+		var note := _latest_relationship_note(customer_id)
+		if note.is_empty():
+			note = "needs still penciled in"
+		lines.append("- %s, %s: %s." % [
+			customer.get("display_name", "Customer"),
+			customer.get("role", "regular"),
+			_clip_text(note, 86)
+		])
+	var hidden_count: int = int(max(0, customers.size() - known.size()))
+	if hidden_count > 0:
+		lines.append("- %d regular%s not understood yet." % [hidden_count, _plural_suffix(hidden_count)])
+	return "\n".join(lines)
+
+
+func _journal_signals_text() -> String:
+	var known := _known_discoveries("signals")
+	if known.is_empty():
+		return "Market Reads\n- No posted signal has been copied into the notebook."
+	var lines: Array[String] = ["Market Reads"]
+	for signal_id in known:
+		var signal_data: Dictionary = _find_signal(signal_id)
+		if signal_data.is_empty():
+			continue
+		lines.append("- %s: %s Points toward %s." % [
+			signal_data.get("source", "signal").capitalize(),
+			_clip_text(signal_data.get("text", ""), 86),
+			", ".join(signal_data.get("points_to_traits", []))
+		])
+	var hidden_count: int = int(max(0, region.get("market_signals", []).size() - known.size()))
+	if hidden_count > 0:
+		lines.append("- %d market note%s still unread." % [hidden_count, _plural_suffix(hidden_count)])
+	return "\n".join(lines)
+
+
+func _journal_reflections_text() -> String:
+	if journal_week_reflections.is_empty():
+		return "Week Reflections\n- No week has been closed in the ledger yet."
+	var lines: Array[String] = ["Week Reflections"]
+	for reflection in journal_week_reflections.slice(0, min(3, journal_week_reflections.size())):
+		lines.append("- %s" % reflection)
+	return "\n".join(lines)
 
 
 func _recommend_plant(plant_id: String) -> void:
@@ -480,6 +577,7 @@ func _on_advance_week_button_pressed() -> void:
 		outcome,
 		propagation_text
 	)
+	_remember_week_reflection(closing_week, outcome)
 	_add_log("Ledger closed week %d: %s" % [closing_week, outcome.get("id", "quiet_week")])
 	week += 1
 	_reset_week_tracking()
@@ -665,6 +763,7 @@ func _load_saved_state() -> void:
 	propagation_tray = _sanitize_dictionary(saved_state.get("propagation_tray", {}))
 	relationship_notes = _sanitize_relationship_notes(saved_state.get("customer_notes", {}))
 	selected_discoveries = _sanitize_discoveries(saved_state.get("discoveries", {}))
+	journal_week_reflections = _strings_from(saved_state.get("week_reflections", [])).slice(0, 6)
 	_apply_weekly_activity(saved_state.get("weekly_activity", {}))
 	if _find_plant(selected_plant_id).is_empty() and not plants.is_empty():
 		selected_plant_id = plants[0].get("id", "")
@@ -685,6 +784,7 @@ func _save_run_state() -> void:
 			"propagation_tray": propagation_tray,
 			"customer_notes": relationship_notes,
 			"discoveries": selected_discoveries,
+			"week_reflections": journal_week_reflections,
 			"weekly_activity": _weekly_activity_snapshot()
 		}
 	}
@@ -788,6 +888,21 @@ func _remember_discovery(kind: String, id: String) -> void:
 	selected_discoveries[kind] = known
 
 
+func _known_discoveries(kind: String) -> Array:
+	if not selected_discoveries.has(kind):
+		return []
+	return selected_discoveries[kind]
+
+
+func _remember_week_reflection(closing_week: int, outcome: Dictionary) -> void:
+	var text := "Week %d: %s" % [
+		closing_week,
+		_clip_text(outcome.get("text", "The week closed quietly."), 112)
+	]
+	journal_week_reflections.push_front(text)
+	journal_week_reflections = journal_week_reflections.slice(0, 6)
+
+
 func _current_signal() -> Dictionary:
 	var signals: Array = region.get("market_signals", [])
 	if signals.is_empty():
@@ -799,6 +914,20 @@ func _find_plant(plant_id: String) -> Dictionary:
 	for plant in plants:
 		if plant.get("id", "") == plant_id:
 			return plant
+	return {}
+
+
+func _find_customer(customer_id: String) -> Dictionary:
+	for customer in customers:
+		if customer.get("id", "") == customer_id:
+			return customer
+	return {}
+
+
+func _find_signal(signal_id: String) -> Dictionary:
+	for signal_data in region.get("market_signals", []):
+		if signal_data.get("id", "") == signal_id:
+			return signal_data
 	return {}
 
 
@@ -859,6 +988,12 @@ func _has_any(text: String, needles: Array[String]) -> bool:
 		if text.contains(needle):
 			return true
 	return false
+
+
+func _clip_text(text: String, max_length: int) -> String:
+	if text.length() <= max_length:
+		return text
+	return "%s..." % text.substr(0, max(0, max_length - 3))
 
 
 func _plural_suffix(amount: int) -> String:

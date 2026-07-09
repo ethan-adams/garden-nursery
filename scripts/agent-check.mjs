@@ -150,7 +150,8 @@ check("Godot walkable yard station scene is wired", async () => {
     ["SignalBoardStation", "signal_board"],
     ["PlantStandStation", "plant_stand"],
     ["PropagationBenchStation", "propagation_bench"],
-    ["LedgerStation", "ledger"]
+    ["LedgerStation", "ledger"],
+    ["JournalStation", "journal"]
   ]) {
     assert(yardScene.includes(`node name="${nodeName}" type="Area2D"`), `nursery yard missing ${nodeName}`);
     assert(yardScene.includes(`station_id = "${stationId}"`), `${nodeName} must define station_id ${stationId}`);
@@ -276,6 +277,9 @@ check("Nursery stand scene is playable shape", async () => {
     "_load_saved_state",
     "_save_run_state",
     "_on_reset_run_button_pressed",
+    "_render_journal",
+    "_journal_plants_text",
+    "_remember_week_reflection",
     "SAVE_FORMAT",
     "_trait_score"
   ]) {
@@ -291,6 +295,7 @@ check("Vertical slice save format is documented", async () => {
     "garden-nursery.save.v1",
     "inventory_stock",
     "customer_notes",
+    "week_reflections",
     "weekly_activity",
     "Reset Run"
   ]) {
