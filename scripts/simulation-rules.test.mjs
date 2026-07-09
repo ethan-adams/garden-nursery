@@ -1,0 +1,76 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import {
+  constraintScore,
+  customerRecommendationOutcome,
+  recommendPlantToCustomers,
+  scoreCustomerFit,
+  traitScore
+} from "./simulation-rules.mjs";
+
+const plants = (await readJson("godot/data/plants/starter_plants.json")).plants;
+const customers = (await readJson("godot/data/customers/hush_arbor_archetypes.json")).customers;
+const region = await readJson("godot/data/regions/hush_arbor.json");
+
+const byId = (items, id) => items.find((item) => item.id === id);
+
+const hushChives = byId(plants, "hush_chives");
+const lanternTomato = byId(plants, "lantern_tomato");
+const chimneyFern = byId(plants, "chimney_fern");
+const thresholdAloe = byId(plants, "threshold_aloe");
+const mara = byId(customers, "mara_lye");
+const cilla = byId(customers, "cilla_park");
+const frostSignal = byId(region.market_signals, "weather_board_frost");
+const shadeSignal = byId(region.market_signals, "porch_chatter_shade");
+
+assert.equal(traitScore(hushChives.traits, frostSignal.points_to_traits), 2, "hardy early-spring plants should match frost signal traits");
+assert.equal(traitScore(lanternTomato.traits, frostSignal.risk_traits), 2, "tender warmth-loving plants should hit frost risk traits");
+
+const chivesForMara = scoreCustomerFit(hushChives, mara, frostSignal);
+const tomatoForMara = scoreCustomerFit(lanternTomato, mara, frostSignal);
+assert.ok(chivesForMara.total > tomatoForMara.total, "risk traits should make early tomatoes score worse than hardy chives during frost gossip");
+assert.ok(chivesForMara.taste > 0, "customer taste should contribute to recommendation fit");
+assert.ok(chivesForMara.constraints > 0, "garden constraints should contribute to recommendation fit");
+
+const fernForCilla = scoreCustomerFit(chimneyFern, cilla, shadeSignal);
+const aloeForCilla = scoreCustomerFit(thresholdAloe, cilla, shadeSignal);
+assert.ok(constraintScore(chimneyFern, cilla.garden_constraints) > 0, "shade and damp constraints should recognize chimney fern");
+assert.ok(fernForCilla.total > aloeForCilla.total, "a shade porch plant should beat a frost-tender bright-window plant for Cilla");
+
+const tightBudgetCustomer = {
+  ...mara,
+  budget: 3
+};
+const overBudgetOutcome = customerRecommendationOutcome(hushChives, tightBudgetCustomer, scoreCustomerFit(hushChives, tightBudgetCustomer, frostSignal), 1);
+assert.deepEqual(
+  pick(overBudgetOutcome, ["sold", "cash", "reputation", "reason"]),
+  { sold: false, cash: 0, reputation: 0, reason: "over_budget" },
+  "plants more than $4 over budget should not sell or punish reputation"
+);
+
+const strongOutcome = customerRecommendationOutcome(hushChives, mara, chivesForMara, 1);
+assert.equal(strongOutcome.reason, "strong_match", "strong fits should be called out as strong matches");
+assert.equal(strongOutcome.reputation, 2, "strong fits should increase reputation");
+
+const poorFit = scoreCustomerFit(lanternTomato, cilla, frostSignal);
+const poorOutcome = customerRecommendationOutcome(lanternTomato, cilla, poorFit, 1);
+assert.equal(poorOutcome.sold, false, "bad fits should not sell");
+assert.equal(poorOutcome.reputation, -1, "bad fits should cost a small amount of trust");
+
+const groupResult = recommendPlantToCustomers(hushChives, customers, frostSignal, hushChives.starting_stock);
+assert.ok(groupResult.sold >= 1, "a good starter recommendation should sell to at least one regular");
+assert.equal(
+  groupResult.reputation,
+  groupResult.outcomes.reduce((sum, entry) => sum + entry.outcome.reputation, 0),
+  "group recommendation reputation should equal the sum of customer outcomes"
+);
+
+console.log("ok - simulation rule tests passed");
+
+async function readJson(path) {
+  return JSON.parse(await readFile(path, "utf8"));
+}
+
+function pick(object, keys) {
+  return Object.fromEntries(keys.map((key) => [key, object[key]]));
+}
