@@ -127,6 +127,63 @@ check("Godot project shell is wired", async () => {
   }
 });
 
+check("Godot walkable yard station scene is wired", async () => {
+  const project = await readFile("godot/project.godot", "utf8");
+  const mainScene = await readFile("godot/scenes/main/main.tscn", "utf8");
+  const yardScene = await readFile("godot/scenes/nursery/nursery_yard.tscn", "utf8");
+  const playerScene = await readFile("godot/scenes/player/player.tscn", "utf8");
+  const yardScript = await readFile("godot/scripts/world/nursery_yard.gd", "utf8");
+  const stationScript = await readFile("godot/scripts/world/station_interactable.gd", "utf8");
+  const playerScript = await readFile("godot/scripts/player/player_controller.gd", "utf8");
+  const standScript = await readFile("godot/scripts/ui/nursery_stand.gd", "utf8");
+
+  assert(mainScene.includes('path="res://scenes/nursery/nursery_yard.tscn"'), "main scene must instance the walkable nursery yard");
+  assert(yardScene.includes('path="res://scripts/world/nursery_yard.gd"'), "nursery yard must use the yard interaction controller");
+  assert(yardScene.includes('path="res://scripts/world/station_interactable.gd"'), "nursery yard must load the reusable station interactable script");
+  assert(yardScene.includes('path="res://scenes/nursery/nursery_stand.tscn"'), "nursery yard must include the station overlay scene");
+  assert(yardScene.includes('node name="Player"'), "nursery yard must include the player");
+  assert(playerScene.includes('node name="Camera2D"'), "player scene must include a Camera2D");
+  assert(yardScene.includes('node name="StationPrompt"'), "nursery yard must include an interaction prompt");
+  assert(yardScene.includes('node name="StationOverlay"'), "nursery yard must include a station overlay layer");
+
+  for (const [nodeName, stationId] of [
+    ["SignalBoardStation", "signal_board"],
+    ["PlantStandStation", "plant_stand"],
+    ["PropagationBenchStation", "propagation_bench"],
+    ["LedgerStation", "ledger"]
+  ]) {
+    assert(yardScene.includes(`node name="${nodeName}" type="Area2D"`), `nursery yard missing ${nodeName}`);
+    assert(yardScene.includes(`station_id = "${stationId}"`), `${nodeName} must define station_id ${stationId}`);
+  }
+
+  for (const required of [
+    "station_activated",
+    "open_station",
+    "get_prompt_text",
+    "ui_confirm",
+    "set_movement_enabled(false)",
+    "set_movement_enabled(true)"
+  ]) {
+    assert(yardScript.includes(required), `nursery yard controller missing ${required}`);
+  }
+
+  for (const required of ["station_id", "station_name", "action_label", "get_prompt_position"]) {
+    assert(stationScript.includes(required), `station interactable script missing ${required}`);
+  }
+
+  for (const required of ["move_speed := 178.0", "deceleration", "play_bounds", "Input.get_vector"]) {
+    assert(playerScript.includes(required), `player controller missing ${required}`);
+  }
+
+  for (const required of ["signal closed", "func open_station", "station_mode", "ui_cancel"]) {
+    assert(standScript.includes(required), `nursery stand overlay missing ${required}`);
+  }
+
+  for (const action of ["ui_confirm", "ui_cancel", "ui_details", "ui_tab_next", "ui_tab_previous"]) {
+    assert(project.includes(`${action}={`), `project.godot missing input action ${action}`);
+  }
+});
+
 check("Godot export preset is present", async () => {
   const presets = await readFile("godot/export_presets.cfg", "utf8");
   assert(presets.includes('name="Steam Deck"'), "export presets must include Steam Deck preset");

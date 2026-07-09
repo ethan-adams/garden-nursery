@@ -9,8 +9,8 @@ GitHub issues are the source of truth for executable tasks. This document explai
 - Product path: Godot 4.5.x under `godot/`.
 - Browser prototype: archived under `browser-prototype/` as a disposable design sketch.
 - Main scene: `godot/scenes/main/main.tscn` loads `godot/scenes/nursery/nursery_yard.tscn`.
-- Yard: walkable 2.5D Hush Arbor nursery first screen with player movement, camera, local yard art, and station placeholder `Area2D`s for signal board, plant stand, propagation bench, and ledger.
-- Existing playable loop: `godot/scenes/nursery/nursery_stand.tscn` still holds the market-reading, recommendation, propagation, and week-advance prototype.
+- Yard: walkable 2.5D Hush Arbor nursery first screen with player movement, camera, local yard art, and interactive stations for signal board, plant stand, propagation bench, and ledger.
+- Existing playable loop: `godot/scenes/nursery/nursery_stand.tscn` holds the market-reading, recommendation, propagation, and week-advance prototype as station-focused overlays launched from the yard.
 - Data: JSON catalogs for starter plants, Hush Arbor customers, region signals/outcomes, and dialogue samples.
 - Content size: 6 starter plants, 3 recurring customers, 4 market signals, and 3 week outcomes.
 - Propagation: one active tray with plant-specific method, cost, time, yield, and success chance.
@@ -52,14 +52,14 @@ Completed foundation:
 - `#12` Add Godot CI sanity check.
 - `#13` Create writing sample pack.
 - `#26` Build walkable 2.5D nursery yard foundation.
+- `#27` Add in-world interaction station framework.
+- `#28` Move nursery loop into world station overlays.
 - `#29` Rework Hush Arbor yard art direction and first-screen UX.
+- `#30` Polish walkable yard camera, collision, and controller feel.
+- `#31` Add sanity checks for walkable world scene.
 
 Remaining tasks:
 
-- `#27` Add in-world interaction station framework.
-- `#28` Move nursery loop into world station overlays.
-- `#30` Polish walkable yard camera, collision, and controller feel.
-- `#31` Add sanity checks for walkable world scene.
 - `#35` Expand Hush Arbor starter plant catalog to vertical-slice size.
 - `#36` Add customer-specific recommendation outcomes.
 - `#37` Add end-of-week ledger with relationship notes.

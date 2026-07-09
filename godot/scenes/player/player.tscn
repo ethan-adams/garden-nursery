@@ -23,7 +23,7 @@ image_path = "res://assets/art/gardener-player.png"
 [node name="Camera2D" type="Camera2D" parent="."]
 enabled = true
 position_smoothing_enabled = true
-position_smoothing_speed = 6.0
+position_smoothing_speed = 4.5
 limit_left = 120
 limit_top = 80
 limit_right = 1160

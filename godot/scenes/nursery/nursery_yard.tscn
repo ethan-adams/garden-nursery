@@ -1,7 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://garden_nursery_yard"]
+[gd_scene load_steps=10 format=3 uid="uid://garden_nursery_yard"]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
 [ext_resource type="Script" path="res://scripts/world/local_texture_sprite.gd" id="2_texture_loader"]
+[ext_resource type="Script" path="res://scripts/world/station_interactable.gd" id="3_station"]
+[ext_resource type="Script" path="res://scripts/world/nursery_yard.gd" id="4_yard"]
+[ext_resource type="PackedScene" path="res://scenes/nursery/nursery_stand.tscn" id="5_overlay"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_signal"]
 size = Vector2(170, 160)
@@ -16,6 +19,7 @@ size = Vector2(230, 150)
 size = Vector2(170, 140)
 
 [node name="NurseryYard" type="Node2D"]
+script = ExtResource("4_yard")
 
 [node name="YardArt" type="Sprite2D" parent="."]
 position = Vector2(640, 400)
@@ -24,26 +28,70 @@ image_path = "res://assets/art/hush-arbor-yard.png"
 
 [node name="SignalBoardStation" type="Area2D" parent="."]
 position = Vector2(308, 322)
+script = ExtResource("3_station")
+station_id = "signal_board"
+station_name = "Signal Board"
+action_label = "read posted market notes"
+prompt_offset = Vector2(-170, -156)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SignalBoardStation"]
 shape = SubResource("RectangleShape2D_signal")
 
 [node name="PlantStandStation" type="Area2D" parent="."]
 position = Vector2(640, 300)
+script = ExtResource("3_station")
+station_id = "plant_stand"
+station_name = "Plant Stand"
+action_label = "recommend from the tables"
+prompt_offset = Vector2(-170, -164)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlantStandStation"]
 shape = SubResource("RectangleShape2D_stand")
 
 [node name="PropagationBenchStation" type="Area2D" parent="."]
 position = Vector2(916, 380)
+script = ExtResource("3_station")
+station_id = "propagation_bench"
+station_name = "Propagation Bench"
+action_label = "check the trays"
+prompt_offset = Vector2(-170, -156)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PropagationBenchStation"]
 shape = SubResource("RectangleShape2D_bench")
 
 [node name="LedgerStation" type="Area2D" parent="."]
 position = Vector2(480, 520)
+script = ExtResource("3_station")
+station_id = "ledger"
+station_name = "Ledger"
+action_label = "close the week"
+prompt_offset = Vector2(-170, -148)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LedgerStation"]
 shape = SubResource("RectangleShape2D_ledger")
 
 [node name="Player" parent="." instance=ExtResource("1_player")]
+
+[node name="StationPrompt" type="PanelContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(340, 0)
+
+[node name="PromptMargin" type="MarginContainer" parent="StationPrompt"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
+
+[node name="PromptText" type="Label" parent="StationPrompt/PromptMargin"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Station prompt"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="StationOverlay" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="NurseryStand" parent="StationOverlay" instance=ExtResource("5_overlay")]
+visible = false
