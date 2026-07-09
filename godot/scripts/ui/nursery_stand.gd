@@ -1,5 +1,7 @@
 extends Control
 
+signal closed
+
 const PLANTS_PATH := "res://data/plants/starter_plants.json"
 const CUSTOMERS_PATH := "res://data/customers/hush_arbor_archetypes.json"
 const REGION_PATH := "res://data/regions/hush_arbor.json"
@@ -16,10 +18,13 @@ var selected_signal_index := 0
 var selected_plant_id := ""
 var propagation_tray: Dictionary = {}
 var log_lines: Array[String] = []
+var station_mode := "all"
 
 @onready var week_label: Label = %WeekValue
 @onready var cash_label: Label = %CashValue
 @onready var reputation_label: Label = %ReputationValue
+@onready var title_label: Label = %Title
+@onready var region_label: Label = %RegionLabel
 @onready var signal_source_label: Label = %SignalSource
 @onready var signal_text_label: Label = %SignalText
 @onready var signal_traits_label: Label = %SignalTraits
@@ -31,11 +36,46 @@ var log_lines: Array[String] = []
 @onready var log_label: Label = %LogText
 @onready var next_signal_button: Button = %NextSignalButton
 @onready var advance_week_button: Button = %AdvanceWeekButton
+@onready var close_button: Button = %CloseButton
+@onready var signal_panel: PanelContainer = %SignalPanel
+@onready var inventory_panel: PanelContainer = %InventoryPanel
+@onready var customer_panel: PanelContainer = %CustomerPanel
+@onready var outcome_panel: PanelContainer = %OutcomePanel
+@onready var board_row: HBoxContainer = %BoardRow
+@onready var lower_row: HBoxContainer = %LowerRow
+@onready var propagation_heading: Label = %PropagationHeading
+@onready var outcome_heading: Label = %OutcomeHeading
 
 func _ready() -> void:
 	_load_data()
 	_setup_focus()
 	_refresh_all()
+	_apply_station_mode()
+
+
+func open_station(next_station_mode: String, station_name: String = "") -> void:
+	station_mode = next_station_mode
+	if station_name.is_empty():
+		station_name = _station_title(station_mode)
+	region_label.text = "Hush Arbor roadside yard"
+	title_label.text = station_name
+	visible = true
+	_apply_station_mode()
+	_refresh_all()
+	_grab_station_focus()
+
+
+func close_station() -> void:
+	visible = false
+	closed.emit()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not visible:
+		return
+	if event.is_action_pressed("ui_cancel"):
+		close_station()
+		get_viewport().set_input_as_handled()
 
 
 func _load_data() -> void:
@@ -72,6 +112,7 @@ func _setup_focus() -> void:
 	next_signal_button.focus_mode = Control.FOCUS_ALL
 	start_propagation_button.focus_mode = Control.FOCUS_ALL
 	advance_week_button.focus_mode = Control.FOCUS_ALL
+	close_button.focus_mode = Control.FOCUS_ALL
 
 
 func _refresh_all() -> void:
@@ -83,6 +124,71 @@ func _refresh_all() -> void:
 	_render_customers()
 	_render_propagation_bench()
 	_render_log()
+	_apply_station_mode()
+
+
+func _apply_station_mode() -> void:
+	var is_signal := station_mode == "signal_board" or station_mode == "all"
+	var is_stand := station_mode == "plant_stand" or station_mode == "all"
+	var is_bench := station_mode == "propagation_bench" or station_mode == "all"
+	var is_ledger := station_mode == "ledger" or station_mode == "all"
+
+	signal_panel.visible = is_signal
+	inventory_panel.visible = is_stand or is_bench
+	customer_panel.visible = is_stand
+	outcome_panel.visible = is_bench or is_ledger or station_mode == "all"
+	board_row.visible = signal_panel.visible or inventory_panel.visible
+	lower_row.visible = customer_panel.visible or outcome_panel.visible
+
+	next_signal_button.visible = is_signal
+	start_propagation_button.visible = is_bench or station_mode == "all"
+	propagation_heading.visible = is_bench or station_mode == "all"
+	propagation_status_label.visible = is_bench or station_mode == "all"
+	advance_week_button.visible = is_ledger or station_mode == "all"
+	outcome_heading.text = "Ledger"
+	if is_bench and not is_ledger:
+		outcome_heading.text = "Propagation Bench"
+	elif station_mode == "all":
+		outcome_heading.text = "Week Outcome"
+
+
+func _grab_station_focus() -> void:
+	match station_mode:
+		"signal_board":
+			next_signal_button.grab_focus()
+		"plant_stand":
+			_grab_first_inventory_focus()
+		"propagation_bench":
+			if not start_propagation_button.disabled:
+				start_propagation_button.grab_focus()
+			else:
+				_grab_first_inventory_focus()
+		"ledger":
+			advance_week_button.grab_focus()
+		_:
+			next_signal_button.grab_focus()
+
+
+func _grab_first_inventory_focus() -> void:
+	for child in inventory_list.get_children():
+		if child is Button:
+			child.grab_focus()
+			return
+	close_button.grab_focus()
+
+
+func _station_title(id: String) -> String:
+	match id:
+		"signal_board":
+			return "Signal Board"
+		"plant_stand":
+			return "Plant Stand"
+		"propagation_bench":
+			return "Propagation Bench"
+		"ledger":
+			return "Ledger"
+		_:
+			return "Foothill Plant House"
 
 
 func _render_signal() -> void:
@@ -181,7 +287,7 @@ func _recommend_plant(plant_id: String) -> void:
 	reputation += reputation_delta
 	plant["starting_stock"] = int(max(0, int(plant.get("starting_stock", 0)) - 1))
 	outcome_label.text = _recommendation_text(plant, signal_data, score, risk)
-	_add_log("Recommended %s after reading the %s." % [plant.get("name", "a plant"), signal_data.get("source", "signal")])
+	_add_log("Plant stand recommended %s after reading the %s." % [plant.get("name", "a plant"), signal_data.get("source", "signal")])
 	_refresh_all()
 
 
@@ -212,7 +318,7 @@ func _on_advance_week_button_pressed() -> void:
 	if not propagation_text.is_empty():
 		outcome_text = "%s\n\n%s" % [outcome_text, propagation_text]
 	outcome_label.text = outcome_text
-	_add_log("Week %d closed: %s" % [week - 1, outcome.get("id", "quiet_week")])
+	_add_log("Ledger closed week %d: %s" % [week - 1, outcome.get("id", "quiet_week")])
 	_refresh_all()
 
 
@@ -322,3 +428,7 @@ func _add_log(message: String) -> void:
 
 func _render_log() -> void:
 	log_label.text = "\n".join(log_lines)
+
+
+func _on_close_button_pressed() -> void:
+	close_station()

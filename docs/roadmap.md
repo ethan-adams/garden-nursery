@@ -9,9 +9,10 @@ This is the project memory rail for agentic work. Update it when a meaningful sy
 - Discovery loop: hybridize two parent plants to create a new stock item.
 - Godot project shell under `godot/` with a minimal 1280x800 main scene for the vertical slice.
 - Walkable 2.5D nursery yard foundation under `godot/scenes/nursery/nursery_yard.tscn`, with player movement, camera, Hush Arbor yard blockout, and station placeholders.
+- In-world station interaction framework now turns the walkable yard into the entry point for the loop: signal board, plant stand, propagation bench, and ledger stations show prompts, open focused overlays, and return control to the player on close.
 - First Hush Arbor yard art/UX pass uses editable SVG source art and PNG runtime assets for a warmer roadside nursery first screen instead of crude scene-tree blockout shapes.
 - Visual development pipeline documented in `docs/art-bible.md`, `docs/visual-development-pipeline.md`, and `docs/art-asset-brief-template.md` so future art work starts from references, briefs, in-engine checks, and Steam Deck readability instead of one-off generated assets.
-- First Godot roadside nursery stand scene under `godot/scenes/nursery/nursery_stand.tscn`, driven by JSON catalogs and playable as a market-reading/recommendation loop.
+- First Godot roadside nursery stand scene under `godot/scenes/nursery/nursery_stand.tscn`, driven by JSON catalogs and playable as station-focused market, recommendation, propagation, and ledger overlays.
 - Core content data format chosen: JSON catalogs for starter plants, Hush Arbor customer archetypes, region market signals/outcomes, and dialogue samples.
 - Hush Arbor market-reading prototype: players cycle imperfect signal sources, recommend a plant, and see cash/reputation/week outcome text respond to trait matches and risks.
 - Propagation bench prototype: players can start one active plant tray with plant-specific method, cost, time, yield, and success chance; completed trays feed back into inventory on week advance.
@@ -34,7 +35,7 @@ See `docs/creative-direction.md` for the current creative direction, including t
 
 - Continue raising the walkable yard quality bar: composition, station readability, interaction prompts, movement feel, and Steam Deck first-screen readability.
 - Produce a Hush Arbor nursery yard style frame using the visual development pipeline, then replace the current prototype yard art only after it passes in-engine readability checks.
-- In-world interaction framework that opens market, plant stand, propagation, and ledger surfaces from yard objects.
+- Expand station overlays with richer focused views, especially plant details, customer notes, and a proper propagation tray board.
 - Customer archetypes with garden constraints, budgets, and taste memory.
 - Regional climate model: heat, frost dates, water restrictions, soil, and native ranges.
 - Plant genetics model for hybrid traits, rarity, stability, and naming.

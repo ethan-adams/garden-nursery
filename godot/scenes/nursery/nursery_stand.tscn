@@ -18,7 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.196078, 0.243137, 0.184314, 1)
+color = Color(0.196078, 0.243137, 0.184314, 0.82)
 
 [node name="SafeArea" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -55,11 +55,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="RegionLabel" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/TitleStack"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Hush Arbor Roadside Stand"
 
 [node name="Title" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/TitleStack"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 38
 text = "Foothill Plant House"
@@ -113,12 +115,21 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "12"
 
+[node name="CloseButton" type="Button" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(118, 54)
+focus_mode = 2
+text = "Close"
+
 [node name="BoardRow" type="HBoxContainer" parent="SafeArea/RootStack"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 18
 
 [node name="SignalPanel" type="PanelContainer" parent="SafeArea/RootStack/BoardRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -163,11 +174,12 @@ unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 54)
 focus_mode = 2
-text = "Read Next Signal"
+text = "Read Next Posted Signal"
 
 [node name="InventoryPanel" type="PanelContainer" parent="SafeArea/RootStack/BoardRow"]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 custom_minimum_size = Vector2(440, 0)
 
 [node name="InventoryMargin" type="MarginContainer" parent="SafeArea/RootStack/BoardRow/InventoryPanel"]
@@ -193,11 +205,13 @@ size_flags_vertical = 3
 theme_override_constants/separation = 8
 
 [node name="LowerRow" type="HBoxContainer" parent="SafeArea/RootStack"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 18
 
 [node name="CustomerPanel" type="PanelContainer" parent="SafeArea/RootStack/LowerRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -224,6 +238,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 8
 
 [node name="OutcomePanel" type="PanelContainer" parent="SafeArea/RootStack/LowerRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -239,6 +254,7 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="OutcomeHeading" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Week Outcome"
@@ -252,6 +268,7 @@ text = "Choose a market signal, recommend a plant, then advance the week."
 autowrap_mode = 3
 
 [node name="PropagationHeading" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Propagation Bench"
@@ -282,8 +299,9 @@ unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 54)
 focus_mode = 2
-text = "Advance Week"
+text = "Close Ledger Week"
 
 [connection signal="pressed" from="SafeArea/RootStack/BoardRow/SignalPanel/SignalMargin/SignalStack/NextSignalButton" to="." method="_on_next_signal_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/StartPropagationButton" to="." method="_on_start_propagation_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/AdvanceWeekButton" to="." method="_on_advance_week_button_pressed"]
+[connection signal="pressed" from="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/CloseButton" to="." method="_on_close_button_pressed"]
