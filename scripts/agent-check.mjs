@@ -306,6 +306,30 @@ check("Station overlay fits 1280x800 with working controller focus", async () =>
   }
 });
 
+check("Self-playtest harness drives the real game", async () => {
+  // Issue #98: the game must verify itself so a human isn't the only playtester.
+  // Tier 1 — the GDScript runner must mount the real overlay in the tree and assert
+  // observable behavior (scroll-follows-focus, on-screen focus, the flow moving the run
+  // forward), not just run pure-logic checks. Guard the driving machinery.
+  const runner = await readFile("godot/tests/run_tests.gd", "utf8");
+  assert(runner.includes("SCENE_TESTS"), "run_tests.gd must define scene-driven behavioral tests (issue #98)");
+  assert(
+    /scene_test_scroll_follows_focus_into_view/.test(runner),
+    "the scroll-follows-focus behavioral test must survive"
+  );
+  assert(runner.includes("open_station"), "scene tests must mount and drive the real stand overlay in-tree");
+  assert(/await\s+process_frame/.test(runner), "scene tests must await frames so layout settles before asserting");
+
+  // Tier 2 — a screenshot capture tool renders the real game for ship evidence, wired
+  // into an npm script and CI so it runs on every push.
+  const capture = await readFile("godot/tools/capture_screens.gd", "utf8");
+  assert(capture.includes("save_png"), "capture_screens.gd must save PNG screenshots of the real game");
+  const pkg = JSON.parse(await readFile("package.json", "utf8"));
+  assert(pkg.scripts?.["godot:screens"], "package.json must wire the godot:screens capture script");
+  const ci = await readFile(".github/workflows/sanity.yml", "utf8");
+  assert(ci.includes("npm run godot:screens"), "CI must run the screenshot capture and upload the artifact");
+});
+
 check("The week has a real action economy", async () => {
   // The week must stay a constraint (issue #93): scarce per-week actions, no infinite
   // restock-recommend loop, and reputation consumed by the visit budget. Guard the

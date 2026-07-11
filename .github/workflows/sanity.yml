@@ -141,6 +141,58 @@ jobs:
           name: garden-nursery-steamdeck-debug
           path: dist/steamdeck/
 
+  screenshots:
+    name: Gameplay screenshots
+    # Evidence, not a gate: a flaky virtual-framebuffer frame must never fail the
+    # workflow or trip the auto-revert. It uploads what it captures; the harness reads
+    # the artifact to judge layout (issue #98, Tier 2).
+    continue-on-error: true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Cache Godot binary
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: .ci/godot
+          key: godot-4.5.1-stable-linux-x86-64
+
+      - name: Download Godot
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p .ci/godot
+          curl -L -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.5.1-stable/Godot_v4.5.1-stable_linux.x86_64.zip
+          unzip /tmp/godot.zip -d .ci/godot
+          mv .ci/godot/Godot_v4.5.1-stable_linux.x86_64 .ci/godot/godot
+          chmod +x .ci/godot/godot
+
+      - name: Install xvfb and software GL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1 libglu1-mesa
+
+      - name: Capture gameplay screenshots
+        env:
+          # Force llvmpipe so opengl3 renders under the headless virtual framebuffer.
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          export PATH="$GITHUB_WORKSPACE/.ci/godot:$PATH"
+          npm run godot:screens
+
+      - name: Upload gameplay screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: garden-nursery-screens
+          path: dist/screens/
+
   recover:
     name: Recover failed managed change
     needs: [npm-test, godot-headless, steamdeck-export]

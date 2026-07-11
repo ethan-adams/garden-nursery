@@ -12,9 +12,25 @@ extends SceneTree
 
 const NurseryRules = preload("res://scripts/core/nursery_rules.gd")
 const NurseryRunState = preload("res://scripts/core/nursery_run_state.gd")
+const StandScene = preload("res://scenes/nursery/nursery_stand.tscn")
+const SAVE_PATH := "user://garden_nursery_vertical_slice_save.json"
+# The Steam Deck design target. Headless defaults the window to a square, so scene tests
+# force this size to assert layout against the real 1280x800 constraint, not a taller one.
+const DECK_SIZE := Vector2i(1280, 800)
+
+# Scene-driven tests are async: they add the real overlay to the tree, await frames so
+# `_ready`/`@onready`/container layout settle, drive it, then assert observable state.
+# List them here explicitly (they must be awaited); the `test_*` methods below stay
+# synchronous pure-logic checks that never touch the tree.
+const SCENE_TESTS := [
+	"scene_test_scroll_follows_focus_into_view",
+	"scene_test_every_section_anchor_stays_on_screen",
+	"scene_test_recommend_and_advance_drive_run_state",
+]
 
 var _failures: Array[String] = []
 var _current := ""
+var _test_count := 0
 
 # Build a run state from the real shipped catalogs, the same way nursery_stand.gd does,
 # so tests exercise actual game data rather than fixtures that can drift from it.
@@ -43,7 +59,27 @@ func _in_stock_plant_ids(rs: NurseryRunState) -> Array:
 			ids.append(plant.get("id", ""))
 	return ids
 
+# SceneTree entrypoint. `_initialize` can't await, so it kicks off the async runner and
+# returns; the main loop then ticks `process_frame`, resuming the coroutine until it
+# quits.
 func _initialize() -> void:
+	_run()
+
+
+func _run() -> void:
+	_run_sync_tests()
+	await _run_scene_tests()
+	if _failures.is_empty():
+		print("ok - %d GDScript test(s) passed" % _test_count)
+		quit(0)
+	else:
+		for failure in _failures:
+			printerr("FAIL - %s" % failure)
+		printerr("%d assertion(s) failed" % _failures.size())
+		quit(1)
+
+
+func _run_sync_tests() -> void:
 	var tests := []
 	for method in get_method_list():
 		var name: String = method.get("name", "")
@@ -52,15 +88,38 @@ func _initialize() -> void:
 	tests.sort()
 	for name in tests:
 		_current = name
+		_test_count += 1
 		call(name)
-	if _failures.is_empty():
-		print("ok - %d GDScript test(s) passed" % tests.size())
-		quit(0)
-	else:
-		for failure in _failures:
-			printerr("FAIL - %s" % failure)
-		printerr("%d assertion(s) failed" % _failures.size())
-		quit(1)
+
+
+func _run_scene_tests() -> void:
+	for name in SCENE_TESTS:
+		_current = name
+		_test_count += 1
+		await call(name)
+
+
+# Add the overlay to the tree at the 1280x800 target, wait for `_ready`/`@onready` and a
+# couple of layout passes to settle, then hand it back sized and ready to drive. The
+# caller frees it. A stale save is cleared first so every run starts from a fresh week.
+func _mount_stand() -> Control:
+	if FileAccess.file_exists(SAVE_PATH):
+		DirAccess.remove_absolute(SAVE_PATH)
+	root.size = DECK_SIZE
+	var stand := StandScene.instantiate() as Control
+	root.add_child(stand)
+	# Let `_ready` fire and `@onready` refs resolve before driving the overlay. The scene
+	# root already carries full-rect anchors, so it fills the 1280x800 window on its own —
+	# don't override its anchors, which would shift the SafeArea margins off true.
+	await _settle(1)
+	stand.open_station("all")
+	await _settle()
+	return stand
+
+
+func _settle(frames: int = 3) -> void:
+	for _i in range(frames):
+		await process_frame
 
 func expect(condition: bool, message: String) -> void:
 	if not condition:
@@ -215,3 +274,89 @@ func test_action_economy_survives_save_load() -> void:
 	legacy.apply_saved_state({"week": 3, "cash": 100, "reputation": 12})
 	expect(legacy.week_action_allowance > 0, "a legacy save migrates to a full week allowance")
 	expect(legacy.week_actions_remaining == legacy.week_action_allowance, "a legacy save opens with all visits available")
+
+# --- scene-driven behavioral tests: drive the real overlay, assert observable state ---
+# These exist so "focus is reachable and scroll follows it at 1280x800" and "the flow
+# actually moves the run forward" are machine-verified, not left to a human launching the
+# build (issue #98). Geometry (rects, viewport containment) is CPU-side layout and works
+# under --headless; only pixels need a renderer, which is the screenshot pass's job.
+
+const ONSCREEN_TOL := 2.0
+
+# The stand renders 16 inventory buttons (~1660px) into an ~800px overlay. Focusing the
+# last one must scroll it into the ScrollContainer's viewport — the exact scroll-follows-
+# focus guarantee issue #94 shipped and issue #98 now proves by geometry. Without the
+# ScrollContainer + follow_focus this button sits ~1500px down, far outside the panel.
+func scene_test_scroll_follows_focus_into_view() -> void:
+	var stand := await _mount_stand()
+	var inventory_list: Control = stand.inventory_list
+	var scroll: Control = inventory_list.get_parent() as Control
+	expect(scroll is ScrollContainer, "the inventory list must live inside a ScrollContainer")
+	var count := inventory_list.get_child_count()
+	expect(count > 4, "the inventory must render enough buttons to overflow the panel")
+	if count == 0 or not (scroll is ScrollContainer):
+		stand.queue_free()
+		return
+
+	var last_button := inventory_list.get_child(count - 1) as Control
+	last_button.grab_focus()
+	await _settle()
+
+	var focus_owner := stand.get_viewport().gui_get_focus_owner()
+	expect(focus_owner == last_button, "the last inventory button can take focus")
+
+	var b := last_button.get_global_rect()
+	var s := scroll.get_global_rect()
+	expect(b.position.y >= s.position.y - ONSCREEN_TOL,
+		"scroll follows focus: the focused item's top is pulled into the viewport, not left above it")
+	expect(b.end.y <= s.end.y + ONSCREEN_TOL,
+		"scroll follows focus: the focused item's bottom is pulled into the viewport, not left below it")
+	stand.queue_free()
+
+# Walk the deliberate cross-section focus path (the shoulder-button jump) all the way
+# around and assert every landing control is visible and fully inside the 1280x800
+# viewport. This is the "no focusable element sits offscreen unreachable" guarantee, made
+# machine-checkable across whatever panels the stand currently shows.
+func scene_test_every_section_anchor_stays_on_screen() -> void:
+	var stand := await _mount_stand()
+	var viewport_rect := Rect2(Vector2.ZERO, Vector2(DECK_SIZE))
+	# One extra step than there are sections guarantees we visit each and wrap back.
+	for _i in range(8):
+		stand._cycle_section_focus(1)
+		await _settle(2)
+		var owner: Control = stand.get_viewport().gui_get_focus_owner()
+		expect(owner != null, "the shoulder-button jump always lands on a real control")
+		if owner == null:
+			continue
+		expect(owner.is_visible_in_tree(), "the focused control is actually visible")
+		var r := owner.get_global_rect()
+		expect(viewport_rect.grow(ONSCREEN_TOL).encloses(r),
+			"focused control '%s' stays fully on screen at 1280x800 (rect %s)" % [owner.name, r])
+	stand.queue_free()
+
+# Driving the real UI handlers (not just the rules layer) must move the run forward:
+# recommending an in-stock plant registers the visit, and closing the week advances it
+# and refreshes the action budget. Catches a UI-layer regression that silently drops the
+# handler wiring even while the core rules still pass.
+func scene_test_recommend_and_advance_drive_run_state() -> void:
+	var stand := await _mount_stand()
+	var rs = stand.run_state
+	var stocked := _in_stock_plant_ids(rs)
+	expect(stocked.size() > 0, "there is an in-stock plant to recommend")
+	if stocked.is_empty():
+		stand.queue_free()
+		return
+
+	var plant_id: String = stocked[0]
+	stand._recommend_plant(plant_id)
+	await _settle(1)
+	expect(rs.weekly_recommended_plant_ids.has(plant_id),
+		"recommending through the stand registers the visit on the run state")
+
+	var week_before: int = rs.week
+	stand._on_advance_week_button_pressed()
+	await _settle(1)
+	expect(rs.week == week_before + 1, "closing the week through the stand advances the calendar")
+	expect(rs.week_actions_remaining == rs.week_action_allowance,
+		"closing the week refreshes the visit budget through the stand")
+	stand.queue_free()

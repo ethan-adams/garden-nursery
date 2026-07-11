@@ -9,6 +9,7 @@
     "test:rules": "node scripts/simulation-rules.test.mjs",
     "godot:smoke": "node scripts/godot-smoke.mjs",
     "godot:test": "node scripts/godot-test.mjs",
+    "godot:screens": "node scripts/godot-screens.mjs",
     "godot:run": "godot --path godot",
     "export:steamdeck": "node scripts/export-godot.mjs steamdeck",
     "test": "npm run validate:data && npm run test:rules && npm run check",

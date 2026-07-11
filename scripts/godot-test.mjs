@@ -1,8 +1,22 @@
 import { spawn } from "node:child_process";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
+// The scene tests drive the real overlay, which loads and autosaves to
+// user://garden_nursery_vertical_slice_save.json — the same path a local playtest uses.
+// Redirect Godot's user data dir into a throwaway home so the pre-commit gate can never
+// touch Ethan's real save (HOME covers macOS ~/Library, XDG_DATA_HOME covers Linux).
+const TEST_HOME = mkdtempSync(join(tmpdir(), "gn-godot-home-"));
+const ISOLATED_ENV = {
+  ...process.env,
+  HOME: TEST_HOME,
+  XDG_DATA_HOME: join(TEST_HOME, ".local", "share"),
+};
 
 function run(command, args, { scanMarkers = true } = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { stdio: "pipe" });
+    const child = spawn(command, args, { stdio: "pipe", env: ISOLATED_ENV });
     let stdout = "";
     let stderr = "";
     child.stdout.on("data", (chunk) => {
@@ -37,12 +51,16 @@ function run(command, args, { scanMarkers = true } = {}) {
 // import logs are noisy and not the thing under test.
 await run("godot", ["--headless", "--path", "godot", "--import"], { scanMarkers: false });
 
-const output = await run("godot", [
-  "--headless",
-  "--path",
-  "godot",
-  "-s",
-  "res://tests/run_tests.gd"
-]);
-process.stdout.write(output.trim() + "\n");
-console.log("ok - Godot GDScript tests passed");
+try {
+  const output = await run("godot", [
+    "--headless",
+    "--path",
+    "godot",
+    "-s",
+    "res://tests/run_tests.gd"
+  ]);
+  process.stdout.write(output.trim() + "\n");
+  console.log("ok - Godot GDScript tests passed");
+} finally {
+  rmSync(TEST_HOME, { recursive: true, force: true });
+}

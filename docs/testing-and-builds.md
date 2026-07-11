@@ -16,7 +16,9 @@ Run this before pushing Godot scene/script changes:
 npm run test:product
 ```
 
-`npm test` validates repository shape, data catalogs, the Godot scene wiring, the writing pack, and the archived browser prototype. `npm run test:product` adds a real Godot headless import so GDScript parse errors and broken resource loads fail before review.
+`npm test` validates repository shape, data catalogs, the Godot scene wiring, the writing pack, and the archived browser prototype. `npm run test:product` adds a real Godot headless import plus behavioral scene tests that mount the actual overlay in-tree and assert observable behavior (scroll-follows-focus, on-screen focus, the week loop moving the run forward), so GDScript parse errors, broken resource loads, and focus/layout regressions fail before review.
+
+`npm run godot:screens` renders the real yard and stand at 1280x800 and saves PNGs to `dist/screens/` (needs a GL context — a window locally, `xvfb` in CI). CI runs it on every push and uploads the `garden-nursery-screens` artifact; the harness reads the shots back to judge layout and readability, which the geometric tests can't see.
 
 Playtest build notes for the first vertical slice live in `docs/vertical-slice-0.1-playtest-build.md`.
 
@@ -72,8 +74,8 @@ The export job is intentionally a debug build. The goal is not distribution poli
 
 ## What This Does Not Cover Yet
 
-- No automated controller navigation test yet.
-- No screenshot/layout regression test yet.
+- Focus navigation is exercised by behavioral scene tests (geometry, scroll-follows-focus), but not on real controller hardware.
+- Screenshots are captured every push for the harness to read, but there is no automated pixel-diff regression gate yet.
 - No release signing, notarization, or Steam integration.
 
 Those should be added when the vertical slice has more stable gameplay logic and UI surfaces.
