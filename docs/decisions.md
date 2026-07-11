@@ -49,3 +49,11 @@ Agents append to this file when a decision changes how the project is built, tes
 **Reason:** Ethan flagged that codex-created issues may be wrong or the wrong thing to solve. Audit confirmed the pattern: thin bodies whose acceptance criteria reduce to "npm test passes" — the self-grading loop that produced a dead-feeling game. Several also contradicted the reset vision (new regions before one region feels alive, balance passes over content that does not exist). They were also still `agent-ready`, so `/ship next` could have claimed them ahead of the new batch.
 
 **Consequence:** The ambitions live on in `docs/roadmap.md`'s Later Milestones section only. Future issues get re-created from `docs/VISION.md` with observable, felt acceptance criteria; green CI alone is never a "done" condition again.
+
+## 2026-07-10 - Weekly action economy: visits scale with reputation
+
+**Decision:** The week is bounded by a small pool of "visits" (issue #93). Recommending, restocking, and starting a propagation tray each spend one visit; when they run out the stand closes until the week is closed. The visit budget is `4 + floor(reputation / 6)`, capped at 8, so reputation is consumed as the thing that sets how busy a week is. A plant can also only be pitched to the regulars once per week.
+
+**Reason:** The old loop was exploitable — no per-week cap on recommend/restock, restock at 55% of retail, strong sales at price+premium, so buy-restock/spam-recommend printed money, and reputation was written everywhere but read by nothing. Scarcity turns the week into a real choice (sell now, restock, or propagate for later) while staying gentle: refusals are worded warmly and the cap grows as standing grows, rather than punishing.
+
+**Consequence:** `nursery_run_state.gd` owns the visit pool (`week_action_budget`/`has_week_action`/`spend_week_action`), persisted in the save with a migration that opens legacy saves to a full week. Covered by GDScript behavioral tests (`godot/tests/run_tests.gd`) and an `agent-check` guard so the exploit can't quietly return. Reputation now has a felt job; a future system may also spend it directly.

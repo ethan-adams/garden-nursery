@@ -3,6 +3,17 @@ extends RefCounted
 
 const NurseryRules := preload("res://scripts/core/nursery_rules.gd")
 
+# Weekly action economy (issue #93). The week grants a small pool of "visits" — the
+# meaningful things you can do at the stand before the week closes. Recommending,
+# restocking, and starting a propagation tray each spend one, so infinite intra-week
+# money loops (buy-restock / spam-recommend) close and the week becomes a real
+# constraint. Reputation is consumed here: a better-regarded stand draws a busier week,
+# so standing earned now buys more room to act next week. Kept gentle — scarcity should
+# create decisions, not punishment.
+const WEEK_ACTION_BASE := 4
+const WEEK_ACTION_REPUTATION_STEP := 6
+const WEEK_ACTION_MAX := 8
+
 var plants: Array = []
 var customers: Array = []
 var region: Dictionary = {}
@@ -29,6 +40,9 @@ var weekly_bench_spend := 0
 var weekly_restock_spend := 0
 var weekly_restocked_plants := 0
 var weekly_plants_sold := 0
+var weekly_recommended_plant_ids: Array[String] = []
+var week_action_allowance := 0
+var week_actions_remaining := 0
 var log_lines: Array[String] = []
 
 
@@ -46,11 +60,12 @@ func setup(next_plants: Array, next_customers: Array, next_region: Dictionary, n
 	propagation_trays = []
 	propagation_capacity = 3
 	next_propagation_tray_id = 1
-	reset_week_tracking()
 	var starting_state: Dictionary = region.get("starting_state", {})
 	week = int(starting_state.get("week", week))
 	cash = int(starting_state.get("cash", cash))
 	reputation = int(starting_state.get("reputation", reputation))
+	# After reputation is known, so the first week's visit allowance reflects it.
+	reset_week_tracking()
 	selected_signal_index = 0
 	if not plants.is_empty():
 		selected_plant_id = plants[0].get("id", "")
@@ -69,6 +84,16 @@ func recommend_plant(plant_id: String) -> Dictionary:
 	var plant := find_plant(plant_id)
 	if plant.is_empty():
 		return {}
+	if weekly_recommended_plant_ids.has(plant_id):
+		return {
+			"outcome_text": "%s already had its turn with the regulars this week. A second pitch the same week won't land differently — try another plant, or close the ledger to reset the visits." % plant.get("name", "That plant"),
+			"log": "Skipped re-pitching %s; already recommended this week." % plant.get("name", "a plant")
+		}
+	if not has_week_action():
+		return {
+			"outcome_text": no_visits_left_text("recommend another plant"),
+			"log": "No visits left to recommend %s this week." % plant.get("name", "a plant")
+		}
 	var signal_data := current_signal()
 	remember_discovery("plants", plant.get("id", ""))
 	remember_discovery("signals", signal_data.get("id", ""))
@@ -112,6 +137,8 @@ func recommend_plant(plant_id: String) -> Dictionary:
 		sale_total,
 		reputation_total
 	])
+	weekly_recommended_plant_ids.append(plant_id)
+	spend_week_action()
 	return {
 		"outcome_text": recommendation_text(plant, signal_data, lines, sold_count, sale_total, reputation_total),
 		"log": "Recommended %s to the regulars: %d sale%s, %+d reputation." % [
@@ -141,6 +168,10 @@ func start_propagation() -> Dictionary:
 	var profile := propagation_profile(plant)
 	if plant.is_empty() or profile.is_empty():
 		return {}
+	if not has_week_action():
+		return {
+			"outcome_text": no_visits_left_text("start a propagation tray")
+		}
 	var cost := int(profile.get("cost", 0))
 	if cash < cost:
 		return {
@@ -162,6 +193,7 @@ func start_propagation() -> Dictionary:
 	}
 	next_propagation_tray_id += 1
 	propagation_trays.append(tray)
+	spend_week_action()
 	return {
 		"outcome_text": "You set a %s tray in slot %d of %d. It will need %d week%s before it can join inventory.\n%s" % [
 			plant.get("name", "plant"),
@@ -179,6 +211,10 @@ func restock_selected_plant() -> Dictionary:
 	var plant := find_plant(selected_plant_id)
 	if plant.is_empty():
 		return {}
+	if not has_week_action():
+		return {
+			"outcome_text": no_visits_left_text("place a supplier order")
+		}
 	var quote := restock_quote(plant)
 	if not bool(quote.get("can_order", false)):
 		return {
@@ -190,6 +226,7 @@ func restock_selected_plant() -> Dictionary:
 	plant["starting_stock"] = int(plant.get("starting_stock", 0)) + quantity
 	weekly_restock_spend += cost
 	weekly_restocked_plants += quantity
+	spend_week_action()
 	return {
 		"outcome_text": "Ordered %d %s for $%d wholesale. Shelf stock is now %d, with about $%d margin if demand holds." % [
 			quantity,
@@ -410,6 +447,8 @@ func save_state_snapshot() -> Dictionary:
 		"resolved_events": resolved_events,
 		"discoveries": selected_discoveries,
 		"week_reflections": journal_week_reflections,
+		"week_action_allowance": week_action_allowance,
+		"week_actions_remaining": week_actions_remaining,
 		"weekly_activity": weekly_activity_snapshot()
 	}
 
@@ -433,6 +472,9 @@ func apply_saved_state(saved_state: Dictionary) -> bool:
 	selected_discoveries = sanitize_discoveries(saved_state.get("discoveries", {}))
 	journal_week_reflections = strings_from(saved_state.get("week_reflections", [])).slice(0, 6)
 	apply_weekly_activity(saved_state.get("weekly_activity", {}))
+	# Migration: saves from before the weekly action economy grant a fresh full week.
+	week_action_allowance = maxi(1, int(saved_state.get("week_action_allowance", week_action_budget())))
+	week_actions_remaining = clampi(int(saved_state.get("week_actions_remaining", week_action_allowance)), 0, week_action_allowance)
 	if find_plant(selected_plant_id).is_empty() and not plants.is_empty():
 		selected_plant_id = plants[0].get("id", "")
 	_repair_next_propagation_tray_id()
@@ -448,6 +490,32 @@ func reset_week_tracking() -> void:
 	weekly_restock_spend = 0
 	weekly_restocked_plants = 0
 	weekly_plants_sold = 0
+	weekly_recommended_plant_ids = []
+	week_action_allowance = week_action_budget()
+	week_actions_remaining = week_action_allowance
+
+
+# How many stand actions this week affords. Grows gently with reputation (a busier stand
+# as word spreads), capped so it can never re-open an infinite loop.
+func week_action_budget() -> int:
+	var bonus := clampi(reputation / WEEK_ACTION_REPUTATION_STEP, 0, WEEK_ACTION_MAX - WEEK_ACTION_BASE)
+	return WEEK_ACTION_BASE + bonus
+
+
+func has_week_action() -> bool:
+	return week_actions_remaining > 0
+
+
+func spend_week_action() -> void:
+	week_actions_remaining = maxi(0, week_actions_remaining - 1)
+
+
+func no_visits_left_text(next_action: String) -> String:
+	return "The week's visits are spent (%d of %d used). Close the ledger week to reopen the stand before you %s." % [
+		week_action_allowance,
+		week_action_allowance,
+		next_action
+	]
 
 
 func current_signal() -> Dictionary:
@@ -728,7 +796,8 @@ func weekly_activity_snapshot() -> Dictionary:
 		"bench_spend": weekly_bench_spend,
 		"restock_spend": weekly_restock_spend,
 		"restocked_plants": weekly_restocked_plants,
-		"plants_sold": weekly_plants_sold
+		"plants_sold": weekly_plants_sold,
+		"recommended_plant_ids": weekly_recommended_plant_ids
 	}
 
 
@@ -743,6 +812,7 @@ func apply_weekly_activity(activity_data) -> void:
 	weekly_restock_spend = int(activity_data.get("restock_spend", 0))
 	weekly_restocked_plants = int(activity_data.get("restocked_plants", 0))
 	weekly_plants_sold = int(activity_data.get("plants_sold", 0))
+	weekly_recommended_plant_ids = strings_from(activity_data.get("recommended_plant_ids", []))
 
 
 func sanitize_dictionary(value) -> Dictionary:

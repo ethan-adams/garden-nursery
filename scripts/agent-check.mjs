@@ -275,6 +275,35 @@ check("Art loads through the import pipeline, not runtime file reads", async () 
   );
 });
 
+check("The week has a real action economy", async () => {
+  // The week must stay a constraint (issue #93): scarce per-week actions, no infinite
+  // restock-recommend loop, and reputation consumed by the visit budget. Guard the
+  // machinery so a future refactor can't quietly delete it and reopen the exploit.
+  const runState = await readFile("godot/scripts/core/nursery_run_state.gd", "utf8");
+  for (const required of [
+    "func week_action_budget",
+    "func has_week_action",
+    "func spend_week_action",
+    "week_actions_remaining",
+    "weekly_recommended_plant_ids"
+  ]) {
+    assert(runState.includes(required), `weekly action economy missing ${required}`);
+  }
+  // Reputation must feed the visit budget (consumed, not inert).
+  assert(
+    /reputation\s*\/\s*WEEK_ACTION_REPUTATION_STEP/.test(runState),
+    "the weekly visit budget must scale with reputation so reputation is consumed"
+  );
+  // Each spendable action must actually spend a visit, and recommend must guard against
+  // re-pitching the same plant in one week.
+  const spendCount = (runState.match(/spend_week_action\(\)/g) ?? []).length;
+  assert(spendCount >= 4, "recommend, restock, and propagation must each spend a week action (plus the definition)");
+  assert(
+    runState.includes("weekly_recommended_plant_ids.has(plant_id)"),
+    "recommend_plant must refuse a second same-week pitch of the same plant"
+  );
+});
+
 check("Core data catalogs are valid", async () => {
   const plantCatalog = await readJson("godot/data/plants/starter_plants.json");
   const customerCatalog = await readJson("godot/data/customers/hush_arbor_archetypes.json");

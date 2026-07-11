@@ -113,7 +113,11 @@ func _refresh_all() -> void:
 	week_label.text = str(run_state.week)
 	cash_label.text = "$%d" % run_state.cash
 	reputation_label.text = str(run_state.reputation)
-	region_label.text = "Hush Arbor roadside yard | %s" % _calendar_header_text()
+	region_label.text = "Hush Arbor roadside yard | %s | Visits left: %d/%d" % [
+		_calendar_header_text(),
+		run_state.week_actions_remaining,
+		run_state.week_action_allowance
+	]
 	_render_signal()
 	_render_inventory()
 	_render_customers()

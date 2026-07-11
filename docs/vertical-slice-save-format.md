@@ -23,8 +23,9 @@ The current format id is `garden-nursery.save.v1`.
   - `customers`
   - `signals`
 - `week_reflections`, the latest ledger-written journal reflections
+- `week_action_allowance` and `week_actions_remaining`, the weekly visit pool (issue #93). Saves from before the action economy default to a full fresh week on load.
 - `weekly_activity`, used by the ledger if the player quits before closing the week
-  - sales, customer trust, propagation spend, restock spend, restocked plants, and sold plants
+  - sales, customer trust, propagation spend, restock spend, restocked plants, sold plants, and `recommended_plant_ids` (plants already pitched this week, so a reload can't re-pitch them)
 
 ## Load Behavior
 
