@@ -93,8 +93,11 @@ static func customer_recommendation_outcome(plant: Dictionary, customer: Diction
 
 
 static func best_outcome_for(plant: Dictionary, outcomes: Array) -> Dictionary:
+	# best_score starts at 0 so an outcome must match at least one trigger trait to
+	# win. A plant with no matching traits (or no selected plant at all) yields an
+	# empty outcome and therefore no week-close cash or reputation.
 	var best := {}
-	var best_score := -1
+	var best_score := 0
 	for outcome in outcomes:
 		var score := trait_score(plant.get("traits", []), outcome.get("trigger_traits", []))
 		if score > best_score:

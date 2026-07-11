@@ -34,12 +34,17 @@ jobs:
         run: npm test
 
   godot-headless:
-    name: Godot headless import
+    name: Godot headless import and tests
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
       - name: Cache Godot binary
         id: cache-godot
@@ -59,6 +64,11 @@ jobs:
 
       - name: Verify Godot project imports
         run: .ci/godot/godot --headless --path godot --quit-after 1
+
+      - name: Run GDScript behavioral tests
+        run: |
+          export PATH="$GITHUB_WORKSPACE/.ci/godot:$PATH"
+          npm run godot:test
 
   steamdeck-export:
     name: Steam Deck debug export

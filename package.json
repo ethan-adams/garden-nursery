@@ -8,9 +8,10 @@
     "validate:data": "node scripts/validate-data.mjs",
     "test:rules": "node scripts/simulation-rules.test.mjs",
     "godot:smoke": "node scripts/godot-smoke.mjs",
+    "godot:test": "node scripts/godot-test.mjs",
     "godot:run": "godot --path godot",
     "export:steamdeck": "node scripts/export-godot.mjs steamdeck",
     "test": "npm run validate:data && npm run test:rules && npm run check",
-    "test:product": "npm test && npm run godot:smoke"
+    "test:product": "npm test && npm run godot:smoke && npm run godot:test"
   }
 }
