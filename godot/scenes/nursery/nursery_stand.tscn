@@ -205,10 +205,16 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Inventory Recommendations"
 
-[node name="InventoryList" type="VBoxContainer" parent="SafeArea/RootStack/BoardRow/InventoryPanel/InventoryMargin/InventoryStack"]
-unique_name_in_owner = true
+[node name="InventoryScroll" type="ScrollContainer" parent="SafeArea/RootStack/BoardRow/InventoryPanel/InventoryMargin/InventoryStack"]
 layout_mode = 2
 size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="InventoryList" type="VBoxContainer" parent="SafeArea/RootStack/BoardRow/InventoryPanel/InventoryMargin/InventoryStack/InventoryScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
 [node name="LowerRow" type="HBoxContainer" parent="SafeArea/RootStack"]
@@ -238,10 +244,16 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Regulars Today"
 
-[node name="CustomerList" type="VBoxContainer" parent="SafeArea/RootStack/LowerRow/CustomerPanel/CustomerMargin/CustomerStack"]
-unique_name_in_owner = true
+[node name="CustomerScroll" type="ScrollContainer" parent="SafeArea/RootStack/LowerRow/CustomerPanel/CustomerMargin/CustomerStack"]
 layout_mode = 2
 size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="CustomerList" type="VBoxContainer" parent="SafeArea/RootStack/LowerRow/CustomerPanel/CustomerMargin/CustomerStack/CustomerScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
 [node name="OutcomePanel" type="PanelContainer" parent="SafeArea/RootStack/LowerRow"]
@@ -256,66 +268,72 @@ theme_override_constants/margin_top = 18
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 18
 
-[node name="OutcomeStack" type="VBoxContainer" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin"]
+[node name="OutcomeScroll" type="ScrollContainer" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin"]
 layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="OutcomeStack" type="VBoxContainer" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="OutcomeHeading" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+[node name="OutcomeHeading" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Week Outcome"
 
-[node name="OutcomeText" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+[node name="OutcomeText" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
 theme_override_font_sizes/font_size = 17
 text = "Choose a market signal, recommend a plant, then advance the week."
 autowrap_mode = 3
 
-[node name="PropagationHeading" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+[node name="PropagationHeading" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Propagation Bench"
 
-[node name="PropagationStatus" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+[node name="PropagationStatus" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 17
 text = "Bench idle."
 autowrap_mode = 3
 
-[node name="StartPropagationButton" type="Button" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+[node name="StartPropagationButton" type="Button" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 50)
 focus_mode = 2
 text = "Start Bench Tray"
 
-[node name="RestockButton" type="Button" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+[node name="RestockButton" type="Button" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 50)
 focus_mode = 2
 text = "Order Stock"
 
-[node name="EventButton" type="Button" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+[node name="EventButton" type="Button" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 50)
 focus_mode = 2
 text = "Seed Swap"
 
-[node name="LogText" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+[node name="LogText" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 text = ""
 autowrap_mode = 3
 
-[node name="AdvanceWeekButton" type="Button" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack"]
+[node name="AdvanceWeekButton" type="Button" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 54)
@@ -323,9 +341,9 @@ focus_mode = 2
 text = "Close Ledger Week"
 
 [connection signal="pressed" from="SafeArea/RootStack/BoardRow/SignalPanel/SignalMargin/SignalStack/NextSignalButton" to="." method="_on_next_signal_button_pressed"]
-[connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/StartPropagationButton" to="." method="_on_start_propagation_button_pressed"]
-[connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/RestockButton" to="." method="_on_restock_button_pressed"]
-[connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/EventButton" to="." method="_on_event_button_pressed"]
-[connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeStack/AdvanceWeekButton" to="." method="_on_advance_week_button_pressed"]
+[connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack/StartPropagationButton" to="." method="_on_start_propagation_button_pressed"]
+[connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack/RestockButton" to="." method="_on_restock_button_pressed"]
+[connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack/EventButton" to="." method="_on_event_button_pressed"]
+[connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack/AdvanceWeekButton" to="." method="_on_advance_week_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/ResetRunButton" to="." method="_on_reset_run_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/CloseButton" to="." method="_on_close_button_pressed"]

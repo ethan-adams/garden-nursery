@@ -75,6 +75,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		close_station()
 		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("ui_tab_next"):
+		_cycle_section_focus(1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("ui_tab_previous"):
+		_cycle_section_focus(-1)
+		get_viewport().set_input_as_handled()
 
 
 func _load_data() -> void:
@@ -107,6 +113,69 @@ func _setup_focus() -> void:
 	advance_week_button.focus_mode = Control.FOCUS_ALL
 	reset_run_button.focus_mode = Control.FOCUS_ALL
 	close_button.focus_mode = Control.FOCUS_ALL
+
+
+# Shoulder buttons (ui_tab_next / ui_tab_previous) jump focus between the visible panels,
+# a deliberate cross-section path on top of the D-pad's within-panel walk. The panels each
+# scroll (follow_focus), so the newly focused control is always brought on screen.
+func _cycle_section_focus(direction: int) -> void:
+	var sections := _visible_sections()
+	if sections.is_empty():
+		return
+	var focused := get_viewport().gui_get_focus_owner()
+	var current := _current_section_index(sections, focused)
+	var next_index := wrapi(current + direction, 0, sections.size())
+	var anchor: Control = sections[next_index]["anchor"]
+	if anchor != null:
+		anchor.grab_focus()
+
+
+# Each visible section paired with the control focus should land on when entering it.
+# A section is only offered if it has a genuinely focusable, visible anchor — never a
+# hidden control, which would grab focus offscreen (Godot's grab_focus ignores
+# visibility).
+func _visible_sections() -> Array:
+	var sections: Array = []
+	_append_section(sections, signal_panel, next_signal_button if next_signal_button.visible else null)
+	if inventory_panel.visible:
+		_append_section(sections, inventory_panel, _first_focusable(inventory_list))
+	if customer_panel.visible:
+		_append_section(sections, customer_panel, _first_focusable(customer_list))
+	if outcome_panel.visible:
+		_append_section(sections, outcome_panel, _first_visible_action_button())
+	sections.append({"root": null, "anchor": close_button})
+	return sections
+
+
+func _append_section(sections: Array, root: Control, anchor: Control) -> void:
+	if root != null and root.visible and anchor != null:
+		sections.append({"root": root, "anchor": anchor})
+
+
+func _current_section_index(sections: Array, focused: Control) -> int:
+	if focused != null:
+		for i in range(sections.size()):
+			var root: Control = sections[i]["root"]
+			if root != null and (root == focused or root.is_ancestor_of(focused)):
+				return i
+	return sections.size() - 1
+
+
+func _first_focusable(node: Node) -> Control:
+	for child in node.get_children():
+		if child is Control and child.visible and child.focus_mode != Control.FOCUS_NONE:
+			return child
+		var nested := _first_focusable(child)
+		if nested != null:
+			return nested
+	return null
+
+
+func _first_visible_action_button() -> Control:
+	for button in [start_propagation_button, restock_button, event_button, advance_week_button]:
+		if button.visible and not button.disabled:
+			return button
+	return null
 
 
 func _refresh_all() -> void:
@@ -272,8 +341,12 @@ func _render_customers() -> void:
 	for child in customer_list.get_children():
 		child.queue_free()
 	for customer in run_state.customers:
-		var label := Label.new()
-		label.text = "%s, %s  |  Budget $%d\nWants: %s\n%s" % [
+		# A read-only card, but built as a Button so the controller can walk the regulars
+		# with a visible focus highlight (the default theme draws no focus state on a bare
+		# Label) and follow_focus scrolls the card into view when the list overflows the
+		# panel at 1280x800 (issue #94).
+		var card := Button.new()
+		var card_text := "%s, %s  |  Budget $%d\nWants: %s\n%s" % [
 			customer.get("display_name", "Customer"),
 			customer.get("role", "regular"),
 			int(customer.get("budget", 0)),
@@ -282,11 +355,14 @@ func _render_customers() -> void:
 		]
 		var memory := _latest_relationship_note(customer.get("id", ""))
 		if not memory.is_empty():
-			label.text = "%s\nNote: %s" % [label.text, memory]
-		label.text = "%s\n%s" % [label.text, _customer_memory_text(customer)]
-		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.custom_minimum_size = Vector2(0, 146)
-		customer_list.add_child(label)
+			card_text = "%s\nNote: %s" % [card_text, memory]
+		card_text = "%s\n%s" % [card_text, _customer_memory_text(customer)]
+		card.text = card_text
+		card.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		card.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		card.custom_minimum_size = Vector2(0, 146)
+		card.focus_mode = Control.FOCUS_ALL
+		customer_list.add_child(card)
 
 
 func _render_journal() -> void:

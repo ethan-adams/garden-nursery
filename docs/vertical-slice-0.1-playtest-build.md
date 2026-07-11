@@ -15,10 +15,10 @@ chmod +x GardenNursery.x86_64
 
 ## Controls
 
-- Move: directional input through Godot `ui_up`, `ui_down`, `ui_left`, `ui_right`
+- Move / step focus control by control: directional input through Godot `ui_up`, `ui_down`, `ui_left`, `ui_right` (D-pad or arrows), or `Tab` / `Shift+Tab` on a keyboard. Long lists scroll to follow the focused item.
 - Interact/select: `E`, Space, or gamepad south button
 - Close/back: Escape or gamepad east button
-- Focus next/previous where available: Page Down / shoulder buttons
+- Jump straight between station panels: the shoulder buttons — L1 for the previous panel, R1 for the next (`Tab` / `Shift+Tab` still step control by control)
 
 ## What To Test
 

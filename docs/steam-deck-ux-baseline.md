@@ -31,10 +31,15 @@ Garden Nursery is Steam Deck-first. Desktop keyboard and mouse can work, but the
 
 Use semantic action names instead of binding gameplay directly to device buttons. Start with these conventions:
 
+Bound and in use today:
+
 - `ui_confirm`: primary accept, select, buy, sell, or continue.
 - `ui_cancel`: back, close, decline, or leave a modal.
-- `ui_details`: inspect a focused plant, customer, market hint, or result.
-- `ui_tab_next` and `ui_tab_previous`: move between major panels or tabs.
+- `ui_tab_next` and `ui_tab_previous`: move between major panels (bound to the shoulder buttons in the stand overlay).
+
+Reserved conventions — names kept for consistency, but not bound to any key until the feature that needs them ships (an action is added to `project.godot` only when it does something, so nothing is a dead binding):
+
+- `ui_details`: inspect a focused plant, customer, market hint, or result (to be bound by the plant-inspect feature).
 - `ui_sort`: cycle sorting/grouping for inventory and market lists.
 - `ui_journal`: open the journal, ledger, or notes surface.
 

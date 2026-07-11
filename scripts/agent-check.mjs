@@ -216,7 +216,7 @@ check("Godot walkable yard station scene is wired", async () => {
     assert(rulesScript.includes(required), `nursery rules script missing ${required}`);
   }
 
-  for (const action of ["ui_confirm", "ui_cancel", "ui_details", "ui_tab_next", "ui_tab_previous"]) {
+  for (const action of ["ui_confirm", "ui_cancel", "ui_tab_next", "ui_tab_previous"]) {
     assert(project.includes(`${action}={`), `project.godot missing input action ${action}`);
   }
 });
@@ -273,6 +273,37 @@ check("Art loads through the import pipeline, not runtime file reads", async () 
     playerScene.includes('type="Texture2D" path="res://assets/art/gardener-player.png"'),
     "player.tscn must reference the player texture as an imported resource"
   );
+});
+
+check("Station overlay fits 1280x800 with working controller focus", async () => {
+  // The stand overlay must scroll long lists (issue #94) so no focusable element sits
+  // offscreen at 1280x800, and scroll must follow focus. Guard the ScrollContainers and
+  // the follow_focus flag against a regression to the old overflowing VBoxes.
+  const stand = await readFile("godot/scenes/nursery/nursery_stand.tscn", "utf8");
+  const standScript = await readFile("godot/scripts/ui/nursery_stand.gd", "utf8");
+  const scrollCount = (stand.match(/type="ScrollContainer"/g) ?? []).length;
+  assert(scrollCount >= 3, "the inventory, customer, and outcome lists must live in ScrollContainers");
+  const followFocusCount = (stand.match(/follow_focus = true/g) ?? []).length;
+  assert(followFocusCount >= scrollCount, "every overlay ScrollContainer must set follow_focus so focus stays visible");
+
+  // The customer cards are rendered at runtime; follow_focus only scrolls to a focusable
+  // child, so the render code must make each card focusable (a bare Label draws no focus
+  // state). Guard the line that makes "Regulars Today" controller-walkable.
+  assert(
+    /card\.focus_mode = Control\.FOCUS_ALL/.test(standScript),
+    "customer cards must be focusable so the controller can walk the regulars and scroll follows focus"
+  );
+
+  // Input actions must be honest: the shoulder-button focus jump is wired, and the old
+  // orphan actions the playtest doc lied about are gone.
+  const project = await readFile("godot/project.godot", "utf8");
+  for (const action of ["ui_tab_next", "ui_tab_previous"]) {
+    assert(project.includes(`${action}={`), `project.godot missing input action ${action}`);
+    assert(standScript.includes(`"${action}"`), `nursery_stand.gd must handle ${action}`);
+  }
+  for (const dead of ["ui_details", "ui_sort", "ui_journal"]) {
+    assert(!project.includes(`${dead}={`), `dead input action ${dead} must be removed or wired to real behavior`);
+  }
 });
 
 check("The week has a real action economy", async () => {
