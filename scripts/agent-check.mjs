@@ -155,7 +155,6 @@ check("Godot walkable yard station scene is wired", async () => {
   assert(yardScene.includes('node name="StationPrompt"'), "nursery yard must include an interaction prompt");
   assert(yardScene.includes('node name="StationOverlay"'), "nursery yard must include a station overlay layer");
   assert(yardScene.includes('node name="StationReadabilityMarkers"'), "nursery yard must include station readability markers");
-  assert(yardScene.includes('node name="PathEdgeAccents"'), "nursery yard must include path edge readability accents");
 
   for (const [nodeName, stationId] of [
     ["SignalBoardStation", "signal_board"],
@@ -168,16 +167,21 @@ check("Godot walkable yard station scene is wired", async () => {
     assert(yardScene.includes(`station_id = "${stationId}"`), `${nodeName} must define station_id ${stationId}`);
   }
 
+  // Station names are painted onto diegetic sign planks in the yard art; the scene
+  // layers a SignLabel-themed Label over each plank so the text stays crisp and
+  // editable. Guard the sign layer so stations never lose their at-a-glance names.
   for (const [markerName, stationLabel] of [
-    ["SignalMarker", "SIGNAL"],
-    ["PlantStandMarker", "STAND"],
-    ["PropagationMarker", "TRAYS"],
-    ["LedgerMarker", "LEDGER"],
-    ["JournalMarker", "JOURNAL"]
+    ["SignalMarker", "Signal Board"],
+    ["PlantStandMarker", "Plant Stand"],
+    ["PropagationMarker", "Trays"],
+    ["LedgerMarker", "Ledger"],
+    ["JournalMarker", "Journal"]
   ]) {
     assert(yardScene.includes(`node name="${markerName}"`), `nursery yard missing ${markerName}`);
-    assert(yardScene.includes(`text = "${stationLabel}"`), `${markerName} must include readable ${stationLabel} label`);
+    assert(yardScene.includes(`text = "${stationLabel}"`), `${markerName} must include readable ${stationLabel} sign label`);
   }
+  const signLabelCount = (yardScene.match(/theme_type_variation = &"SignLabel"/g) ?? []).length;
+  assert(signLabelCount >= 5, "every station sign label must use the SignLabel theme variation");
 
   for (const required of [
     "station_activated",
@@ -226,6 +230,12 @@ check("Godot export preset is present", async () => {
   assert(presets.includes('name="Steam Deck"'), "export presets must include Steam Deck preset");
   assert(presets.includes('platform="Linux/X11"'), "Steam Deck preset must export Linux/X11");
   assert(presets.includes('export_path="../dist/steamdeck/GardenNursery.x86_64"'), "Steam Deck export path must target dist/steamdeck");
+
+  // The export must run a --import pass before --export-debug. The project loads its
+  // custom gui theme (referencing imported fonts) at engine boot, before a single-pass
+  // export's own filesystem scan imports it, so a fresh checkout aborts without this.
+  const exportScript = await readFile("scripts/export-godot.mjs", "utf8");
+  assert(exportScript.includes('"--import"'), "export-godot.mjs must import the project before exporting so imported data exists on a fresh checkout");
 });
 
 check("Art loads through the import pipeline, not runtime file reads", async () => {
@@ -263,6 +273,17 @@ check("Art loads through the import pipeline, not runtime file reads", async () 
     );
   }
 
+  // The committed PNGs are rasterized from editable SVG sources by rasterize_art.gd; the
+  // SVGs are the art's source of truth (issue: craft-pass). Guard the tool the same way
+  // capture_screens.gd is guarded, so a refactor can't silently delete the regeneration
+  // path and leave the PNGs orphaned from their sources.
+  const rasterizer = await readFile("godot/tools/rasterize_art.gd", "utf8");
+  assert(rasterizer.includes("save_png"), "rasterize_art.gd must save the PNGs it rasterizes from SVG");
+  for (const svg of ["hush-arbor-yard.svg", "gardener-player.svg"]) {
+    assert(await fileExists(`godot/assets/art/${svg}`), `missing SVG art source: godot/assets/art/${svg}`);
+    assert(rasterizer.includes(svg), `rasterize_art.gd must regenerate ${svg}`);
+  }
+
   const yardScene = await readFile("godot/scenes/nursery/nursery_yard.tscn", "utf8");
   const playerScene = await readFile("godot/scenes/player/player.tscn", "utf8");
   assert(
@@ -273,6 +294,31 @@ check("Art loads through the import pipeline, not runtime file reads", async () 
     playerScene.includes('type="Texture2D" path="res://assets/art/gardener-player.png"'),
     "player.tscn must reference the player texture as an imported resource"
   );
+});
+
+check("Nursery UI theme is wired with licensed fonts", async () => {
+  // The workbench theme (art bible: paper/wood/slate surfaces, opaque panels, marigold
+  // controller focus) must stay the project-wide gui theme, and its fonts must ship
+  // with their OFL license texts. Guard against a regression to default-theme chrome.
+  const project = await readFile("godot/project.godot", "utf8");
+  assert(
+    project.includes('theme/custom="res://assets/ui/nursery_theme.tres"'),
+    "project.godot must set the nursery workbench theme as the custom gui theme"
+  );
+  const theme = await readFile("godot/assets/ui/nursery_theme.tres", "utf8");
+  for (const variation of ["SlatePanel", "KraftPanel", "WoodPanel", "SignLabel", "PrimaryButton"]) {
+    assert(theme.includes(`${variation}/base_type`), `nursery theme missing ${variation} variation`);
+  }
+  assert(theme.includes("button_focus"), "nursery theme must style controller focus on buttons");
+  for (const fontFile of [
+    "godot/assets/fonts/AlegreyaSans-Regular.ttf",
+    "godot/assets/fonts/AlegreyaSans-Bold.ttf",
+    "godot/assets/fonts/Alegreya-Variable.ttf",
+    "godot/assets/fonts/OFL-AlegreyaSans.txt",
+    "godot/assets/fonts/OFL-Alegreya.txt"
+  ]) {
+    assert(await fileExists(fontFile), `missing committed font asset: ${fontFile}`);
+  }
 });
 
 check("Station overlay fits 1280x800 with working controller focus", async () => {

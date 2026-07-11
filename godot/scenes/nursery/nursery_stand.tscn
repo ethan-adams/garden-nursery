@@ -18,7 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.196078, 0.243137, 0.184314, 0.82)
+color = Color(0.278, 0.224, 0.153, 1)
 
 [node name="SafeArea" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -38,6 +38,7 @@ theme_override_constants/separation = 18
 
 [node name="Header" type="PanelContainer" parent="SafeArea/RootStack"]
 layout_mode = 2
+theme_type_variation = &"WoodPanel"
 
 [node name="HeaderMargin" type="MarginContainer" parent="SafeArea/RootStack/Header"]
 layout_mode = 2
@@ -57,14 +58,20 @@ size_flags_horizontal = 3
 [node name="RegionLabel" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/TitleStack"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CreamMutedLabel"
 theme_override_font_sizes/font_size = 18
-text = "Hush Arbor Roadside Stand"
+text = "Hush Arbor roadside yard"
+text_overrun_behavior = 3
 
 [node name="Title" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/TitleStack"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 38
+size_flags_horizontal = 3
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 36
 text = "Foothill Plant House"
+text_overrun_behavior = 3
 
 [node name="Stats" type="HBoxContainer" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow"]
 layout_mode = 2
@@ -72,48 +79,71 @@ theme_override_constants/separation = 14
 
 [node name="WeekBox" type="VBoxContainer" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats"]
 layout_mode = 2
-custom_minimum_size = Vector2(110, 0)
+custom_minimum_size = Vector2(76, 0)
 
 [node name="WeekLabel" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats/WeekBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_type_variation = &"CreamMutedLabel"
+theme_override_font_sizes/font_size = 18
 text = "Week"
 
 [node name="WeekValue" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats/WeekBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_type_variation = &"CreamHeadingLabel"
+theme_override_font_sizes/font_size = 27
 text = "1"
 
 [node name="CashBox" type="VBoxContainer" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats"]
 layout_mode = 2
-custom_minimum_size = Vector2(110, 0)
+custom_minimum_size = Vector2(96, 0)
 
 [node name="CashLabel" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats/CashBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_type_variation = &"CreamMutedLabel"
+theme_override_font_sizes/font_size = 18
 text = "Cash"
 
 [node name="CashValue" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats/CashBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_type_variation = &"CreamHeadingLabel"
+theme_override_font_sizes/font_size = 27
 text = "$120"
 
 [node name="ReputationBox" type="VBoxContainer" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats"]
 layout_mode = 2
-custom_minimum_size = Vector2(130, 0)
+custom_minimum_size = Vector2(110, 0)
 
 [node name="ReputationLabel" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats/ReputationBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_type_variation = &"CreamMutedLabel"
+theme_override_font_sizes/font_size = 18
 text = "Reputation"
 
 [node name="ReputationValue" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats/ReputationBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_type_variation = &"CreamHeadingLabel"
+theme_override_font_sizes/font_size = 27
 text = "12"
+
+[node name="VisitsBox" type="VBoxContainer" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats"]
+layout_mode = 2
+custom_minimum_size = Vector2(106, 0)
+
+[node name="VisitsLabel" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats/VisitsBox"]
+layout_mode = 2
+theme_type_variation = &"CreamMutedLabel"
+theme_override_font_sizes/font_size = 18
+text = "Visits left"
+
+[node name="VisitsValue" type="Label" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow/Stats/VisitsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CreamHeadingLabel"
+theme_override_font_sizes/font_size = 27
+text = "6/6"
 
 [node name="ResetRunButton" type="Button" parent="SafeArea/RootStack/Header/HeaderMargin/HeaderRow"]
 unique_name_in_owner = true
@@ -139,6 +169,7 @@ theme_override_constants/separation = 18
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"SlatePanel"
 
 [node name="SignalMargin" type="MarginContainer" parent="SafeArea/RootStack/BoardRow/SignalPanel"]
 layout_mode = 2
@@ -153,18 +184,21 @@ theme_override_constants/separation = 12
 
 [node name="SignalHeading" type="Label" parent="SafeArea/RootStack/BoardRow/SignalPanel/SignalMargin/SignalStack"]
 layout_mode = 2
+theme_type_variation = &"CreamHeadingLabel"
 theme_override_font_sizes/font_size = 24
 text = "Market Signal Board"
 
 [node name="SignalSource" type="Label" parent="SafeArea/RootStack/BoardRow/SignalPanel/SignalMargin/SignalStack"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"CreamMutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "Weather Board"
 
 [node name="SignalText" type="Label" parent="SafeArea/RootStack/BoardRow/SignalPanel/SignalMargin/SignalStack"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"CreamLabel"
 theme_override_font_sizes/font_size = 22
 text = "Possible frost Thursday."
 autowrap_mode = 3
@@ -172,6 +206,7 @@ autowrap_mode = 3
 [node name="SignalTraits" type="Label" parent="SafeArea/RootStack/BoardRow/SignalPanel/SignalMargin/SignalStack"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"CreamMutedLabel"
 theme_override_font_sizes/font_size = 18
 text = "Points toward: hardy"
 autowrap_mode = 3
@@ -202,6 +237,7 @@ theme_override_constants/separation = 10
 
 [node name="InventoryHeading" type="Label" parent="SafeArea/RootStack/BoardRow/InventoryPanel/InventoryMargin/InventoryStack"]
 layout_mode = 2
+theme_type_variation = &"HeadingLabel"
 theme_override_font_sizes/font_size = 24
 text = "Inventory Recommendations"
 
@@ -227,6 +263,7 @@ theme_override_constants/separation = 18
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"KraftPanel"
 
 [node name="CustomerMargin" type="MarginContainer" parent="SafeArea/RootStack/LowerRow/CustomerPanel"]
 layout_mode = 2
@@ -241,6 +278,7 @@ theme_override_constants/separation = 10
 
 [node name="CustomerHeading" type="Label" parent="SafeArea/RootStack/LowerRow/CustomerPanel/CustomerMargin/CustomerStack"]
 layout_mode = 2
+theme_type_variation = &"HeadingLabel"
 theme_override_font_sizes/font_size = 24
 text = "Regulars Today"
 
@@ -282,6 +320,7 @@ theme_override_constants/separation = 12
 [node name="OutcomeHeading" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"HeadingLabel"
 theme_override_font_sizes/font_size = 24
 text = "Week Outcome"
 
@@ -295,6 +334,7 @@ autowrap_mode = 3
 [node name="PropagationHeading" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"HeadingLabel"
 theme_override_font_sizes/font_size = 22
 text = "Propagation Bench"
 
@@ -329,6 +369,7 @@ text = "Seed Swap"
 [node name="LogText" type="Label" parent="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"MutedLabel"
 theme_override_font_sizes/font_size = 15
 text = ""
 autowrap_mode = 3
@@ -338,6 +379,7 @@ unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 54)
 focus_mode = 2
+theme_type_variation = &"PrimaryButton"
 text = "Close Ledger Week"
 
 [connection signal="pressed" from="SafeArea/RootStack/BoardRow/SignalPanel/SignalMargin/SignalStack/NextSignalButton" to="." method="_on_next_signal_button_pressed"]

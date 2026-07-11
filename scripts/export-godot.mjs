@@ -57,7 +57,7 @@ function assertTemplatesInstalled() {
   process.exit(1);
 }
 
-function run(command, args) {
+function run(command, args, { scanMarkers = true } = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, { stdio: "pipe" });
     let stdout = "";
@@ -76,10 +76,15 @@ function run(command, args) {
         reject(new Error(`Godot export exited ${code}`));
         return;
       }
-      for (const marker of ["SCRIPT ERROR", "Parse Error", "ERROR: Failed to load"]) {
-        if (output.includes(marker)) {
-          reject(new Error(`Godot export output contained "${marker}"`));
-          return;
+      // A first-time import legitimately logs transient load/parse errors while the
+      // generated data (.ctex, .fontdata) does not yet exist, so only the export pass
+      // scans for these markers — by then everything is imported.
+      if (scanMarkers) {
+        for (const marker of ["SCRIPT ERROR", "Parse Error", "ERROR: Failed to load"]) {
+          if (output.includes(marker)) {
+            reject(new Error(`Godot export output contained "${marker}"`));
+            return;
+          }
         }
       }
       resolve();
@@ -89,5 +94,13 @@ function run(command, args) {
 
 assertTemplatesInstalled();
 await mkdir(target.outputDir, { recursive: true });
+
+// Import the project first, in its own pass. A fresh checkout has the committed .import
+// sidecars but not the generated data in .godot/imported/ (.ctex, .fontdata, ...), and
+// the project loads its custom gui theme (which references imported fonts) at engine
+// boot — before a single-pass export's own filesystem scan would import them. Without
+// this pass the theme fails to load on CI and the export aborts. Matches the import-first
+// pattern the screenshot capture already relies on.
+await run("godot", ["--headless", "--path", "godot", "--import"], { scanMarkers: false });
 await run("godot", ["--headless", "--path", "godot", "--export-debug", target.preset, target.outputPathFromGodotProject]);
 console.log(`ok - exported ${target.preset} to ${target.outputDir}`);

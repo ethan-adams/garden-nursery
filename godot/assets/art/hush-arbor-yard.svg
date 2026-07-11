@@ -1,133 +1,368 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" role="img" aria-label="Hush Arbor roadside nursery yard in early spring">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" role="img" aria-label="Hush Arbor roadside nursery yard on a bright early-spring morning">
+  <!--
+    Editable source of truth for the yard background. Regenerate the committed PNG with:
+      godot &#45;&#45;headless &#45;&#45;path godot -s res://tools/rasterize_art.gd
+
+    Scene geometry the art must keep serving (station Area2D centers in nursery_yard.tscn):
+      signal board (308,322) / plant stand (640,300) / propagation bench (916,380)
+      ledger (480,520) / journal (716,534)
+    Each station paints a cream sign plank; the scene layers a Label over it.
+    Light direction: warm morning key from the upper left.
+  -->
   <defs>
-    <linearGradient id="coolSky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#dfe8d5"/>
-      <stop offset="1" stop-color="#a9b98f"/>
+    <linearGradient id="morningSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6eecf"/>
+      <stop offset="0.6" stop-color="#e3e4bf"/>
+      <stop offset="1" stop-color="#c8d4ac"/>
     </linearGradient>
-    <linearGradient id="wetLane" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#554a3d"/>
-      <stop offset="0.55" stop-color="#6a5d4a"/>
-      <stop offset="1" stop-color="#4c4439"/>
+    <linearGradient id="meadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fae66"/>
+      <stop offset="1" stop-color="#749453"/>
     </linearGradient>
-    <linearGradient id="woodWarm" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#8f6240"/>
-      <stop offset="1" stop-color="#553821"/>
+    <linearGradient id="apron" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d3bf94"/>
+      <stop offset="1" stop-color="#c2ab7e"/>
     </linearGradient>
-    <linearGradient id="shadeCloth" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#354b3e"/>
-      <stop offset="1" stop-color="#26372f"/>
+    <linearGradient id="roadBed" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6a5c4a"/>
+      <stop offset="1" stop-color="#544838"/>
     </linearGradient>
-    <radialGradient id="softLight" cx="0.48" cy="0.18" r="0.88">
-      <stop offset="0" stop-color="#f5efd4" stop-opacity="0.45"/>
-      <stop offset="0.55" stop-color="#f5efd4" stop-opacity="0.12"/>
-      <stop offset="1" stop-color="#f5efd4" stop-opacity="0"/>
+    <linearGradient id="woodWarm" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#96683f"/>
+      <stop offset="1" stop-color="#6b4527"/>
+    </linearGradient>
+    <linearGradient id="woodWeathered" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8a7457"/>
+      <stop offset="1" stop-color="#6d5a41"/>
+    </linearGradient>
+    <radialGradient id="morningGlow" cx="0.4" cy="0.1" r="0.95">
+      <stop offset="0" stop-color="#fbf3d3" stop-opacity="0.32"/>
+      <stop offset="0.5" stop-color="#fbf3d3" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#fbf3d3" stop-opacity="0"/>
     </radialGradient>
   </defs>
 
-  <rect width="1280" height="800" fill="#3f5137"/>
-  <path d="M0 0h1280v800H0z" fill="url(#coolSky)" opacity="0.2"/>
-  <ellipse cx="640" cy="392" rx="610" ry="340" fill="#50653d"/>
-  <path d="M70 116c152-48 326-51 481-27 116 18 224 10 334-13 137-29 251-20 330 31v479c-89 32-198 25-329 11-142-15-279 10-405 38-138 31-288 33-411-7z" fill="#5f7045"/>
-  <path d="M95 150c145-38 305-40 455-14 112 19 224 9 333-14 123-26 225-19 302 24v412c-111 27-222 12-336 8-144-5-253 37-392 59-133 21-256 5-362-41z" fill="#66794e" opacity="0.75"/>
-  <path d="M0 616c156-13 289-6 401 21 124 29 248 42 380 18 161-30 330-68 499-37v182H0z" fill="url(#wetLane)"/>
-  <path d="M0 650c116-14 231-10 344 15 166 37 309 50 470 17 166-34 303-46 466-24v28c-167-20-303-6-466 29-158 34-313 22-475-17-111-26-224-29-339-15z" fill="#2f3b32" opacity="0.28"/>
-  <path d="M243 649c92-48 181-85 267-111 81-25 143-42 216-23 75 19 158 47 288 35l42 37c-138 13-230-16-309-37-67-18-127-5-205 21-91 29-181 66-268 112z" fill="#c1b083"/>
-  <path d="M294 639c78-38 155-67 233-90 73-22 125-31 191-14 76 19 162 44 273 35" fill="none" stroke="#e1d3a5" stroke-width="8" stroke-linecap="round" opacity="0.45"/>
-  <path d="M240 657c92-51 184-88 276-114 83-24 145-35 211-17 78 22 165 49 286 37" fill="none" stroke="#7b704d" stroke-width="5" stroke-linecap="round" opacity="0.36"/>
+  <!-- ============ SKY AND FAR DISTANCE ============ -->
+  <rect width="1280" height="800" fill="url(#morningSky)"/>
+  <!-- far hills -->
+  <path d="M0 208c118-34 246-52 388-40 96 8 178 2 262-16 130-28 262-30 396-4 90 17 168 20 234 12v120H0z" fill="#adc389"/>
+  <path d="M0 240c150-26 296-34 448-18 118 12 238 6 356-14 118-20 250-18 372 8 40 8 74 12 104 13v90H0z" fill="#9cb478"/>
 
-  <g opacity="0.72">
-    <path d="M88 202c37-58 81-86 132-86 49 0 87 31 114 88-40 28-79 40-118 37-45-3-87-16-128-39z" fill="#31452f"/>
-    <path d="M996 183c44-63 97-91 157-78 44 9 76 43 96 101-41 25-85 34-131 26-47-8-88-24-122-49z" fill="#304530"/>
-    <path d="M80 251c28-24 58-36 89-36 37 0 68 17 94 51-57 27-115 22-183-15z" fill="#475d3c"/>
-    <path d="M1015 249c32-23 66-33 102-29 36 5 65 23 89 56-61 22-124 13-191-27z" fill="#455c3c"/>
-  </g>
-  <g fill="#6f5334" opacity="0.78">
-    <path d="M198 210h19l-8 126h-18z"/>
-    <path d="M1128 197h20l-5 136h-18z"/>
-    <path d="M153 253h14l-5 94h-13z"/>
-    <path d="M1090 264h14l-4 88h-13z"/>
-  </g>
-
-  <g id="signal-board" transform="translate(285 320)">
-    <ellipse cx="0" cy="58" rx="92" ry="21" fill="#2f3428" opacity="0.24"/>
-    <path d="M-57-8h18v116h-18zM43-12h18v120H43z" fill="#5a3f27"/>
-    <path d="M-88-82c49-10 104-10 159 0 11 2 18 11 17 22l-7 78c-1 9-8 16-17 18-47 9-96 10-150 1-10-2-17-11-16-21l6-80c1-9 7-16 8-18z" fill="#9e8052"/>
-    <path d="M-70-59c40-7 86-7 129 0l-5 51c-39 8-82 8-129 1z" fill="#ded4a8"/>
-    <path d="M-42-40c22-6 43-5 63 3" fill="none" stroke="#6d5a3f" stroke-width="6" stroke-linecap="round"/>
-    <path d="M-52-20c28-6 60-6 95 1" fill="none" stroke="#6d5a3f" stroke-width="5" stroke-linecap="round"/>
-    <path d="M53-58c14 14 14 29 1 46-13-17-12-32-1-46z" fill="#758d58"/>
+  <!-- ============ ORCHARD TREE LINE ============ -->
+  <g>
+    <!-- left old pear, blooming -->
+    <path d="M196 156h20l-6 150h-14z" fill="#7a5638"/>
+    <path d="M118 158c30-58 82-84 138-70 44 11 72 46 82 96-46 26-96 33-142 22-34-8-61-24-78-48z" fill="#628049"/>
+    <path d="M132 128c26-30 62-42 102-34-14 24-38 38-70 44-12 2-23-1-32-10z" fill="#79995c"/>
+    <ellipse cx="128" cy="164" rx="26" ry="18" fill="#f0d3da"/>
+    <ellipse cx="236" cy="106" rx="30" ry="20" fill="#f0d3da"/>
+    <ellipse cx="308" cy="170" rx="22" ry="15" fill="#e9c2cd"/>
+    <!-- small left companion -->
+    <path d="M92 232h13l-4 84h-10z" fill="#7a5638"/>
+    <path d="M46 236c20-34 52-48 88-40 26 6 44 24 52 52-38 18-76 20-106 6-14-6-25-12-34-18z" fill="#577544"/>
+    <!-- right old pear pair -->
+    <path d="M1108 140h20l-6 172h-14z" fill="#7a5638"/>
+    <path d="M1022 148c34-62 92-88 150-70 44 14 70 50 78 100-52 26-106 31-154 17-32-10-57-25-74-47z" fill="#5f7d48"/>
+    <path d="M1044 116c30-28 68-38 108-26-16 24-42 36-76 40-12 1-23-4-32-14z" fill="#77975a"/>
+    <ellipse cx="1042" cy="150" rx="28" ry="19" fill="#f0d3da"/>
+    <ellipse cx="1168" cy="102" rx="26" ry="18" fill="#e9c2cd"/>
+    <ellipse cx="1216" cy="176" rx="20" ry="14" fill="#f0d3da"/>
+    <path d="M1226 236h13l-4 84h-10z" fill="#7a5638"/>
+    <path d="M1180 240c20-34 52-48 88-40 20 5 36 17 46 36v26c-32 12-64 12-96 0-16-6-28-13-38-22z" fill="#587646"/>
   </g>
 
-  <g id="plant-stand" transform="translate(650 309)">
-    <ellipse cx="0" cy="104" rx="180" ry="36" fill="#2f3428" opacity="0.23"/>
-    <path d="M-168-86c109-31 222-32 338-2 15 4 24 19 19 34l-8 25c-114-28-232-28-354 1l-8-26c-5-14 0-27 13-32z" fill="#7d9a6b"/>
-    <path d="M-166-27c113-28 229-28 348-1l-24 36c-103-21-204-21-304 0z" fill="#58764f"/>
-    <path d="M-152 0h304c15 0 27 12 27 27v46H-179V27c0-15 12-27 27-27z" fill="url(#woodWarm)"/>
-    <path d="M-171 70h342v35h-342z" fill="#6e482c"/>
-    <path d="M-134 103h22v78h-22zM112 103h22v78h-22z" fill="#4e3321"/>
-    <g transform="translate(-95 24)">
-      <path d="M-46-16h92l11 45H-57z" fill="#60452d"/>
-      <path d="M-33-25c15 14 13 31-3 50-13-19-12-35 3-50zM0-31c18 17 17 37-1 60-18-23-17-43 1-60zM33-24c17 17 17 34 1 51-17-19-17-36-1-51z" fill="#446b38"/>
+  <!-- ============ MEADOW ============ -->
+  <path d="M0 268c210-30 422-34 634-10 216 24 432 22 646-8v420H0z" fill="url(#meadow)"/>
+  <!-- mown texture bands -->
+  <path d="M0 330c220-24 440-27 660-8 208 18 414 16 620-6v26c-206 20-412 22-620 5-220-18-440-15-660 8z" fill="#84a35f" opacity="0.55"/>
+  <path d="M0 452c224-20 448-21 672-3 202 16 406 14 608-4v26c-202 16-406 18-608 3-224-17-448-16-672 4z" fill="#84a35f" opacity="0.4"/>
+
+  <!-- ============ WORKING APRON (packed gravel where the stations live) ============ -->
+  <path d="M158 372c96-44 214-66 342-64 116 2 232 10 344 32 112 22 200 60 250 110 22 22 18 48-10 62-96 48-214 70-344 68-118-2-236-12-348-36-108-24-192-58-240-104-20-20-18-46 6-68z" fill="url(#apron)"/>
+  <path d="M206 386c88-38 192-56 306-54 108 2 216 10 320 30 100 20 180 52 228 94-90 40-196 58-314 56-110-2-220-12-324-34-98-20-176-50-216-92z" fill="#d9c69b" opacity="0.5"/>
+  <!-- scattered gravel flecks -->
+  <g fill="#a58c60" opacity="0.5">
+    <circle cx="420" cy="420" r="4"/><circle cx="530" cy="470" r="3"/><circle cx="700" cy="440" r="4"/>
+    <circle cx="840" cy="480" r="3"/><circle cx="600" cy="520" r="3"/><circle cx="370" cy="500" r="3"/>
+    <circle cx="950" cy="520" r="4"/><circle cx="760" cy="560" r="3"/>
+  </g>
+
+  <!-- ============ ROADSIDE LANE (foreground) ============ -->
+  <path d="M0 636c150-16 300-20 452-12l96 4c66 2 132 2 198-2l102-5c144-6 288-2 432 13v166H0z" fill="#618150" opacity="0.4"/>
+  <path d="M0 640c212-20 424-24 636-10 214 14 428 12 644-6v176H0z" fill="#5c7b4a"/>
+  <path d="M0 676c216-22 430-26 644-12 212 14 424 12 636-6v142H0z" fill="url(#roadBed)"/>
+  <!-- wheel ruts -->
+  <path d="M0 716c214-18 426-22 638-10 210 12 420 10 642-6" fill="none" stroke="#463c2f" stroke-width="10" opacity="0.5"/>
+  <path d="M0 754c214-16 428-20 640-9 210 11 420 9 640-5" fill="none" stroke="#463c2f" stroke-width="9" opacity="0.4"/>
+  <!-- split-rail fence along the verge, gap at the path -->
+  <g stroke="#7d6247" stroke-width="9" stroke-linecap="round" fill="none">
+    <path d="M40 622c118-10 236-14 354-12M60 654c112-9 224-13 336-12"/>
+    <path d="M886 610c112-2 224 2 336 12M866 642c118-1 236 4 354 15"/>
+  </g>
+  <g fill="#6b5138">
+    <path d="M78 600h14v70H78z"/><path d="M228 594h14v70h-14z"/><path d="M378 592h14v70h-14z"/>
+    <path d="M906 592h14v70h-14z"/><path d="M1056 596h14v72h-14z"/><path d="M1196 604h14v72h-14z"/>
+  </g>
+  <!-- grass tufts on the verge -->
+  <g fill="#6f9155">
+    <path d="M148 640c6-14 14-20 24-18-4 12-12 18-24 18zM500 632c8-12 16-16 26-13-6 11-14 15-26 13zM806 634c7-13 15-18 25-15-5 12-13 17-25 15zM1150 648c6-13 14-18 24-16-4 12-12 17-24 16z"/>
+  </g>
+
+  <!-- ============ PATH FROM THE ROAD (over the verge, meeting the lane) ============ -->
+  <path d="M574 706c8-42 18-82 30-120 8-26 13-50 17-72l88 4c-2 22-6 46-12 72-10 38-17 78-21 120-34 3-68 2-102-4z" fill="#e0cea4"/>
+  <path d="M592 704c8-40 17-76 28-112 8-24 13-46 17-68l40 2c-3 22-7 44-13 68-9 36-16 74-20 114-18 1-35 0-52-4z" fill="#cbb586" opacity="0.55"/>
+  <path d="M620 700c7-38 15-74 26-108 7-24 12-46 16-66" fill="none" stroke="#b8a274" stroke-width="6" opacity="0.6" stroke-linecap="round"/>
+  <g fill="#a8905f" opacity="0.85">
+    <ellipse cx="580" cy="668" rx="10" ry="5"/><ellipse cx="700" cy="646" rx="10" ry="5"/>
+    <ellipse cx="590" cy="590" rx="9" ry="4"/><ellipse cx="692" cy="562" rx="9" ry="4"/>
+  </g>
+
+  <!-- ============ LEFT PLANT BED (rows of potted color) ============ -->
+  <g id="left-bed">
+    <ellipse cx="230" cy="530" rx="130" ry="26" fill="#3a4830" opacity="0.18"/>
+    <path d="M120 470h218c10 0 17 8 16 18l-5 40c-1 9-8 15-17 15H128c-9 0-16-6-17-15l-6-40c-1-10 6-18 15-18z" fill="#8a6a44"/>
+    <path d="M112 470h236v14H112z" fill="#a07c50"/>
+    <!-- pots and plants: mound / upright / rosette variety -->
+    <g>
+      <path d="M136 452h30l-6 20h-18z" fill="#b56943"/><path d="M133 448h36v8h-36z" fill="#c97f52"/>
+      <path d="M142 430c8-14 20-16 30-6-4 12-14 16-30 6z" fill="#6f9455"/>
+      <circle cx="160" cy="424" r="7" fill="#e3a43a"/><circle cx="146" cy="432" r="5" fill="#e3a43a"/>
     </g>
-    <g transform="translate(31 22)">
-      <path d="M-58-14H58l10 45H-68z" fill="#6b4a31"/>
-      <circle cx="-35" cy="-19" r="14" fill="#bd7775"/>
-      <circle cx="0" cy="-25" r="16" fill="#d9a45f"/>
-      <circle cx="36" cy="-18" r="13" fill="#c895bb"/>
-      <path d="M-42 0c28-12 56-12 85 1" fill="none" stroke="#47733d" stroke-width="8" stroke-linecap="round"/>
+    <g>
+      <path d="M186 450h30l-6 20h-18z" fill="#a75f3c"/><path d="M183 446h36v8h-36z" fill="#bd7148"/>
+      <path d="M192 414c4-16 12-24 24-24-2 16-10 24-24 24zM206 420c8-10 18-12 28-6-6 10-16 12-28 6z" fill="#5d8049"/>
+      <circle cx="206" cy="404" r="6" fill="#8f6fae"/>
+    </g>
+    <g>
+      <path d="M238 452h32l-6 20h-20z" fill="#b56943"/><path d="M235 448h38v8h-38z" fill="#c97f52"/>
+      <path d="M244 428c10-12 24-13 34-2-8 10-20 12-34 2zM250 416c8-10 18-12 28-6-6 10-16 12-28 6z" fill="#78995a"/>
+      <circle cx="272" cy="412" r="6" fill="#c2574b"/><circle cx="256" cy="406" r="5" fill="#c2574b"/>
+    </g>
+    <g>
+      <path d="M292 450h30l-6 20h-18z" fill="#a75f3c"/><path d="M289 446h36v8h-36z" fill="#bd7148"/>
+      <path d="M296 424c2-18 10-28 24-30 0 18-8 28-24 30zM310 428c10-8 20-8 30 0-8 8-18 8-30 0z" fill="#527446"/>
+      <circle cx="320" cy="412" r="6" fill="#e3a43a"/>
+    </g>
+    <!-- seed flat leaning on the bed -->
+    <path d="M126 508h56l8 26h-70z" fill="#5f4128"/>
+    <path d="M134 512c14-8 28-8 42 0-14 6-28 6-42 0z" fill="#a4c86e"/>
+  </g>
+
+  <!-- ============ RIGHT PLANT BED ============ -->
+  <g id="right-bed">
+    <ellipse cx="1108" cy="546" rx="120" ry="24" fill="#3a4830" opacity="0.18"/>
+    <path d="M1006 486h204c10 0 17 8 16 18l-5 38c-1 9-8 15-17 15h-192c-9 0-16-6-17-15l-5-38c-1-10 6-18 16-18z" fill="#8a6a44"/>
+    <path d="M998 486h222v14H998z" fill="#a07c50"/>
+    <g>
+      <path d="M1022 468h30l-6 20h-18z" fill="#b56943"/><path d="M1019 464h36v8h-36z" fill="#c97f52"/>
+      <path d="M1028 446c8-12 20-14 30-4-6 10-16 12-30 4z" fill="#6f9455"/>
+      <circle cx="1048" cy="438" r="6" fill="#e3a43a"/>
+    </g>
+    <g>
+      <path d="M1072 466h32l-6 20h-20z" fill="#a75f3c"/><path d="M1069 462h38v8h-38z" fill="#bd7148"/>
+      <path d="M1080 434c4-16 12-24 24-24-2 16-10 24-24 24zM1092 442c8-8 18-10 28-4-6 8-16 10-28 4z" fill="#5d8049"/>
+      <circle cx="1094" cy="424" r="6" fill="#8f6fae"/><circle cx="1106" cy="430" r="5" fill="#8f6fae"/>
+    </g>
+    <g>
+      <path d="M1126 468h30l-6 20h-18z" fill="#b56943"/><path d="M1123 464h36v8h-36z" fill="#c97f52"/>
+      <path d="M1130 448c10-10 22-11 32-2-8 9-19 10-32 2z" fill="#78995a"/>
+      <circle cx="1152" cy="438" r="6" fill="#c2574b"/>
+    </g>
+    <g>
+      <path d="M1176 470h28l-5 18h-18z" fill="#a75f3c"/><path d="M1173 466h34v8h-34z" fill="#bd7148"/>
+      <path d="M1180 446c6-12 16-16 28-10-4 12-14 16-28 10z" fill="#527446"/>
+      <circle cx="1200" cy="438" r="5" fill="#e3a43a"/>
     </g>
   </g>
 
-  <g id="propagation-bench" transform="translate(930 398)">
-    <ellipse cx="0" cy="88" rx="140" ry="28" fill="#2f3428" opacity="0.22"/>
-    <path d="M-132-81c91-25 180-24 267 3l-23 42c-72-18-148-18-228 2z" fill="url(#shadeCloth)"/>
-    <path d="M-108-28h216c13 0 23 10 23 23v52h-262V-5c0-13 10-23 23-23z" fill="#6d472a"/>
-    <path d="M-122 43h244v33h-244z" fill="#8b6040"/>
-    <path d="M-96 74h19v74h-19zM78 74h19v74H78z" fill="#4e3321"/>
-    <g transform="translate(-48 -7)">
-      <path d="M-47-14h94l10 38H-57z" fill="#5a402a"/>
-      <path d="M-33-19c19 9 19 22 2 38-16-15-17-28-2-38zM0-24c20 13 20 28 0 45-20-17-20-32 0-45zM33-19c17 11 16 24-2 39-15-16-15-29 2-39z" fill="#9db35d"/>
-    </g>
-    <g transform="translate(58 -8)">
-      <path d="M-43-12h86l9 35H-52z" fill="#533b28"/>
-      <ellipse cx="-23" cy="-21" rx="13" ry="19" fill="#d9e3c0" opacity="0.76"/>
-      <ellipse cx="18" cy="-20" rx="14" ry="20" fill="#d9e3c0" opacity="0.76"/>
-      <path d="M-30-3c27-9 54-9 81 0" fill="none" stroke="#6d8e49" stroke-width="7" stroke-linecap="round"/>
-    </g>
+  <!-- ============ STATION: SIGNAL BOARD (center 308,322) ============ -->
+  <g id="signal-board">
+    <ellipse cx="308" cy="392" rx="96" ry="18" fill="#3a4830" opacity="0.22"/>
+    <path d="M250 288h16v104h-16zM350 288h16v104h-16z" fill="#6b4a2e"/>
+    <!-- little shingle roof -->
+    <path d="M222 262l86-26 86 26-8 16-78-22-78 22z" fill="#8a5f3c"/>
+    <!-- board frame and cork face -->
+    <path d="M234 266h148c8 0 14 6 14 14v76c0 8-6 14-14 14H234c-8 0-14-6-14-14v-76c0-8 6-14 14-14z" fill="#6b4a2e"/>
+    <path d="M244 276h128c5 0 9 4 9 9v58c0 5-4 9-9 9H244c-5 0-9-4-9-9v-58c0-5 4-9 9-9z" fill="#b3906a"/>
+    <!-- pinned notices -->
+    <path d="M252 284h44v34h-44z" fill="#f2e8cd"/>
+    <path d="M258 292c10-3 20-3 32 0M258 300c10-2 20-2 30 1M258 308c8-2 16-2 24 0" stroke="#7b6749" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="274" cy="286" r="3.4" fill="#c2574b"/>
+    <path d="M306 286h36v26h-36z" fill="#dceae3"/>
+    <path d="M312 294c8-2 16-2 24 0M312 301c7-2 14-2 22 1" stroke="#4e8e8a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="324" cy="288" r="3.2" fill="#c2574b"/>
+    <path d="M254 326h40v22h-40z" fill="#f2e8cd"/>
+    <path d="M260 333c8-2 16-2 26 0M260 340c8-2 15-2 22 1" stroke="#7b6749" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M302 320h56v30h-56z" fill="#e8d9b0"/>
+    <path d="M310 330c12-3 26-3 40 0M310 340c10-2 22-2 34 1" stroke="#8a7454" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="330" cy="322" r="3.2" fill="#4e8e8a"/>
+    <!-- cream sign plank (Label "Market Board" sits here, center 308,238) -->
+    <path d="M236 222h144c6 0 11 5 11 11v14c0 6-5 11-11 11H236c-6 0-11-5-11-11v-14c0-6 5-11 11-11z" fill="#efe4c3"/>
+    <path d="M236 222h144c6 0 11 5 11 11v14c0 6-5 11-11 11H236c-6 0-11-5-11-11v-14c0-6 5-11 11-11z" fill="none" stroke="#6b4a2e" stroke-width="4"/>
   </g>
 
-  <g id="ledger-crate" transform="translate(488 520)">
-    <ellipse cx="0" cy="62" rx="108" ry="24" fill="#2f3428" opacity="0.23"/>
-    <path d="M-78-19h156l20 70H-98z" fill="#87603b"/>
-    <path d="M-90-9H90M-70 21H73M-44-18l-11 67M43-18l13 67" fill="none" stroke="#5f3f28" stroke-width="7" stroke-linecap="round"/>
-    <path d="M-36-63c26-10 52-10 78 0l16 48c-31-8-62-8-94 0z" fill="#ded0a4"/>
-    <path d="M3-67l2 50" stroke="#9a7d54" stroke-width="4"/>
-    <path d="M-23-45c12-3 24-3 36 1M-17-31c11-2 22-2 34 1" stroke="#7b6749" stroke-width="4" stroke-linecap="round"/>
-  </g>
-
-  <g id="porch-pots">
-    <g transform="translate(210 520)">
-      <ellipse cx="0" cy="43" rx="54" ry="15" fill="#2f3428" opacity="0.2"/>
-      <path d="M-31-2h62l-12 56h-38z" fill="#a75f3c"/>
-      <path d="M-25-14c21 14 22 33 2 56-17-24-18-42-2-56zM6-25c25 21 25 44 0 69-25-25-25-48 0-69zM33-10c19 17 18 34-3 51-15-20-14-37 3-51z" fill="#51763f"/>
-      <circle cx="10" cy="-8" r="8" fill="#b477aa"/>
+  <!-- ============ STATION: PLANT STAND, the hero (center 640,300) ============ -->
+  <g id="plant-stand">
+    <ellipse cx="640" cy="416" rx="200" ry="30" fill="#3a4830" opacity="0.24"/>
+    <!-- rear posts -->
+    <path d="M478 186h16v176h-16zM786 186h16v176h-16z" fill="#5c3d24"/>
+    <!-- striped canvas awning: straight-edged canopy so the stripes stay true quads -->
+    <g>
+      <path d="M474 158h332l30 58H444z" fill="#f3e9cf"/>
+      <path d="M504 158h33l-27 58h-33zM570 158h33l-24 58h-33zM636 158h33l-21 58h-33zM702 158h33l-18 58h-33zM768 158h33l-15 58h-33z" fill="#b6473e"/>
+      <!-- valance band with scallops -->
+      <path d="M440 216h400v26H440z" fill="#e4d5b2"/>
+      <path d="M440 242c11-9 23-9 33-1 11-9 23-9 33-1 11-9 23-9 33-1 11-9 23-9 33-1 11-9 23-9 33-1 11-9 23-9 33-1 11-9 23-9 33-1 11-9 23-9 33-1 11-9 23-9 33-1 11-9 23-9 33-1 11-9 23-9 33-1l7 14H436z" fill="#e4d5b2"/>
+      <path d="M470 216h33l-6 26h-33zM536 216h33l-5 26h-33zM602 216h33l-4 26h-33zM668 216h33l-3 26h-33zM734 216h33l-2 26h-33zM800 216h33l-1 26h-33z" fill="#c05a50" opacity="0.5"/>
     </g>
-    <g transform="translate(1110 507)">
-      <ellipse cx="0" cy="45" rx="55" ry="15" fill="#2f3428" opacity="0.2"/>
-      <path d="M-34-3h68l-13 59h-42z" fill="#a7603d"/>
-      <path d="M-31-11c24 17 25 36 2 58-18-24-19-44-2-58zM2-27c28 22 28 47 1 73-27-26-27-51-1-73zM35-11c19 18 18 36-4 54-16-20-14-38 4-54z" fill="#4f7040"/>
-      <circle cx="-13" cy="-4" r="7" fill="#e0b45b"/>
+    <!-- cream sign plank on the valance (Label "Plant Stand", center 640,229) -->
+    <path d="M562 208h156c7 0 12 5 12 12v20c0 7-5 12-12 12H562c-7 0-12-5-12-12v-20c0-7 5-12 12-12z" fill="#efe4c3"/>
+    <path d="M562 208h156c7 0 12 5 12 12v20c0 7-5 12-12 12H562c-7 0-12-5-12-12v-20c0-7 5-12 12-12z" fill="none" stroke="#6b4a2e" stroke-width="4"/>
+    <!-- tiered display tables -->
+    <path d="M470 306h340c12 0 22 10 22 22v20H448v-20c0-12 10-22 22-22z" fill="url(#woodWarm)"/>
+    <path d="M448 348h384v18H448z" fill="#7a4e2d"/>
+    <path d="M470 366h22v66h-22zM788 366h22v66h-22z" fill="#4e3321"/>
+    <path d="M540 366h18v58h-18zM722 366h18v58h-18z" fill="#5c3d24"/>
+    <!-- back riser shelf -->
+    <path d="M498 276h284c8 0 14 6 14 14v16H484v-16c0-8 6-14 14-14z" fill="#8a5f3c"/>
+    <!-- plants on the riser: distinct low silhouettes tucked under the valance -->
+    <g>
+      <!-- upright herb pot -->
+      <path d="M512 262h26l-5 16h-16z" fill="#b56943"/>
+      <path d="M520 246c4-8 10-12 18-12-1 9-7 13-18 12zM528 254c6-6 13-7 20-3-4 6-11 7-20 3z" fill="#5d8049"/>
+      <!-- mounding bloom -->
+      <path d="M566 262h30l-6 18h-18z" fill="#a75f3c"/>
+      <path d="M566 252c11-10 26-11 38-2-9 9-22 10-38 2z" fill="#78995a"/>
+      <circle cx="588" cy="248" r="6" fill="#e3a43a"/><circle cx="573" cy="252" r="5" fill="#e3a43a"/>
+      <!-- red bloom cluster -->
+      <path d="M626 260h26l-5 18h-16z" fill="#b56943"/>
+      <path d="M624 252c8-8 18-9 26-3-6 7-14 8-26 3z" fill="#527446"/>
+      <circle cx="640" cy="248" r="6" fill="#c2574b"/><circle cx="629" cy="252" r="4.6" fill="#c2574b"/>
+      <!-- violet rosette -->
+      <path d="M684 262h30l-6 18h-18z" fill="#a75f3c"/>
+      <path d="M682 254c8-8 19-10 28-4-6 7-15 8-28 4z" fill="#6f9455"/>
+      <circle cx="700" cy="250" r="5.6" fill="#8f6fae"/><circle cx="711" cy="254" r="4.6" fill="#8f6fae"/>
+      <!-- trailing pot -->
+      <path d="M742 260h28l-5 18h-18z" fill="#b56943"/>
+      <path d="M740 252c9-8 21-9 30-2-7 8-17 9-30 2z" fill="#78995a"/>
+      <path d="M744 264c-5 9-5 18 0 26M766 264c5 9 5 18 0 26" stroke="#5d8049" stroke-width="4" fill="none" stroke-linecap="round"/>
     </g>
+    <!-- plants on the main table -->
+    <g>
+      <path d="M492 292h30l-6 16h-18z" fill="#a75f3c"/>
+      <path d="M490 278c10-10 24-11 34-2-8 9-20 10-34 2z" fill="#6f9455"/>
+      <circle cx="512" cy="270" r="6" fill="#e0b45b"/>
+      <path d="M548 290h32l-6 18h-20z" fill="#b56943"/>
+      <path d="M548 274c10-12 26-13 36-2-8 10-22 11-36 2z" fill="#527446"/>
+      <circle cx="572" cy="264" r="6" fill="#c895bb"/><circle cx="556" cy="268" r="5" fill="#c895bb"/>
+      <!-- seed tray with seedling rows -->
+      <path d="M608 296h84l6 20h-96z" fill="#5f4128"/>
+      <path d="M616 300c8-6 16-6 24 0-8 5-16 5-24 0zM644 300c8-6 16-6 24 0-8 5-16 5-24 0zM672 300c8-6 16-6 24 0-8 5-16 5-24 0z" fill="#a4c86e"/>
+      <path d="M712 290h32l-6 18h-20z" fill="#a75f3c"/>
+      <path d="M710 276c10-10 24-12 36-4-8 10-22 12-36 4z" fill="#78995a"/>
+      <circle cx="736" cy="266" r="7" fill="#e3a43a"/>
+      <path d="M762 292h28l-5 16h-18z" fill="#b56943"/>
+      <path d="M762 280c8-9 20-10 28-2-6 8-16 9-28 2z" fill="#5d8049"/>
+      <circle cx="782" cy="272" r="5" fill="#c2574b"/>
+    </g>
+    <!-- chalk price board leaning on a table leg -->
+    <path d="M496 380l40-6 6 44-40 6z" fill="#3d4a44"/>
+    <path d="M496 380l40-6 6 44-40 6z" fill="none" stroke="#8a6a44" stroke-width="4"/>
+    <path d="M506 388c8-3 16-4 24-3M508 398c7-2 14-3 22-2M510 408c6-2 12-2 18-1" stroke="#f5efdd" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- stacked terracotta by the right leg -->
+    <path d="M756 402h34l-6 22h-22zM760 390h26v10h-26zM764 378h18v10h-18z" fill="#b56943"/>
   </g>
 
-  <g id="small-life" opacity="0.96">
-    <path d="M812 459c12-8 23-8 33 1-10 10-21 10-33-1z" fill="#8fae61"/>
-    <path d="M831 475c16-9 31-9 45 2-14 11-29 10-45-2z" fill="#6d914f"/>
-    <path d="M370 470c12-7 24-6 34 4-12 8-23 7-34-4z" fill="#769953"/>
-    <path d="M1020 594c30-9 59-9 88 0" fill="none" stroke="#a78f66" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
-    <path d="M128 594c28-8 55-8 82 1" fill="none" stroke="#a78f66" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+  <!-- ============ STATION: PROPAGATION BENCH (center 916,380) ============ -->
+  <g id="propagation-bench">
+    <ellipse cx="916" cy="470" rx="150" ry="24" fill="#3a4830" opacity="0.22"/>
+    <!-- shade cloth frame -->
+    <path d="M812 288h16v100h-16zM1004 288h16v100h-16z" fill="#5c3d24"/>
+    <path d="M798 292c40-24 86-36 118-36s78 12 118 36l-10 26c-36-20-72-30-108-30s-72 10-108 30z" fill="#4e6e5c"/>
+    <path d="M806 312c36-18 72-28 110-28s74 10 110 28" fill="none" stroke="#3d5a4a" stroke-width="6" opacity="0.7"/>
+    <!-- cream sign plank (Label "Trays", center 916,306) -->
+    <path d="M856 290h120c6 0 11 5 11 11v14c0 6-5 11-11 11H856c-6 0-11-5-11-11v-14c0-6 5-11 11-11z" fill="#efe4c3"/>
+    <path d="M856 290h120c6 0 11 5 11 11v14c0 6-5 11-11 11H856c-6 0-11-5-11-11v-14c0-6 5-11 11-11z" fill="none" stroke="#6b4a2e" stroke-width="4"/>
+    <!-- bench top -->
+    <path d="M820 366h192c10 0 18 8 18 18v14H802v-14c0-10 8-18 18-18z" fill="url(#woodWarm)"/>
+    <path d="M802 398h228v16H802z" fill="#7a4e2d"/>
+    <path d="M822 414h20v56h-20zM990 414h20v56h-20z" fill="#4e3321"/>
+    <!-- seed trays with cell rows -->
+    <g>
+      <path d="M816 348h70l6 18h-82z" fill="#5f4128"/>
+      <path d="M822 352c7-5 14-5 21 0-7 4-14 4-21 0zM846 352c7-5 14-5 21 0-7 4-14 4-21 0zM868 352c6-5 12-5 18 0-6 4-12 4-18 0z" fill="#a4c86e"/>
+      <path d="M900 346h64l6 20h-76z" fill="#66452b"/>
+      <path d="M908 351c6-5 13-5 19 0-6 4-13 4-19 0zM930 351c6-5 13-5 19 0-6 4-13 4-19 0z" fill="#8fae61"/>
+      <!-- glass cloches -->
+      <ellipse cx="990" cy="344" rx="15" ry="20" fill="#dce9de" opacity="0.8"/>
+      <circle cx="990" cy="322" r="4" fill="#8a7454"/>
+      <path d="M984 350c4-6 9-8 14-5" stroke="#6d8e49" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </g>
+    <!-- teal watering can on the bench end -->
+    <path d="M1016 344h26c6 0 10 4 10 10v14h-36z" fill="#4e8e8a"/>
+    <path d="M1016 350l-14-10 4-6 14 10z" fill="#4e8e8a"/>
+    <circle cx="1030" cy="340" r="7" fill="none" stroke="#3d726e" stroke-width="4"/>
+    <!-- bags of soil leaning below -->
+    <path d="M860 442h34c6 0 10 5 9 11l-3 18h-46l-3-18c-1-6 3-11 9-11z" fill="#8a7454"/>
+    <path d="M866 442c4-8 18-8 22 0z" fill="#6d5a41"/>
   </g>
 
-  <rect width="1280" height="800" fill="url(#softLight)"/>
-  <path d="M0 0h1280v800H0z" fill="#243024" opacity="0.08"/>
+  <!-- ============ STATION: LEDGER DESK (center 480,520) ============ -->
+  <g id="ledger-desk">
+    <ellipse cx="480" cy="584" rx="104" ry="20" fill="#3a4830" opacity="0.22"/>
+    <!-- crate desk -->
+    <path d="M414 500h132c8 0 14 6 13 14l-5 56c-1 7-7 13-14 13H420c-7 0-13-6-14-13l-5-56c-1-8 5-14 13-14z" fill="url(#woodWeathered)"/>
+    <path d="M406 500h148v12H406z" fill="#96805f"/>
+    <path d="M424 522h112M428 546h104" stroke="#5c4a33" stroke-width="5" stroke-linecap="round"/>
+    <!-- open ledger -->
+    <path d="M436 476c14-8 28-10 42-6 14-4 28-2 42 6l-6 26c-12-6-24-8-36-5-12-3-24-1-36 5z" fill="#f2e8cd"/>
+    <path d="M478 470l2 28" stroke="#a08a5e" stroke-width="3"/>
+    <path d="M446 480c8-3 16-4 24-3M448 488c7-2 15-3 22-2M488 478c8-1 16 0 24 3M488 486c7-1 15 0 22 2" stroke="#7b6749" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- red ribbon bookmark + ink pot -->
+    <path d="M500 496l6 14 8-4-6-14z" fill="#c2574b"/>
+    <path d="M526 486h14v12h-14z" fill="#3d4a44"/>
+    <!-- sign plank on a stake (Label "Ledger", center 480,451) -->
+    <path d="M474 464h12v24h-12z" fill="#6b4a2e"/>
+    <path d="M426 436h108c6 0 10 4 10 10v10c0 6-4 10-10 10H426c-6 0-10-4-10-10v-10c0-6 4-10 10-10z" fill="#efe4c3"/>
+    <path d="M426 436h108c6 0 10 4 10 10v10c0 6-4 10-10 10H426c-6 0-10-4-10-10v-10c0-6 4-10 10-10z" fill="none" stroke="#6b4a2e" stroke-width="4"/>
+  </g>
+
+  <!-- ============ STATION: DISCOVERY JOURNAL (center 716,534) ============ -->
+  <g id="journal-stool">
+    <ellipse cx="716" cy="592" rx="88" ry="17" fill="#3a4830" opacity="0.22"/>
+    <!-- low stool -->
+    <path d="M668 540h96c7 0 12 5 12 12v10h-120v-10c0-7 5-12 12-12z" fill="url(#woodWarm)"/>
+    <path d="M672 562h16v34h-16zM744 562h16v34h-16z" fill="#4e3321"/>
+    <!-- open field journal with pencil and pressed leaf -->
+    <path d="M676 518c13-7 26-9 39-5 13-4 26-2 39 5l-5 24c-11-5-22-7-34-4-12-3-23-1-34 4z" fill="#f2e8cd"/>
+    <path d="M715 513l2 26" stroke="#a08a5e" stroke-width="3"/>
+    <path d="M686 522c7-2 14-3 21-2M688 530c6-2 13-2 19-1" stroke="#7b6749" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M724 520c6-6 13-8 20-4-4 6-11 8-20 4z" fill="#6f9455"/>
+    <path d="M728 534l22-6" stroke="#c9973b" stroke-width="4" stroke-linecap="round"/>
+    <!-- sign plank on a stake (Label "Journal", center 716,469) -->
+    <path d="M710 482h12v24h-12z" fill="#6b4a2e"/>
+    <path d="M662 454h108c6 0 10 4 10 10v10c0 6-4 10-10 10H662c-6 0-10-4-10-10v-10c0-6 4-10 10-10z" fill="#efe4c3"/>
+    <path d="M662 454h108c6 0 10 4 10 10v10c0 6-4 10-10 10H662c-6 0-10-4-10-10v-10c0-6 4-10 10-10z" fill="none" stroke="#6b4a2e" stroke-width="4"/>
+  </g>
+
+  <!-- ============ SMALL LIFE ============ -->
+  <g>
+    <!-- wheelbarrow by the left bed -->
+    <path d="M296 560l64-8 10 26-58 8c-8 1-14-4-16-12z" fill="#7d6247"/>
+    <circle cx="310" cy="592" r="12" fill="#4e3321"/>
+    <circle cx="310" cy="592" r="5" fill="#8a7457"/>
+    <path d="M356 556l26-4 4 8-26 5z" fill="#5c4a33"/>
+    <path d="M306 552c10-8 22-9 32-3-8 8-19 9-32 3z" fill="#78995a"/>
+    <!-- robin on a fence post -->
+    <ellipse cx="235" cy="586" rx="9" ry="7" fill="#6d5a41"/>
+    <circle cx="243" cy="580" r="5" fill="#6d5a41"/>
+    <path d="M240 586c3-2 6-2 8 0" stroke="#c2574b" stroke-width="4" stroke-linecap="round"/>
+    <path d="M248 579l5-1" stroke="#3a2c1c" stroke-width="2" stroke-linecap="round"/>
+    <!-- bees near the stand -->
+    <circle cx="562" cy="200" r="3" fill="#e0b45b"/><circle cx="742" cy="208" r="3" fill="#e0b45b"/>
+    <circle cx="586" cy="188" r="2.4" fill="#e0b45b"/>
+  </g>
+
+  <!-- ============ MORNING LIGHT ============ -->
+  <rect width="1280" height="800" fill="url(#morningGlow)"/>
 </svg>
