@@ -8,8 +8,13 @@ on:
     branches:
       - main
 
+concurrency:
+  group: sanity-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
-  contents: read
+  contents: write
+  issues: write
 
 jobs:
   npm-test:
@@ -109,3 +114,41 @@ jobs:
         with:
           name: garden-nursery-steamdeck-debug
           path: dist/steamdeck/
+
+  recover:
+    name: Recover failed managed change
+    needs: [npm-test, godot-headless, steamdeck-export]
+    if: ${{ always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && (needs.npm-test.result == 'failure' || needs.godot-headless.result == 'failure' || needs.steamdeck-export.result == 'failure') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Revert the harness-managed head or open an incident
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FAILED_SHA: ${{ github.sha }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          git fetch origin main
+          current_sha="$(git rev-parse origin/main)"
+          message="$(git show -s --format=%B "$FAILED_SHA")"
+          if [ "$current_sha" = "$FAILED_SHA" ] && grep -qx 'Harness-Managed: true' <<<"$message"; then
+            git config user.name 'garden-nursery recovery bot'
+            git config user.email 'actions@users.noreply.github.com'
+            git checkout -B harness-recovery origin/main
+            git revert --no-edit "$FAILED_SHA"
+            git push origin HEAD:main
+            exit 0
+          fi
+
+          title="Sanity checks need repair: ${FAILED_SHA:0:12}"
+          existing="$(gh issue list --state open --search "$title in:title" --json number --jq 'length')"
+          if [ "$existing" = "0" ]; then
+            gh issue create \
+              --title "$title" \
+              --body "Automated checks failed for \`$FAILED_SHA\`. The commit was not automatically reverted because it was no longer the head of main or was not marked as harness-managed. Run: $RUN_URL"
+          fi
+          exit 1

@@ -1,18 +1,24 @@
 # Issue Backlog
 
-Use GitHub issue numbers when asking Codex CLI to work autonomously.
+Use GitHub issue numbers when asking Claude to work autonomously.
 
 Example:
 
 ```sh
 cd /Users/ethanadams/dev/garden-nursery
-cdsp
+claude
 ```
 
-Then ask Codex:
+Then:
 
 ```text
-Work issue #51. Follow AGENTS.md.
+/ship 51
+```
+
+Or let the harness claim the queue head on its own:
+
+```text
+/ship next
 ```
 
 ## Current Next Issue

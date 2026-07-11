@@ -6,22 +6,15 @@ A Steam Deck-first Godot cozy systems narrative game about starting a small nurs
 
 Garden Nursery is being developed as a single-player 2D/2.5D cozy nursery sim in Godot 4.x.
 
-The current target is **Godot Vertical Slice 0.1**:
-
-- One starter region.
-- A small roadside nursery stand.
-- Steam Deck-friendly UI.
-- Plant inventory and local market signals.
-- Customers with specific needs.
-- A week loop with outcomes.
-- Writing that is warm, specific, hopeful, and not generic cozy filler.
+The vertical slice (0.1) and the Hush Arbor alpha issue batch (0.2) are complete; current work is **Nursery Systems Alpha 0.3**, starting at issue `#51`.
 
 The old browser prototype in `browser-prototype/` is only a disposable design sketch. The product path is the Godot project under `godot/`.
 
 ## Key Docs
 
-- `AGENTS.md` - agent workflow and repo rules.
-- `docs/session-handoff.md` - shortest handoff for future Codex sessions.
+- `CLAUDE.md` - the Claude harness contract: workflow, delivery, and verification rules.
+- `docs/VISION.md` - durable product direction and how Ethan works with the harness.
+- `docs/session-handoff.md` - shortest handoff for future sessions.
 - `docs/creative-direction.md` - game identity, writing pillars, regions, magic, Steam Deck constraints.
 - `docs/art-bible.md` - production visual target, palette, UI, composition, and asset acceptance bar.
 - `docs/visual-development-pipeline.md` - repeatable visual research, asset brief, production, integration, and review workflow.
@@ -32,10 +25,8 @@ The old browser prototype in `browser-prototype/` is only a disposable design sk
 - `docs/testing-and-builds.md` - local, CI, Mac, and Steam Deck testing process.
 - `docs/vertical-slice-0.1-playtest-build.md` - current playtest artifact, controls, known issues, and feedback prompts.
 - `docs/decisions.md` - lightweight project decision log.
-- `docs/claude-brief-review.md` - critical review of the Claude-generated planning brief.
 - `docs/issue-backlog.md` - current issue queue.
-- `docs/agent-pr-workflow.md` - PR-first development process.
-- `docs/chatgpt-project-setup.md` - ChatGPT Project setup notes.
+- `docs/roadmap.md` - end-to-end product roadmap and milestone ladder.
 
 ## Working Locally
 
@@ -83,32 +74,32 @@ npm run export:steamdeck
 
 See `docs/testing-and-builds.md` for the standard Mac and Steam Deck playtest flow.
 
-## Codex Workflow
+## Claude Workflow
 
-Start Codex CLI from the repo:
+Start Claude Code from the repo:
 
 ```sh
 cd /Users/ethanadams/dev/garden-nursery
-cdsp
+claude
 ```
 
-Then ask Codex to work a GitHub issue:
+Then ship the next queued GitHub issue:
 
 ```text
-Work issue #5. Follow AGENTS.md.
+/ship next
 ```
 
-Normal workflow:
+Or a specific issue or task:
 
-1. Inspect the issue and repo docs.
-2. Create a task branch.
-3. Implement the smallest complete slice.
-4. Run `npm test`.
-5. Commit cleanly.
-6. Open a PR.
-7. Wait for GitHub Actions.
-8. Squash-merge when passing.
+```text
+/ship 51
+```
+
+The `/ship` pipeline scopes the task, implements it, runs a multi-agent adversarial
+review gate, verifies with `npm test` / `npm run test:product`, pushes a
+`Harness-Managed: true` commit to `main`, and monitors CI, which auto-reverts a failing
+harness-managed head. See `CLAUDE.md` for the full contract.
 
 ## Current Next Work
 
-The roadmap is issue-backed end to end. After the Godot Vertical Slice 0.1 playtest build, continue into the Hush Arbor alpha tasks starting at `#42`.
+The roadmap is issue-backed end to end. Continue with the Nursery Systems Alpha 0.3 batch starting at `#51`.

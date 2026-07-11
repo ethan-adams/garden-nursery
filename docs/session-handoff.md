@@ -1,12 +1,14 @@
 # Session Handoff
 
-This file is the short "start here" note for a future Codex session. The full plan lives in `docs/roadmap.md`; the executable issue index lives in `docs/issue-backlog.md`.
+This file is the short "start here" note for a future Claude session. The full plan
+lives in `docs/roadmap.md`; the executable issue index lives in `docs/issue-backlog.md`;
+the workflow contract is the root `CLAUDE.md`.
 
 ## Current State
 
 - Local repo: `/Users/ethanadams/dev/garden-nursery`
 - GitHub repo: https://github.com/ethan-adams/garden-nursery
-- Normal starting branch: `main`
+- Trunk: `main` (harness-managed commits push directly; CI auto-reverts failures)
 - Godot baseline: `4.5.1.stable.official`
 - Product path: Godot project under `godot/`
 - Archived sketch: `browser-prototype/`
@@ -21,21 +23,19 @@ This file is the short "start here" note for a future Codex session. The full pl
 - JSON catalogs live under `godot/data/`.
 - Current content size: 16 plants, 3 customers, 4 market signals, and 3 week outcomes.
 - `npm test` and `npm run test:product` are the standard local checks.
-- GitHub milestones now cover the end-to-end path from Vertical Slice 0.1 through Production Beta 0.8.
+- GitHub milestones cover the end-to-end path from Vertical Slice 0.1 through Production Beta 0.8.
 
 ## Start Here
 
-From a terminal:
-
 ```sh
 cd /Users/ethanadams/dev/garden-nursery
-cdsp
+claude
 ```
 
 Best next prompt:
 
 ```text
-Work issue #51. Follow AGENTS.md.
+/ship next
 ```
 
 Recommended immediate sequence:
@@ -70,14 +70,15 @@ Export a Steam Deck/Linux debug build:
 npm run export:steamdeck
 ```
 
-Local export currently requires Godot 4.5.1 Linux export templates installed on the Mac. CI installs templates automatically and uploads the Steam Deck debug artifact.
+Local export currently requires Godot 4.5.1 Linux export templates installed on the Mac.
+CI installs templates automatically and uploads the Steam Deck debug artifact.
 
 ## Key Docs
 
-- `AGENTS.md` - workflow and repo rules.
+- `CLAUDE.md` - workflow contract and repo rules.
+- `docs/VISION.md` - durable product direction.
 - `docs/roadmap.md` - end-to-end product roadmap.
 - `docs/issue-backlog.md` - issue-backed task index.
-- `docs/vertical-slice-0.1.md` - first playable Godot target.
 - `docs/creative-direction.md` - game identity and writing pillars.
 - `docs/starter-region-brief.md` - Hush Arbor region.
 - `docs/steam-deck-ux-baseline.md` - Steam Deck UX requirements.
@@ -88,6 +89,9 @@ Local export currently requires Godot 4.5.1 Linux export templates installed on 
 
 ## Important Direction
 
-Keep new systems anchored in the walkable yard and station overlays. The player should feel like they are walking up to nursery objects and doing nursery work there.
+Keep new systems anchored in the walkable yard and station overlays. The player should
+feel like they are walking up to nursery objects and doing nursery work there.
 
-Keep all ordinary work issue-backed, branch-based, PR-first, and checked through `npm test`. Use `npm run test:product` for Godot scene/script/resource work.
+Keep all ordinary work issue-backed and delivered through the `/ship` pipeline: one
+coherent `Harness-Managed: true` commit, verified with `npm test` (and
+`npm run test:product` for Godot changes), pushed to `main`, and watched through CI.

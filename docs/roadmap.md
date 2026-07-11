@@ -220,7 +220,8 @@ Every milestone should protect these:
 - Keep `npm test` fast enough to run before every commit.
 - Use `npm run test:product` before pushing Godot scene/script/resource changes.
 - Keep Steam Deck debug exports building in CI so playtest artifacts are routine.
-- Route ordinary agent work through branches and pull requests instead of direct pushes to `main`.
-- Use GitHub Actions sanity checks to verify PR branches remotely.
+- Deliver ordinary work through the `/ship` pipeline: one coherent `Harness-Managed: true`
+  commit pushed to `main`, with CI auto-reverting a failing harness-managed head.
 - Prefer issue-backed work using GitHub issue numbers as stable work ids.
 - Add tests for simulation rules as game logic moves out of UI scene scripts.
+- See the root `CLAUDE.md` for the full workflow contract.
