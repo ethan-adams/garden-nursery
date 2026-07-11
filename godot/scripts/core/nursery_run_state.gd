@@ -314,6 +314,12 @@ func advance_week() -> Dictionary:
 		event_result
 	)
 	remember_week_reflection(closing_week, outcome)
+	# Open the week's outcome on a line of real prose, not telemetry — the pack's week
+	# reflection leads so the player reads it before the ledger math (which scrolls below),
+	# rotated by week so it reads differently each close (issue #95).
+	var reflection := week_reflection_line(closing_week)
+	if not reflection.is_empty():
+		text = "%s\n\n%s" % [reflection, text]
 	week += 1
 	reset_week_tracking()
 	return {
@@ -1133,3 +1139,56 @@ func plural_suffix(amount: int) -> String:
 	if amount == 1:
 		return ""
 	return "s"
+
+
+# --- writing pack surfacing (issue #95) ---
+# The pack in `dialogue` (writing_sample_pack.json) is the load-bearing prose. These
+# helpers read it back so the barks, week reflections, and character sketches reach the
+# player instead of dying in memory. Selection rotates by a caller-supplied index (week,
+# visit count, or list position) so lines vary without repeating verbatim — and stays
+# deterministic, so it survives save/load and doesn't wait on the RNG work in #101.
+
+func _dialogue_character(customer_id: String) -> Dictionary:
+	for character in dialogue.get("characters", []):
+		if typeof(character) == TYPE_DICTIONARY and String(character.get("id", "")) == customer_id:
+			return character
+	return {}
+
+# Barks are stored speaker-prefixed ("Mara: ..."); a character's first name is the prefix.
+func character_barks(customer_id: String) -> Array[String]:
+	var lines: Array[String] = []
+	var character := _dialogue_character(customer_id)
+	var prefix: String = String(character.get("name", "")).split(" ")[0]
+	if prefix.is_empty():
+		return lines
+	var tag := "%s:" % prefix
+	for bark in dialogue.get("customer_barks", []):
+		var text := String(bark)
+		if text.begins_with(tag):
+			lines.append(text.substr(tag.length()).strip_edges())
+	return lines
+
+# A single spoken line for a regular, with the speaker prefix stripped (their card already
+# names them). Empty when the pack has no line for that character.
+func customer_bark(customer_id: String, rotation: int = 0) -> String:
+	var lines := character_barks(customer_id)
+	if lines.is_empty():
+		return ""
+	return lines[posmod(rotation, lines.size())]
+
+# An atmospheric closing line for week close, rotated so consecutive weeks differ.
+func week_reflection_line(index: int = 0) -> String:
+	var reflections: Array = dialogue.get("week_reflections", [])
+	if reflections.is_empty():
+		return ""
+	return String(reflections[posmod(index, reflections.size())])
+
+func character_sketch(customer_id: String) -> String:
+	return String(_dialogue_character(customer_id).get("sketch", ""))
+
+# Any bark, speaker prefix kept, for ambient "overheard in the yard" flavor.
+func overheard_bark(rotation: int = 0) -> String:
+	var barks: Array = dialogue.get("customer_barks", [])
+	if barks.is_empty():
+		return ""
+	return String(barks[posmod(rotation, barks.size())])

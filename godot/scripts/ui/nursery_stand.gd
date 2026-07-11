@@ -342,6 +342,7 @@ func _render_propagation_bench() -> void:
 func _render_customers() -> void:
 	for child in customer_list.get_children():
 		child.queue_free()
+	var customer_index := 0
 	for customer in run_state.customers:
 		# A read-only card, but built as a Button so the controller can walk the regulars
 		# with a visible focus highlight (the default theme draws no focus state on a bare
@@ -355,6 +356,13 @@ func _render_customers() -> void:
 			", ".join(customer.get("taste", [])),
 			customer.get("market_hint", "")
 		]
+		# The customer's own voice from the writing pack, rotating by week (offset per
+		# regular so they don't all say the same-indexed line) so the good lines actually
+		# reach the player instead of dying in memory (issue #95).
+		var bark := run_state.customer_bark(customer.get("id", ""), run_state.week + customer_index)
+		if not bark.is_empty():
+			card_text = "%s\n“%s”" % [card_text, bark]
+		customer_index += 1
 		var memory := _latest_relationship_note(customer.get("id", ""))
 		if not memory.is_empty():
 			card_text = "%s\nNote: %s" % [card_text, memory]

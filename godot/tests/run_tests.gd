@@ -276,6 +276,54 @@ func test_action_economy_survives_save_load() -> void:
 	expect(legacy.week_action_allowance > 0, "a legacy save migrates to a full week allowance")
 	expect(legacy.week_actions_remaining == legacy.week_action_allowance, "a legacy save opens with all visits available")
 
+# --- writing pack surfaces in play (issue #95) ---
+# The pack genuinely meets the writing bar; the defect was that it was loaded and never
+# read. These assert the barks and reflections actually reach the player-facing strings —
+# an unplugged sample pack does not count (VISION.md).
+
+func test_customer_barks_come_from_the_pack() -> void:
+	var rs := _fresh_run_state()
+	var pack_barks: Array = rs.dialogue.get("customer_barks", [])
+	expect(pack_barks.size() > 0, "the writing pack ships customer barks")
+	var voiced := 0
+	for customer in rs.customers:
+		var bark: String = rs.customer_bark(customer.get("id", ""), 0)
+		if bark.is_empty():
+			continue
+		voiced += 1
+		# The card shows the line prefix-stripped; it must trace back to a real pack bark.
+		var found := false
+		for raw in pack_barks:
+			if String(raw).ends_with(bark):
+				found = true
+				break
+		expect(found, "a surfaced bark for %s is a real pack line, not invented" % customer.get("id", ""))
+	expect(voiced >= 3, "each recurring regular gets a voiced line from the pack")
+
+func test_customer_bark_rotation_varies_the_line() -> void:
+	var rs := _fresh_run_state()
+	for customer in rs.customers:
+		var lines := rs.character_barks(customer.get("id", ""))
+		if lines.size() >= 2:
+			var id: String = customer.get("id", "")
+			expect(rs.customer_bark(id, 0) != rs.customer_bark(id, 1),
+				"rotating the index gives a different bark, not verbatim repetition")
+			return
+	expect(false, "at least one regular has multiple barks to rotate through")
+
+func test_week_close_surfaces_a_pack_reflection() -> void:
+	var rs := _fresh_run_state()
+	var reflections: Array = rs.dialogue.get("week_reflections", [])
+	expect(reflections.size() > 0, "the pack ships week reflections")
+	var result := rs.advance_week()
+	var text: String = result.get("outcome_text", "")
+	var found := false
+	for reflection in reflections:
+		if text.contains(String(reflection)):
+			found = true
+			break
+	expect(found, "closing the week surfaces a pack reflection in the outcome text, not just telemetry")
+
 # --- scene-driven behavioral tests: drive the real overlay, assert observable state ---
 # These exist so "focus is reachable and scroll follows it at 1280x800" and "the flow
 # actually moves the run forward" are machine-verified, not left to a human launching the

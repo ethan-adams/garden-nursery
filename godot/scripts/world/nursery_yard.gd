@@ -114,10 +114,17 @@ func _update_prompt() -> void:
 		return
 	var onboarding_step := _current_onboarding_step()
 	if current_station == null:
-		if onboarding_step.is_empty():
+		var dock_text: String = onboarding_step.get("title", "")
+		if not onboarding_step.is_empty():
+			dock_text = "%s\n%s" % [dock_text, _station_direction_text(onboarding_step.get("station_id", ""))]
+		else:
+			# Onboarding done and just wandering — let a line of yard chatter drift by
+			# instead of an empty dock, so the world keeps talking (issue #95).
+			dock_text = _overheard_line()
+		if dock_text.is_empty():
 			prompt_container.visible = false
 			return
-		prompt_label.text = "%s\n%s" % [onboarding_step.get("title", ""), _station_direction_text(onboarding_step.get("station_id", ""))]
+		prompt_label.text = dock_text
 		prompt_container.reset_size()
 		prompt_container.global_position = ONBOARDING_DOCK
 		prompt_container.visible = true
@@ -159,6 +166,21 @@ func _on_station_overlay_closed() -> void:
 		player.set_movement_enabled(true)
 	_refresh_station_focus()
 	_update_prompt()
+
+
+func _overheard_line() -> String:
+	# A calm line of yard chatter for the idle dock, rotated by week so it changes at a
+	# gentle pace rather than flickering every frame. Empty (dock hidden) until the stand's
+	# run state and writing pack are loaded.
+	if station_overlay == null:
+		return ""
+	var run_state = station_overlay.run_state
+	if run_state == null:
+		return ""
+	var bark: String = run_state.overheard_bark(run_state.week)
+	if bark.is_empty():
+		return ""
+	return "Overheard  ·  %s" % bark
 
 
 func _current_onboarding_step() -> Dictionary:
