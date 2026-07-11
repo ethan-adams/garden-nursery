@@ -13,8 +13,9 @@ the workflow contract is the root `CLAUDE.md`.
 - Product path: Godot project under `godot/`
 - Archived sketch: `browser-prototype/`
 - Current phase: build `Make It Real 0.3` (issues `#91`–`#101`; the codex-era backlog `#51`–`#71` is closed as not-planned)
-- Progress (2026-07-11): the structural fixes are done — `#91` free-money, `#92` export art, `#93` action economy, `#94` stand vertical fit, `#98` behavioral/screenshot harness, `#103` stand horizontal overflow guard, and `#95` writing-pack surfacing are all closed.
-- Current priority: keep driving the 0.3 felt gate ("Ethan plays the exported build and it feels like a game, not forms"). Open felt work, highest-leverage first: `#96` select a plant without selling, `#100` coherent free-asset art pass. Foundation trailing: `#97` plant instances/region-clean refactor, `#99` full-year calendar, `#101` seed week-close RNG.
+- Progress (2026-07-11): the felt gate is nearly clear. Closed: `#91` free-money, `#92` export art, `#93` action economy, `#94` stand vertical fit, `#95` writing-pack surfacing, `#96` select-without-selling, `#98` behavioral/screenshot harness, `#103` stand horizontal overflow guard. `#100` pixel-art identity (Kenney Tiny Farm CC0) shipped a first pass and is **left open** for Ethan's art-director refinement (ledger/journal props are weak — see the issue comment and `docs/decisions.md` 2026-07-11).
+- Visual identity is now **cozy pixel art** — `docs/decisions.md` 2026-07-11 supersedes the art-bible's painterly pillar for the current gate.
+- Current priority: refine `#100` with Ethan's eye when he wants, then the foundation trio: `#97` plant instances/region-clean refactor, `#99` full-year calendar, `#101` seed week-close RNG.
 - Read `docs/VISION.md` before planning anything; it was reset 2026-07-10 with Ethan's answers from the vision Q&A.
 
 ## What Exists
@@ -42,9 +43,8 @@ Best next prompt:
 
 Recommended immediate sequence:
 
-1. `#96` Select a plant without selling it (inspect/select as a neutral action; propagation/restock/event target it).
-2. `#100` Replace placeholder art with a coherent free-asset pass (attacks the "graphics are bad" verdict).
-3. `#99` / `#97` / `#101` Foundation: full-year calendar, plant-instance refactor, seeded week-close RNG.
+1. `#100` Refine the pixel-art pass with Ethan's eye (better ledger/journal props, denser composition) — visual identity is his call.
+2. `#99` / `#97` / `#101` Foundation: full-year calendar, plant-instance refactor, seeded week-close RNG.
 
 ## Standard Checks
 

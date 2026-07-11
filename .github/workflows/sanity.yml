@@ -127,7 +127,7 @@ jobs:
           # not the bare asset name — the name also appears as the scene's ext_resource
           # path and the .import sidecar, which ship even when the texture data does not
           # (the exact issue #92 gray-void failure this guard must catch).
-          for asset in hush-arbor-yard gardener-player; do
+          for asset in hush-arbor-yard player-pixel; do
             if ! grep -Eqa "imported/${asset}\.png-[0-9a-f]+\.ctex" "$pck"; then
               echo "Texture data for '$asset' is not packed into the export — the build would render a gray void (issue #92)"
               exit 1
