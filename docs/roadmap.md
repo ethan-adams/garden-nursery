@@ -42,25 +42,25 @@ See `docs/creative-direction.md` for the creative authority.
 
 ## Roadmap Shape
 
-The roadmap is organized as playable milestones, not departments. Each milestone should leave the game more playable than it found it.
+The roadmap is organized as playable milestones, not departments. Each milestone should leave the game more playable than it found it — and, per the player-zero rule in `docs/VISION.md`, more interesting to Ethan than it found it.
 
-1. Finish the Godot Vertical Slice 0.1.
-2. Make Hush Arbor a repeatable alpha nursery.
-3. Deepen the core nursery systems.
-4. Make Hush Arbor feel alive across a season.
-5. Expand to a multi-region campaign structure.
-6. Harden the game for Steam Deck beta and release candidate work.
+1. Finish the Godot Vertical Slice 0.1. (Done.)
+2. Make Hush Arbor a repeatable alpha nursery. (Issues closed; quality bar not met — see the honest status under Milestone 2.)
+3. Make what exists real, playable, and felt (`0.3 Make It Real`).
+4. Build the minute-to-minute fantasy: a day of care inside a season of plans.
+5. Make Hush Arbor emotionally and seasonally alive.
+6. Expand regions, then harden for Steam Deck beta.
 
 ## Milestone Ladder
 
-This is the explicit long-term path. Completing Milestone 2 does not finish the game; it turns the first region into a repeatable alpha loop.
+Reset 2026-07-10 after the vision Q&A and critical review (see `docs/VISION.md`). The codex-era `0.3 Nursery Systems Alpha` batch (#51–#56) is deferred and labeled `blocked`; new systems wait until the existing game is honest and felt.
 
-- `0.1 Vertical Slice`: prove the walkable yard, station overlays, market reading, recommendations, propagation, ledger, save/load, and journal.
-- `0.2 Hush Arbor Alpha`: make one starter region playable for several weeks with stateful simulation, propagation capacity, weather, care, memory, economy, onboarding, seed-swap play, and readable station art.
-- `0.3 Nursery Systems Alpha`: make the nursery itself systemic through layout, structures, hybridizing, cultivar records, suppliers, competitors, water, soil, and local pressure.
-- `0.4 Living Hush Arbor Alpha`: make the starter region emotionally and seasonally alive through character arcs, festivals, seasonal presentation, mastery evaluation, and accessibility/settings.
-- `0.5 Multi-Region Campaign Alpha`: prove that regional play changes strategy with a country map, travel, specialty unlocks, hot/dry and cold/hard regions, and cross-region adaptation.
-- `0.8 Production Beta`: harden Steam Deck performance, input, save migration, economy pacing, content balance, and release-candidate process.
+- `0.1 Vertical Slice` (done): prove the walkable yard, station overlays, market reading, recommendations, propagation, ledger, save/load, and journal.
+- `0.2 Hush Arbor Alpha` (issues closed, bar not met): stateful simulation, propagation capacity, weather, care, memory, economy, onboarding, and seed-swap play exist in code, but the loop is exploitable and the build doesn't feel real.
+- `0.3 Make It Real` (current, #91–#101): honest economy, working export art, controller UI that fits 1280x800, writing that surfaces in play, a full-year calendar, coherent free-asset art, and foundations (plant instances, region-clean rules, behavioral tests) that can carry later systems.
+- `0.4 A Living Day` (to be scoped after 0.3): the minute-to-minute fantasy from `docs/VISION.md` — a day structure with care tasks, seasonal planning bets, visible plant growth, customers present in the world, and medium/long-term plans the player can see progressing.
+- `0.5 Living Hush Arbor` (re-scope of old 0.4, plus the deferred systemic-nursery ideas from #51–#56 that survive contact with 0.4): character arcs, festivals, seasonal presentation, layout/structures, hybridizing.
+- Later: multi-region campaign, then production beta. Unchanged in ambition, unscheduled on purpose.
 
 ## Milestone 1: Godot Vertical Slice 0.1
 
@@ -119,32 +119,39 @@ Tasks:
 - `#49` Add Hush Arbor seed-swap event loop. Complete.
 - `#50` Replace placeholder station art with production-readable Hush Arbor assets. Complete.
 
+Exit criteria (honest status, 2026-07-10): the issue batch is closed but the criteria were never actually evaluated, and the 2026-07-10 critical review plus Ethan's own playtest falsify them — the loop is exploitable (free week outcomes, unlimited actions), the calendar freezes after week 5, the stand overlay cannot fit 1280x800 with controller focus, and the build does not feel real. Milestone 0.3 exists to make these criteria true before anything new is built.
+
+## Milestone 3: Make It Real 0.3
+
+Goal: make what exists real, playable, and felt. No new systems until the current game is honest — economy with constraints, art that renders, UI that fits the Deck, writing that surfaces, and foundations that can carry future systems.
+
+Tasks (GitHub milestone `0.3 Make It Real`):
+
+- `#91` Fix the always-paying week outcome (free money bug).
+- `#92` Fix exported-build art rendering (import pipeline).
+- `#93` Give the week a real action economy.
+- `#94` Plant stand UI fits 1280x800 with working controller focus.
+- `#95` Surface the writing pack in play.
+- `#96` Select a plant without selling it.
+- `#97` Refactor: plant instances, region-clean rules, state/presentation split.
+- `#98` Behavioral tests that exercise the actual game.
+- `#99` Season calendar runs a full year.
+- `#100` Replace placeholder art with a coherent free asset pass.
+- `#101` Seed and persist week-close RNG.
+
 Exit criteria:
 
-- The player can play several weeks without the loop feeling exhausted.
-- Weather, care, pricing, stock, propagation, and customer memory all affect decisions.
-- The nursery remains controller-first and readable at 1280x800.
-- Hush Arbor's seed-swap and local customs are playable, not just documented.
+- Ethan plays the exported Steam Deck build and reports it feels like a game, not a set of forms. This is the gate that matters.
+- No known way to earn cash or reputation without meaningful play.
+- Every station overlay is controller-navigable and readable at 1280x800 on the actual exported build.
+- The player reads writing-pack-quality prose during ordinary play.
+- CI exercises real GDScript simulation behavior.
 
-## Milestone 3: Nursery Systems Alpha 0.3
+The deferred codex-era batch (`#51`–`#56`: layout, structures, hybridizing, cultivars, suppliers/competitors, water/soil/regulation) stays blocked until this milestone completes, then gets re-scoped against `docs/VISION.md`.
 
-Goal: deepen the systemic nursery fantasy: layout, structures, hybridizing, discovery, suppliers, and local pressures.
+## Later Milestones (pending re-scope after 0.3)
 
-Tasks:
-
-- `#51` Add nursery layout and bench placement MVP.
-- `#52` Add greenhouse and shade-house unlock path.
-- `#53` Add hybridizing and variety stability model.
-- `#54` Add plant naming and cultivar discovery records.
-- `#55` Add supplier and competitor market signals.
-- `#56` Add water, soil, and regulation pressure systems.
-
-Exit criteria:
-
-- The nursery space affects browsing, care, propagation, or sales.
-- Hybridizing can create named cultivars that persist and matter.
-- Market reading has multiple biased sources, not only customer hints.
-- Water, soil, and local rules create humane tradeoffs without turning the game punitive.
+The sections below predate the 2026-07-10 reset. Their ambitions stand, but their task batches and ordering will be re-scoped against `docs/VISION.md` once `0.3 Make It Real` completes — with a new `0.4 A Living Day` milestone (day structure, care tasks, seasonal bets, customers in the world) scoped first.
 
 ## Milestone 4: Living Hush Arbor Alpha 0.4
 

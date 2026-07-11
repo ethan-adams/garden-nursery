@@ -6,7 +6,7 @@ A Steam Deck-first Godot cozy systems narrative game about starting a small nurs
 
 Garden Nursery is being developed as a single-player 2D/2.5D cozy nursery sim in Godot 4.x.
 
-The vertical slice (0.1) and the Hush Arbor alpha issue batch (0.2) are complete; current work is **Nursery Systems Alpha 0.3**, starting at issue `#51`.
+The vertical slice (0.1) and the Hush Arbor alpha issue batch (0.2) landed, but the 2026-07-10 review found the quality bar unmet. Current work is **Make It Real 0.3** (issues `#91`–`#101`): honest economy, working export art, controller UI that fits the Deck, writing that surfaces in play, and foundations for what comes next. See `docs/VISION.md`.
 
 The old browser prototype in `browser-prototype/` is only a disposable design sketch. The product path is the Godot project under `godot/`.
 
@@ -102,4 +102,4 @@ harness-managed head. See `CLAUDE.md` for the full contract.
 
 ## Current Next Work
 
-The roadmap is issue-backed end to end. Continue with the Nursery Systems Alpha 0.3 batch starting at `#51`.
+The roadmap is issue-backed end to end. Continue with the Make It Real 0.3 batch starting at `#91` (`/ship next`).

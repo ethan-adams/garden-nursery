@@ -12,8 +12,9 @@ the workflow contract is the root `CLAUDE.md`.
 - Godot baseline: `4.5.1.stable.official`
 - Product path: Godot project under `godot/`
 - Archived sketch: `browser-prototype/`
-- Current phase: build `Nursery Systems Alpha 0.3`
-- Current priority: make the nursery space itself systemic through layout and bench placement.
+- Current phase: build `Make It Real 0.3` (issues `#91`–`#101`; the codex-era 0.3 batch `#51`–`#56` is blocked/deferred)
+- Current priority: make the existing game honest and felt — fix the exploitable economy and broken export art first (`#91`, `#92`).
+- Read `docs/VISION.md` before planning anything; it was reset 2026-07-10 with Ethan's answers from the vision Q&A.
 
 ## What Exists
 
@@ -40,9 +41,9 @@ Best next prompt:
 
 Recommended immediate sequence:
 
-1. `#51` Add nursery layout and bench placement MVP.
-2. `#52` Add greenhouse and shade-house unlock path.
-3. `#53` Add hybridizing and variety stability model.
+1. `#91` Fix the always-paying week outcome (free money bug).
+2. `#92` Fix exported-build art rendering (import pipeline).
+3. `#93` Give the week a real action economy.
 
 ## Standard Checks
 

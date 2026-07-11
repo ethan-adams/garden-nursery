@@ -33,3 +33,11 @@ Agents append to this file when a decision changes how the project is built, tes
 **Reason:** The rest of that review was stale meta-commentary on an old planning brief, but these two choices still bind content work.
 
 **Consequence:** Content and data changes keep following the `godot/data/` catalog structure and fictional-region rule without needing the deleted doc.
+
+## 2026-07-10 - Vision reset: player-zero rule and Make It Real 0.3
+
+**Decision:** After the vision Q&A with Ethan, `docs/VISION.md` is the reset steering doc: the project exists for Ethan learning game dev and building a world that feels alive (Steam someday, revenue never); whatever keeps the game interesting to Ethan ships first; replayability is deprioritized. The codex-era `Nursery Systems Alpha 0.3` batch (`#51`–`#56`) is deferred/blocked and replaced by `Make It Real 0.3` (`#91`–`#101`), driven by the 2026-07-10 critical review (exploitable economy, broken export art, UI overflow at 1280x800, unplugged writing, drifted JS test mirror, frozen calendar).
+
+**Reason:** Ethan played the build and judged it dead-feeling; the review found the milestone-2 exit criteria were never actually evaluated. New systems on top of a false foundation would compound the drift.
+
+**Consequence:** No new simulation systems until 0.3's exit gate passes — Ethan plays the exported Steam Deck build and reports it feels like a game. Art path is free/openly-licensed packs first, commissions later.
