@@ -25,6 +25,7 @@ const DECK_SIZE := Vector2i(1280, 800)
 const SCENE_TESTS := [
 	"scene_test_scroll_follows_focus_into_view",
 	"scene_test_every_section_anchor_stays_on_screen",
+	"scene_test_stand_content_never_overflows_viewport",
 	"scene_test_recommend_and_advance_drive_run_state",
 ]
 
@@ -332,6 +333,38 @@ func scene_test_every_section_anchor_stays_on_screen() -> void:
 		var r := owner.get_global_rect()
 		expect(viewport_rect.grow(ONSCREEN_TOL).encloses(r),
 			"focused control '%s' stays fully on screen at 1280x800 (rect %s)" % [owner.name, r])
+	stand.queue_free()
+
+# The SafeArea holds every panel and label. Its full-rect anchors pin it to the viewport,
+# but if the content's minimum width exceeds 1280 the MarginContainer grows past the
+# window and its grow-both direction shoves the left edge off-screen (negative x) —
+# clipping headings and body text while focusable controls stay reachable (issue #103,
+# surfaced by #98's screenshots). scene_test_every_section_anchor_stays_on_screen only
+# checks *focusable* controls, so it can't catch label bleed; this asserts the whole
+# content rect stays inside 1280x800 across the modes and weeks where content changes most.
+const STAND_MODES := ["all", "signal_board", "plant_stand", "propagation_bench", "ledger", "journal"]
+
+func scene_test_stand_content_never_overflows_viewport() -> void:
+	var stand := await _mount_stand()
+	var rs = stand.run_state
+	var viewport_rect := Rect2(Vector2.ZERO, Vector2(DECK_SIZE))
+	for week in range(3):
+		for mode in STAND_MODES:
+			stand.open_station(mode)
+			await _settle(2)
+			var r: Rect2 = stand.get_node("SafeArea").get_global_rect()
+			expect(viewport_rect.grow(ONSCREEN_TOL).encloses(r),
+				"stand content stays inside 1280x800 in mode '%s' week %d — no text bleeds off-edge (rect %s)" % [mode, int(rs.week), r])
+		# Advance the week with real work so later weeks' content (customer memory, ledger
+		# history, calendar text) is exercised, since content width shifts week to week.
+		stand.open_station("all")
+		await _settle(1)
+		var stocked := _in_stock_plant_ids(rs)
+		if not stocked.is_empty():
+			stand._recommend_plant(stocked[0])
+			await _settle(1)
+		stand._on_advance_week_button_pressed()
+		await _settle(1)
 	stand.queue_free()
 
 # Driving the real UI handlers (not just the rules layer) must move the run forward:
