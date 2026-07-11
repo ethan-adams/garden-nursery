@@ -119,6 +119,22 @@ jobs:
           export PATH="$GITHUB_WORKSPACE/.ci/godot:$PATH"
           npm run export:steamdeck
 
+      - name: Verify art is packed into the export
+        run: |
+          pck="dist/steamdeck/GardenNursery.pck"
+          test -f "$pck" || { echo "Export PCK $pck is missing"; exit 1; }
+          # Match the imported texture data entry (.godot/imported/<asset>.png-<hash>.ctex),
+          # not the bare asset name — the name also appears as the scene's ext_resource
+          # path and the .import sidecar, which ship even when the texture data does not
+          # (the exact issue #92 gray-void failure this guard must catch).
+          for asset in hush-arbor-yard gardener-player; do
+            if ! grep -Eqa "imported/${asset}\.png-[0-9a-f]+\.ctex" "$pck"; then
+              echo "Texture data for '$asset' is not packed into the export — the build would render a gray void (issue #92)"
+              exit 1
+            fi
+          done
+          echo "ok - yard and player texture data are packed into the exported build"
+
       - name: Upload Steam Deck debug artifact
         uses: actions/upload-artifact@v4
         with:

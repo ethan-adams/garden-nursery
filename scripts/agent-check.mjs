@@ -228,6 +228,53 @@ check("Godot export preset is present", async () => {
   assert(presets.includes('export_path="../dist/steamdeck/GardenNursery.x86_64"'), "Steam Deck export path must target dist/steamdeck");
 });
 
+check("Art loads through the import pipeline, not runtime file reads", async () => {
+  // Image.load_from_file / FileAccess-style asset reads work from the editor but
+  // silently fail in an exported PCK, leaving a gray void (issue #92). Scene art must
+  // reference committed imported textures instead. Guard against a regression to
+  // runtime asset loading in gameplay scripts.
+  async function collectScripts(dir) {
+    const found = [];
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      const path = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        found.push(...(await collectScripts(path)));
+      } else if (entry.name.endsWith(".gd")) {
+        found.push(path);
+      }
+    }
+    return found;
+  }
+
+  for (const path of await collectScripts("godot/scripts")) {
+    const source = await readFile(path, "utf8");
+    assert(
+      !source.includes("Image.load_from_file"),
+      `${path} loads art at runtime with Image.load_from_file; reference an imported texture in the scene instead`
+    );
+  }
+
+  // The imported textures the scenes depend on must be committed (their .import
+  // sidecars are what the exporter uses to pack the .ctex into the build).
+  for (const asset of ["hush-arbor-yard.png", "gardener-player.png"]) {
+    assert(
+      await fileExists(`godot/assets/art/${asset}.import`),
+      `godot/assets/art/${asset}.import must be committed so the texture ships in the export`
+    );
+  }
+
+  const yardScene = await readFile("godot/scenes/nursery/nursery_yard.tscn", "utf8");
+  const playerScene = await readFile("godot/scenes/player/player.tscn", "utf8");
+  assert(
+    yardScene.includes('type="Texture2D" path="res://assets/art/hush-arbor-yard.png"'),
+    "nursery_yard.tscn must reference the yard texture as an imported resource"
+  );
+  assert(
+    playerScene.includes('type="Texture2D" path="res://assets/art/gardener-player.png"'),
+    "player.tscn must reference the player texture as an imported resource"
+  );
+});
+
 check("Core data catalogs are valid", async () => {
   const plantCatalog = await readJson("godot/data/plants/starter_plants.json");
   const customerCatalog = await readJson("godot/data/customers/hush_arbor_archetypes.json");

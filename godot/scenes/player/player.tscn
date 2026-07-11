@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://garden_nursery_player"]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_player_controller"]
-[ext_resource type="Script" path="res://scripts/world/local_texture_sprite.gd" id="2_texture_loader"]
+[ext_resource type="Texture2D" path="res://assets/art/gardener-player.png" id="2_player_texture"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_player"]
 radius = 18.0
@@ -17,8 +17,7 @@ shape = SubResource("CapsuleShape2D_player")
 [node name="GardenerSprite" type="Sprite2D" parent="."]
 position = Vector2(0, -20)
 scale = Vector2(0.82, 0.82)
-script = ExtResource("2_texture_loader")
-image_path = "res://assets/art/gardener-player.png"
+texture = ExtResource("2_player_texture")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 enabled = true

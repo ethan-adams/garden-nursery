@@ -61,3 +61,33 @@ func test_best_outcome_requires_a_trait_match() -> void:
 	var matching := {"id": "p2", "traits": ["hardy", "early-spring"]}
 	var earned := NurseryRules.best_outcome_for(matching, outcomes)
 	expect(earned.get("id", "") == "read_frost", "a matching plant must earn its outcome")
+
+# --- art travels through the import pipeline (issue #92) ---
+# The yard and player sprites must carry imported Texture2D resources set in the
+# scene, not load image files at runtime. Runtime Image.load_from_file works in the
+# editor but silently fails from an exported PCK, leaving a gray void. Instancing the
+# scene (without adding it to the tree, so _ready never fires) and asserting the
+# texture resolved proves the ext_resource is a real imported resource that the
+# exporter packs.
+
+func test_yard_sprite_has_imported_texture() -> void:
+	var scene: PackedScene = load("res://scenes/nursery/nursery_yard.tscn")
+	expect(scene != null, "nursery_yard.tscn must load")
+	if scene == null:
+		return
+	var yard := scene.instantiate()
+	var sprite := yard.get_node_or_null("YardArt") as Sprite2D
+	expect(sprite != null, "YardArt node must exist")
+	expect(sprite != null and sprite.texture != null, "YardArt must carry an imported texture, not load one at runtime")
+	yard.free()
+
+func test_player_sprite_has_imported_texture() -> void:
+	var scene: PackedScene = load("res://scenes/player/player.tscn")
+	expect(scene != null, "player.tscn must load")
+	if scene == null:
+		return
+	var player := scene.instantiate()
+	var sprite := player.get_node_or_null("GardenerSprite") as Sprite2D
+	expect(sprite != null, "GardenerSprite node must exist")
+	expect(sprite != null and sprite.texture != null, "GardenerSprite must carry an imported texture, not load one at runtime")
+	player.free()

@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://garden_nursery_yard"]
 
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="1_player"]
-[ext_resource type="Script" path="res://scripts/world/local_texture_sprite.gd" id="2_texture_loader"]
+[ext_resource type="Texture2D" path="res://assets/art/hush-arbor-yard.png" id="2_yard_texture"]
 [ext_resource type="Script" path="res://scripts/world/station_interactable.gd" id="3_station"]
 [ext_resource type="Script" path="res://scripts/world/nursery_yard.gd" id="4_yard"]
 [ext_resource type="PackedScene" path="res://scenes/nursery/nursery_stand.tscn" id="5_overlay"]
@@ -26,8 +26,7 @@ script = ExtResource("4_yard")
 
 [node name="YardArt" type="Sprite2D" parent="."]
 position = Vector2(640, 400)
-script = ExtResource("2_texture_loader")
-image_path = "res://assets/art/hush-arbor-yard.png"
+texture = ExtResource("2_yard_texture")
 
 [node name="StationReadabilityMarkers" type="Node2D" parent="."]
 
