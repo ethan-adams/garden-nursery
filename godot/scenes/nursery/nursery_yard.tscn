@@ -30,75 +30,131 @@ texture = ExtResource("2_yard_texture")
 
 [node name="StationReadabilityMarkers" type="Node2D" parent="."]
 
+[node name="PathEdgeAccents" type="Node2D" parent="StationReadabilityMarkers"]
+
+[node name="MainPathWash" type="Polygon2D" parent="StationReadabilityMarkers/PathEdgeAccents"]
+color = Color(0.835294, 0.686275, 0.458824, 0.24)
+polygon = PackedVector2Array(238, 356, 428, 330, 695, 347, 984, 425, 1058, 512, 1005, 582, 703, 552, 431, 566, 264, 494)
+
+[node name="LeftBedEdge" type="Line2D" parent="StationReadabilityMarkers/PathEdgeAccents"]
+points = PackedVector2Array(229, 366, 415, 342, 693, 360, 972, 436, 1040, 516)
+width = 4.0
+default_color = Color(0.231373, 0.380392, 0.247059, 0.72)
+
+[node name="RightBedEdge" type="Line2D" parent="StationReadabilityMarkers/PathEdgeAccents"]
+points = PackedVector2Array(260, 487, 432, 552, 702, 538, 994, 570, 1044, 520)
+width = 4.0
+default_color = Color(0.231373, 0.380392, 0.247059, 0.72)
+
 [node name="SignalMarker" type="Node2D" parent="StationReadabilityMarkers"]
 position = Vector2(308, 322)
 
+[node name="SignalPlaque" type="Polygon2D" parent="StationReadabilityMarkers/SignalMarker"]
+color = Color(0.145098, 0.298039, 0.372549, 0.86)
+polygon = PackedVector2Array(-88, -86, 88, -86, 98, -44, 82, -8, -82, -8, -98, -44)
+
+[node name="SignalPin" type="Line2D" parent="StationReadabilityMarkers/SignalMarker"]
+points = PackedVector2Array(0, -10, 0, 48)
+width = 5.0
+default_color = Color(0.388235, 0.247059, 0.141176, 0.8)
+
 [node name="SignalLabel" type="Label" parent="StationReadabilityMarkers/SignalMarker"]
-offset_left = -76.0
-offset_top = -101.0
-offset_right = 76.0
-offset_bottom = -73.0
-theme_type_variation = &"SignLabel"
-theme_override_font_sizes/font_size = 21
-text = "Signal Board"
+offset_left = -62.0
+offset_top = -74.0
+offset_right = 62.0
+offset_bottom = -38.0
+theme_override_colors/font_color = Color(0.952941, 0.901961, 0.764706, 1)
+theme_override_font_sizes/font_size = 20
+text = "SIGNAL"
 horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="PlantStandMarker" type="Node2D" parent="StationReadabilityMarkers"]
 position = Vector2(640, 300)
 
+[node name="PlantStandPlaque" type="Polygon2D" parent="StationReadabilityMarkers/PlantStandMarker"]
+color = Color(0.145098, 0.419608, 0.392157, 0.84)
+polygon = PackedVector2Array(-138, -76, 138, -76, 158, -34, 132, 12, -132, 12, -158, -34)
+
+[node name="PlantStandTable" type="Line2D" parent="StationReadabilityMarkers/PlantStandMarker"]
+points = PackedVector2Array(-116, 14, 116, 14)
+width = 8.0
+default_color = Color(0.564706, 0.341176, 0.168627, 0.86)
+
 [node name="PlantStandLabel" type="Label" parent="StationReadabilityMarkers/PlantStandMarker"]
-offset_left = -84.0
-offset_top = -85.0
-offset_right = 84.0
-offset_bottom = -55.0
-theme_type_variation = &"SignLabel"
-theme_override_font_sizes/font_size = 24
-text = "Plant Stand"
+offset_left = -58.0
+offset_top = -64.0
+offset_right = 58.0
+offset_bottom = -28.0
+theme_override_colors/font_color = Color(0.976471, 0.8, 0.356863, 1)
+theme_override_font_sizes/font_size = 22
+text = "STAND"
 horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="PropagationMarker" type="Node2D" parent="StationReadabilityMarkers"]
 position = Vector2(916, 380)
 
+[node name="PropagationPlaque" type="Polygon2D" parent="StationReadabilityMarkers/PropagationMarker"]
+color = Color(0.207843, 0.392157, 0.25098, 0.84)
+polygon = PackedVector2Array(-126, -72, 126, -72, 144, -32, 120, 16, -120, 16, -144, -32)
+
+[node name="TraySlots" type="Line2D" parent="StationReadabilityMarkers/PropagationMarker"]
+points = PackedVector2Array(-82, -10, -28, -10, -28, 18, 28, 18, 28, -10, 82, -10)
+width = 6.0
+default_color = Color(0.705882, 0.572549, 0.266667, 0.9)
+
 [node name="PropagationLabel" type="Label" parent="StationReadabilityMarkers/PropagationMarker"]
-offset_left = -66.0
-offset_top = -86.0
-offset_right = 66.0
-offset_bottom = -58.0
-theme_type_variation = &"SignLabel"
-theme_override_font_sizes/font_size = 21
-text = "Trays"
+offset_left = -58.0
+offset_top = -60.0
+offset_right = 58.0
+offset_bottom = -24.0
+theme_override_colors/font_color = Color(0.952941, 0.901961, 0.764706, 1)
+theme_override_font_sizes/font_size = 22
+text = "TRAYS"
 horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="LedgerMarker" type="Node2D" parent="StationReadabilityMarkers"]
 position = Vector2(480, 520)
 
+[node name="LedgerPlaque" type="Polygon2D" parent="StationReadabilityMarkers/LedgerMarker"]
+color = Color(0.760784, 0.682353, 0.494118, 0.88)
+polygon = PackedVector2Array(-86, -70, 86, -70, 102, -28, 76, 18, -76, 18, -102, -28)
+
+[node name="LedgerRibbon" type="Line2D" parent="StationReadabilityMarkers/LedgerMarker"]
+points = PackedVector2Array(-52, -52, 52, -52)
+width = 5.0
+default_color = Color(0.552941, 0.164706, 0.141176, 0.86)
+
 [node name="LedgerLabel" type="Label" parent="StationReadabilityMarkers/LedgerMarker"]
-offset_left = -60.0
-offset_top = -82.0
-offset_right = 60.0
-offset_bottom = -56.0
-theme_type_variation = &"SignLabel"
+offset_left = -62.0
+offset_top = -48.0
+offset_right = 62.0
+offset_bottom = -12.0
+theme_override_colors/font_color = Color(0.219608, 0.156863, 0.109804, 1)
 theme_override_font_sizes/font_size = 20
-text = "Ledger"
+text = "LEDGER"
 horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="JournalMarker" type="Node2D" parent="StationReadabilityMarkers"]
 position = Vector2(716, 534)
 
+[node name="JournalPlaque" type="Polygon2D" parent="StationReadabilityMarkers/JournalMarker"]
+color = Color(0.188235, 0.360784, 0.396078, 0.84)
+polygon = PackedVector2Array(-94, -64, 94, -64, 110, -24, 78, 22, -78, 22, -110, -24)
+
+[node name="JournalSpine" type="Line2D" parent="StationReadabilityMarkers/JournalMarker"]
+points = PackedVector2Array(-46, -50, -46, 14)
+width = 5.0
+default_color = Color(0.952941, 0.901961, 0.764706, 0.9)
+
 [node name="JournalLabel" type="Label" parent="StationReadabilityMarkers/JournalMarker"]
-offset_left = -60.0
-offset_top = -78.0
-offset_right = 60.0
-offset_bottom = -52.0
-theme_type_variation = &"SignLabel"
+offset_left = -68.0
+offset_top = -46.0
+offset_right = 68.0
+offset_bottom = -10.0
+theme_override_colors/font_color = Color(0.952941, 0.901961, 0.764706, 1)
 theme_override_font_sizes/font_size = 20
-text = "Journal"
+text = "JOURNAL"
 horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="SignalBoardStation" type="Area2D" parent="."]
 position = Vector2(308, 322)
@@ -106,7 +162,7 @@ script = ExtResource("3_station")
 station_id = "signal_board"
 station_name = "Signal Board"
 action_label = "read posted market notes"
-prompt_offset = Vector2(-210, -156)
+prompt_offset = Vector2(-170, -156)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SignalBoardStation"]
 shape = SubResource("RectangleShape2D_signal")
@@ -117,7 +173,7 @@ script = ExtResource("3_station")
 station_id = "plant_stand"
 station_name = "Plant Stand"
 action_label = "recommend from the tables"
-prompt_offset = Vector2(-210, -164)
+prompt_offset = Vector2(-170, -164)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlantStandStation"]
 shape = SubResource("RectangleShape2D_stand")
@@ -128,7 +184,7 @@ script = ExtResource("3_station")
 station_id = "propagation_bench"
 station_name = "Propagation Bench"
 action_label = "check the trays"
-prompt_offset = Vector2(-210, -156)
+prompt_offset = Vector2(-170, -156)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PropagationBenchStation"]
 shape = SubResource("RectangleShape2D_bench")
@@ -139,7 +195,7 @@ script = ExtResource("3_station")
 station_id = "ledger"
 station_name = "Ledger"
 action_label = "close the week"
-prompt_offset = Vector2(-210, -148)
+prompt_offset = Vector2(-170, -148)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="LedgerStation"]
 shape = SubResource("RectangleShape2D_ledger")
@@ -150,7 +206,7 @@ script = ExtResource("3_station")
 station_id = "journal"
 station_name = "Discovery Journal"
 action_label = "open the notebook"
-prompt_offset = Vector2(-210, -148)
+prompt_offset = Vector2(-170, -148)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="JournalStation"]
 shape = SubResource("RectangleShape2D_journal")
@@ -159,13 +215,13 @@ shape = SubResource("RectangleShape2D_journal")
 
 [node name="StationPrompt" type="PanelContainer" parent="."]
 visible = false
-custom_minimum_size = Vector2(420, 0)
+custom_minimum_size = Vector2(340, 0)
 
 [node name="PromptMargin" type="MarginContainer" parent="StationPrompt"]
 layout_mode = 2
-theme_override_constants/margin_left = 16
+theme_override_constants/margin_left = 14
 theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 16
+theme_override_constants/margin_right = 14
 theme_override_constants/margin_bottom = 10
 
 [node name="PromptText" type="Label" parent="StationPrompt/PromptMargin"]

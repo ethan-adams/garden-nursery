@@ -2,10 +2,6 @@ extends Node2D
 
 signal station_activated(station_id: String)
 
-# Bottom-center dock for the no-station onboarding note (420px-wide panel) so guidance
-# never covers the player, the stations, or their painted signs at 1280x800.
-const ONBOARDING_DOCK := Vector2(430, 636)
-
 var nearby_stations: Array[Area2D] = []
 var current_station: Area2D
 var overlay_open := false
@@ -118,8 +114,7 @@ func _update_prompt() -> void:
 			prompt_container.visible = false
 			return
 		prompt_label.text = "%s\n%s" % [onboarding_step.get("title", ""), _station_direction_text(onboarding_step.get("station_id", ""))]
-		prompt_container.reset_size()
-		prompt_container.global_position = ONBOARDING_DOCK
+		prompt_container.global_position = Vector2(360, 96)
 		prompt_container.visible = true
 		return
 	var prompt_text: String = current_station.get_prompt_text()
@@ -129,9 +124,6 @@ func _update_prompt() -> void:
 		else:
 			prompt_text = "%s\nNext: %s" % [prompt_text, onboarding_step.get("title", "")]
 	prompt_label.text = prompt_text
-	# An autowrapping label keeps the panel's stale height when the text shrinks, so
-	# collapse to minimum size on every change before repositioning.
-	prompt_container.reset_size()
 	prompt_container.global_position = current_station.get_prompt_position()
 	prompt_container.visible = true
 

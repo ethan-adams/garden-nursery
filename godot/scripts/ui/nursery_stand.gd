@@ -7,9 +7,6 @@ const CUSTOMERS_PATH := "res://data/customers/hush_arbor_archetypes.json"
 const REGION_PATH := "res://data/regions/hush_arbor.json"
 const DIALOGUE_PATH := "res://data/dialogue/writing_sample_pack.json"
 const NurseryRunState := preload("res://scripts/core/nursery_run_state.gd")
-# The theme's Button font is bold for action buttons; the generated plant-tag and
-# regular cards are multi-line prose, so they read better in the regular weight.
-const CARD_FONT := preload("res://assets/fonts/AlegreyaSans-Regular.ttf")
 const SAVE_FILE_NAME := "garden_nursery_vertical_slice_save.json"
 const SAVE_PATH := "user://%s" % SAVE_FILE_NAME
 const SAVE_FORMAT := "garden-nursery.save.v1"
@@ -20,7 +17,6 @@ var station_mode := "all"
 @onready var week_label: Label = %WeekValue
 @onready var cash_label: Label = %CashValue
 @onready var reputation_label: Label = %ReputationValue
-@onready var visits_label: Label = %VisitsValue
 @onready var title_label: Label = %Title
 @onready var region_label: Label = %RegionLabel
 @onready var signal_source_label: Label = %SignalSource
@@ -186,8 +182,11 @@ func _refresh_all() -> void:
 	week_label.text = str(run_state.week)
 	cash_label.text = "$%d" % run_state.cash
 	reputation_label.text = str(run_state.reputation)
-	visits_label.text = "%d/%d" % [run_state.week_actions_remaining, run_state.week_action_allowance]
-	region_label.text = "Hush Arbor roadside yard — %s" % _calendar_header_text()
+	region_label.text = "Hush Arbor roadside yard | %s | Visits left: %d/%d" % [
+		_calendar_header_text(),
+		run_state.week_actions_remaining,
+		run_state.week_action_allowance
+	]
 	_render_signal()
 	_render_inventory()
 	_render_customers()
@@ -303,7 +302,6 @@ func _render_inventory() -> void:
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button.custom_minimum_size = Vector2(0, 96)
 		button.focus_mode = Control.FOCUS_ALL
-		button.add_theme_font_override("font", CARD_FONT)
 		button.pressed.connect(_recommend_plant.bind(plant.get("id", "")))
 		inventory_list.add_child(button)
 
@@ -364,7 +362,6 @@ func _render_customers() -> void:
 		card.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		card.custom_minimum_size = Vector2(0, 146)
 		card.focus_mode = Control.FOCUS_ALL
-		card.add_theme_font_override("font", CARD_FONT)
 		customer_list.add_child(card)
 
 

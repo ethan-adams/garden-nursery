@@ -17,10 +17,6 @@ window/size/viewport_height=800
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
-[gui]
-
-theme/custom="res://assets/ui/nursery_theme.tres"
-
 [input]
 
 ui_confirm={
