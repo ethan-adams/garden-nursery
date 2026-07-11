@@ -154,6 +154,7 @@ check("Godot walkable yard station scene is wired", async () => {
   assert(playerScene.includes('node name="Camera2D"'), "player scene must include a Camera2D");
   assert(yardScene.includes('node name="StationPrompt"'), "nursery yard must include an interaction prompt");
   assert(yardScene.includes('node name="StationOverlay"'), "nursery yard must include a station overlay layer");
+  assert(yardScene.includes('node name="StationReadabilityMarkers"'), "nursery yard must include station readability markers");
 
   for (const [nodeName, stationId] of [
     ["SignalBoardStation", "signal_board"],
@@ -166,10 +167,21 @@ check("Godot walkable yard station scene is wired", async () => {
     assert(yardScene.includes(`station_id = "${stationId}"`), `${nodeName} must define station_id ${stationId}`);
   }
 
-  // Stations read from their pixel-art prop silhouettes now, not floating text labels
-  // (issue #100) — the onboarding flow names each station contextually as the player
-  // learns it. So there is no sign-label layer to guard; the guard that stations stay
-  // recognizable is the composed yard texture + the Area2D interaction layer above.
+  // Station names are painted onto diegetic sign planks in the yard art; the scene
+  // layers a SignLabel-themed Label over each plank so the text stays crisp and
+  // editable. Guard the sign layer so stations never lose their at-a-glance names.
+  for (const [markerName, stationLabel] of [
+    ["SignalMarker", "Signal Board"],
+    ["PlantStandMarker", "Plant Stand"],
+    ["PropagationMarker", "Trays"],
+    ["LedgerMarker", "Ledger"],
+    ["JournalMarker", "Journal"]
+  ]) {
+    assert(yardScene.includes(`node name="${markerName}"`), `nursery yard missing ${markerName}`);
+    assert(yardScene.includes(`text = "${stationLabel}"`), `${markerName} must include readable ${stationLabel} sign label`);
+  }
+  const signLabelCount = (yardScene.match(/theme_type_variation = &"SignLabel"/g) ?? []).length;
+  assert(signLabelCount >= 5, "every station sign label must use the SignLabel theme variation");
 
   for (const required of [
     "station_activated",
@@ -254,22 +266,23 @@ check("Art loads through the import pipeline, not runtime file reads", async () 
 
   // The imported textures the scenes depend on must be committed (their .import
   // sidecars are what the exporter uses to pack the .ctex into the build).
-  for (const asset of ["hush-arbor-yard.png", "player-pixel.png"]) {
+  for (const asset of ["hush-arbor-yard.png", "gardener-player.png"]) {
     assert(
       await fileExists(`godot/assets/art/${asset}.import`),
       `godot/assets/art/${asset}.import must be committed so the texture ships in the export`
     );
   }
 
-  // Visual identity is cozy pixel art from the Tiny Farm CC0 pack (issue #100, decisions
-  // 2026-07-11). The yard texture is composed from the pack's 16px tiles by compose_yard.gd
-  // — that pack is the source of truth, guarded here like capture_screens.gd so a refactor
-  // can't orphan the yard PNG from its generator or lose the license.
-  const packLicense = await readFile("godot/assets/art/tiny-farm/License.txt", "utf8");
-  assert(/Creative Commons Zero|CC0/i.test(packLicense), "Tiny Farm pack must ship its CC0 license text");
-  const composer = await readFile("godot/tools/compose_yard.gd", "utf8");
-  assert(composer.includes("save_png"), "compose_yard.gd must save the yard PNG it composes from Tiny Farm tiles");
-  assert(composer.includes("tiny-farm/Tiles"), "compose_yard.gd must compose from the Tiny Farm tile source");
+  // The committed PNGs are rasterized from editable SVG sources by rasterize_art.gd; the
+  // SVGs are the art's source of truth (issue: craft-pass). Guard the tool the same way
+  // capture_screens.gd is guarded, so a refactor can't silently delete the regeneration
+  // path and leave the PNGs orphaned from their sources.
+  const rasterizer = await readFile("godot/tools/rasterize_art.gd", "utf8");
+  assert(rasterizer.includes("save_png"), "rasterize_art.gd must save the PNGs it rasterizes from SVG");
+  for (const svg of ["hush-arbor-yard.svg", "gardener-player.svg"]) {
+    assert(await fileExists(`godot/assets/art/${svg}`), `missing SVG art source: godot/assets/art/${svg}`);
+    assert(rasterizer.includes(svg), `rasterize_art.gd must regenerate ${svg}`);
+  }
 
   const yardScene = await readFile("godot/scenes/nursery/nursery_yard.tscn", "utf8");
   const playerScene = await readFile("godot/scenes/player/player.tscn", "utf8");
@@ -278,12 +291,9 @@ check("Art loads through the import pipeline, not runtime file reads", async () 
     "nursery_yard.tscn must reference the yard texture as an imported resource"
   );
   assert(
-    playerScene.includes('type="Texture2D" path="res://assets/art/player-pixel.png"'),
-    "player.tscn must reference the pixel player texture as an imported resource"
+    playerScene.includes('type="Texture2D" path="res://assets/art/gardener-player.png"'),
+    "player.tscn must reference the player texture as an imported resource"
   );
-  // Pixel art must render crisp, not blurred: both sprites use nearest-neighbour filtering.
-  assert(yardScene.includes("texture_filter = 1"), "yard sprite must use nearest-neighbour filtering for crisp pixels");
-  assert(playerScene.includes("texture_filter = 1"), "player sprite must use nearest-neighbour filtering for crisp pixels");
 });
 
 check("Nursery UI theme is wired with licensed fonts", async () => {

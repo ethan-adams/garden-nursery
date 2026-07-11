@@ -1,12 +1,5 @@
 # Garden Nursery Art Bible
 
-> **Superseded for the current gate (2026-07-11):** the game now ships **cozy pixel art**
-> (Kenney "Tiny Farm" CC0 pack) as its near-term visual identity — see `docs/decisions.md`
-> (2026-07-11 "Visual identity: cozy pixel art"). The painted-botanical target below is a
-> *possible later commission*, the "eventual bar, not the current gate" (`docs/VISION.md`).
-> Where this bible says "not generic farm sim pixel art," that pillar is on hold; treat the
-> pixel-art decision as authoritative for anything shipping now.
-
 This is the visual bar for production art. It should guide every scene, UI surface, prop, plant asset, prompt, and outsourced art brief.
 
 ## Visual Target
