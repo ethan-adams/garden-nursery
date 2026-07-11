@@ -12,7 +12,7 @@ the workflow contract is the root `CLAUDE.md`.
 - Godot baseline: `4.5.1.stable.official`
 - Product path: Godot project under `godot/`
 - Archived sketch: `browser-prototype/`
-- Current phase: build `Make It Real 0.3` (issues `#91`–`#101`; the codex-era 0.3 batch `#51`–`#56` is blocked/deferred)
+- Current phase: build `Make It Real 0.3` (issues `#91`–`#101`; the codex-era backlog `#51`–`#71` is closed as not-planned)
 - Current priority: make the existing game honest and felt — fix the exploitable economy and broken export art first (`#91`, `#92`).
 - Read `docs/VISION.md` before planning anything; it was reset 2026-07-10 with Ethan's answers from the vision Q&A.
 

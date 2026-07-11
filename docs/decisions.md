@@ -41,3 +41,11 @@ Agents append to this file when a decision changes how the project is built, tes
 **Reason:** Ethan played the build and judged it dead-feeling; the review found the milestone-2 exit criteria were never actually evaluated. New systems on top of a false foundation would compound the drift.
 
 **Consequence:** No new simulation systems until 0.3's exit gate passes — Ethan plays the exported Steam Deck build and reports it feels like a game. Art path is free/openly-licensed packs first, commissions later.
+
+## 2026-07-10 - Codex-era backlog closed as not-planned
+
+**Decision:** Open issues `#51`–`#71` (the codex-authored 0.3–0.8 batches) are closed as not-planned, superseding the earlier same-day choice to merely block `#51`–`#56`. The open queue now contains only the evidence-backed `Make It Real 0.3` issues (`#91`–`#101`).
+
+**Reason:** Ethan flagged that codex-created issues may be wrong or the wrong thing to solve. Audit confirmed the pattern: thin bodies whose acceptance criteria reduce to "npm test passes" — the self-grading loop that produced a dead-feeling game. Several also contradicted the reset vision (new regions before one region feels alive, balance passes over content that does not exist). They were also still `agent-ready`, so `/ship next` could have claimed them ahead of the new batch.
+
+**Consequence:** The ambitions live on in `docs/roadmap.md`'s Later Milestones section only. Future issues get re-created from `docs/VISION.md` with observable, felt acceptance criteria; green CI alone is never a "done" condition again.

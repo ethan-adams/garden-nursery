@@ -23,7 +23,7 @@ Or let the harness claim the queue head on its own:
 
 ## Current Next Issue
 
-- `#51` feat: Add nursery layout and bench placement MVP - https://github.com/ethan-adams/garden-nursery/issues/51
+- `#91` fix: closing the week always pays out even with no matching activity - https://github.com/ethan-adams/garden-nursery/issues/91
 
 ## Godot Vertical Slice 0.1
 
@@ -75,48 +75,27 @@ Completed:
 
 Open:
 
-- None. Continue with `Nursery Systems Alpha 0.3`.
+- None. Continue with `Make It Real 0.3`.
 
-## Nursery Systems Alpha 0.3
+## Make It Real 0.3
 
-Goal: deepen the systemic nursery game with layout, structures, hybridizing, cultivar discovery, suppliers, regulations, and stronger coverage.
+Goal: make what exists real, playable, and felt — honest economy, working export art, controller UI that fits 1280x800, writing that surfaces in play, and foundations for later systems. Scoped from the 2026-07-10 critical review; every issue carries code-level evidence and observable acceptance criteria.
 
-- `#51` Add nursery layout and bench placement MVP - https://github.com/ethan-adams/garden-nursery/issues/51
-- `#52` Add greenhouse and shade-house unlock path - https://github.com/ethan-adams/garden-nursery/issues/52
-- `#53` Add hybridizing and variety stability model - https://github.com/ethan-adams/garden-nursery/issues/53
-- `#54` Add plant naming and cultivar discovery records - https://github.com/ethan-adams/garden-nursery/issues/54
-- `#55` Add supplier and competitor market signals - https://github.com/ethan-adams/garden-nursery/issues/55
-- `#56` Add water, soil, and regulation pressure systems - https://github.com/ethan-adams/garden-nursery/issues/56
+- `#91` Fix the always-paying week outcome (free money bug) - https://github.com/ethan-adams/garden-nursery/issues/91
+- `#92` Fix exported-build art rendering (import pipeline) - https://github.com/ethan-adams/garden-nursery/issues/92
+- `#93` Give the week a real action economy - https://github.com/ethan-adams/garden-nursery/issues/93
+- `#94` Plant stand UI fits 1280x800 with working controller focus - https://github.com/ethan-adams/garden-nursery/issues/94
+- `#95` Surface the writing pack in play - https://github.com/ethan-adams/garden-nursery/issues/95
+- `#96` Select a plant without selling it - https://github.com/ethan-adams/garden-nursery/issues/96
+- `#97` Refactor: plant instances, region-clean rules, state/presentation split - https://github.com/ethan-adams/garden-nursery/issues/97
+- `#98` Behavioral tests that exercise the actual game - https://github.com/ethan-adams/garden-nursery/issues/98
+- `#99` Season calendar runs a full year - https://github.com/ethan-adams/garden-nursery/issues/99
+- `#100` Replace placeholder art with a coherent free asset pass - https://github.com/ethan-adams/garden-nursery/issues/100
+- `#101` Seed and persist week-close RNG - https://github.com/ethan-adams/garden-nursery/issues/101
 
-## Living Hush Arbor Alpha 0.4
+## Retired Codex Backlog
 
-Goal: make the starter region emotionally and seasonally alive, then close it with a mastery loop.
-
-- `#57` Add Hush Arbor character arcs for regular customers - https://github.com/ethan-adams/garden-nursery/issues/57
-- `#58` Add festivals and community board requests - https://github.com/ethan-adams/garden-nursery/issues/58
-- `#59` Add seasonal visual and audio state changes - https://github.com/ethan-adams/garden-nursery/issues/59
-- `#60` Add late-season evaluation and Hush Arbor mastery loop - https://github.com/ethan-adams/garden-nursery/issues/60
-- `#61` Add accessibility and settings pass - https://github.com/ethan-adams/garden-nursery/issues/61
-
-## Multi-Region Campaign Alpha 0.5
-
-Goal: expand from one region into a campaign/sandbox structure without losing regional specificity.
-
-- `#62` Define country map and reusable region content template - https://github.com/ethan-adams/garden-nursery/issues/62
-- `#63` Add hot dry region prototype - https://github.com/ethan-adams/garden-nursery/issues/63
-- `#64` Add cold hard-mode region prototype - https://github.com/ethan-adams/garden-nursery/issues/64
-- `#65` Add region travel and specialty unlocks - https://github.com/ethan-adams/garden-nursery/issues/65
-- `#66` Add cross-region plant adaptation rules - https://github.com/ethan-adams/garden-nursery/issues/66
-
-## Production Beta 0.8
-
-Goal: turn the alpha into a shippable Steam Deck-first game.
-
-- `#67` Add Steam Deck performance budget and profiling gate - https://github.com/ethan-adams/garden-nursery/issues/67
-- `#68` Add full controller remapping and input prompt polish - https://github.com/ethan-adams/garden-nursery/issues/68
-- `#69` Add save migration and compatibility checks - https://github.com/ethan-adams/garden-nursery/issues/69
-- `#70` Run full economy, content, and pacing balance pass - https://github.com/ethan-adams/garden-nursery/issues/70
-- `#71` Prepare release candidate checklist - https://github.com/ethan-adams/garden-nursery/issues/71
+The codex-era batches for `Nursery Systems Alpha 0.3` (`#51`–`#56`), `Living Hush Arbor Alpha 0.4` (`#57`–`#61`), `Multi-Region Campaign Alpha 0.5` (`#62`–`#66`), and `Production Beta 0.8` (`#67`–`#71`) were closed as not-planned on 2026-07-10: their acceptance criteria reduced to green CI, the self-grading pattern the vision reset retired. The ambitions survive in `docs/roadmap.md`'s Later Milestones section; when their time comes they get re-created from `docs/VISION.md` with observable, felt acceptance criteria.
 
 ## Labels
 

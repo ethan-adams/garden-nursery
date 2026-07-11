@@ -53,7 +53,7 @@ The roadmap is organized as playable milestones, not departments. Each milestone
 
 ## Milestone Ladder
 
-Reset 2026-07-10 after the vision Q&A and critical review (see `docs/VISION.md`). The codex-era `0.3 Nursery Systems Alpha` batch (#51–#56) is deferred and labeled `blocked`; new systems wait until the existing game is honest and felt.
+Reset 2026-07-10 after the vision Q&A and critical review (see `docs/VISION.md`). The codex-era backlog (#51–#71) is closed as not-planned — its acceptance criteria reduced to green CI, the self-grading pattern the reset retired; new systems wait until the existing game is honest and felt.
 
 - `0.1 Vertical Slice` (done): prove the walkable yard, station overlays, market reading, recommendations, propagation, ledger, save/load, and journal.
 - `0.2 Hush Arbor Alpha` (issues closed, bar not met): stateful simulation, propagation capacity, weather, care, memory, economy, onboarding, and seed-swap play exist in code, but the loop is exploitable and the build doesn't feel real.
@@ -147,7 +147,7 @@ Exit criteria:
 - The player reads writing-pack-quality prose during ordinary play.
 - CI exercises real GDScript simulation behavior.
 
-The deferred codex-era batch (`#51`–`#56`: layout, structures, hybridizing, cultivars, suppliers/competitors, water/soil/regulation) stays blocked until this milestone completes, then gets re-scoped against `docs/VISION.md`.
+The codex-era batch (`#51`–`#56`: layout, structures, hybridizing, cultivars, suppliers/competitors, water/soil/regulation) is closed as not-planned; whatever survives contact with `docs/VISION.md` after this milestone gets re-created with felt acceptance criteria.
 
 ## Later Milestones (pending re-scope after 0.3)
 
