@@ -253,6 +253,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
+[node name="RecommendButton" type="Button" parent="SafeArea/RootStack/BoardRow/InventoryPanel/InventoryMargin/InventoryStack"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 54)
+focus_mode = 2
+text = "Recommend to the Regulars"
+
 [node name="LowerRow" type="HBoxContainer" parent="SafeArea/RootStack"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -383,6 +390,7 @@ theme_type_variation = &"PrimaryButton"
 text = "Close Ledger Week"
 
 [connection signal="pressed" from="SafeArea/RootStack/BoardRow/SignalPanel/SignalMargin/SignalStack/NextSignalButton" to="." method="_on_next_signal_button_pressed"]
+[connection signal="pressed" from="SafeArea/RootStack/BoardRow/InventoryPanel/InventoryMargin/InventoryStack/RecommendButton" to="." method="_on_recommend_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack/StartPropagationButton" to="." method="_on_start_propagation_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack/RestockButton" to="." method="_on_restock_button_pressed"]
 [connection signal="pressed" from="SafeArea/RootStack/LowerRow/OutcomePanel/OutcomeMargin/OutcomeScroll/OutcomeStack/EventButton" to="." method="_on_event_button_pressed"]

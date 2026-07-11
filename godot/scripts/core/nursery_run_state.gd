@@ -79,6 +79,15 @@ func setup(next_plants: Array, next_customers: Array, next_region: Dictionary, n
 	]
 
 
+# Neutral inspect: point the bench, restock, and event actions at a plant with no sale and
+# no simulation side effects — no cash, reputation, memory, discovery, or spent visit
+# (issue #96). Selling is the separate, explicit recommend_plant() action.
+func select_plant(plant_id: String) -> void:
+	if find_plant(plant_id).is_empty():
+		return
+	selected_plant_id = plant_id
+
+
 func recommend_plant(plant_id: String) -> Dictionary:
 	selected_plant_id = plant_id
 	var plant := find_plant(plant_id)

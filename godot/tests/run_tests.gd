@@ -26,6 +26,7 @@ const SCENE_TESTS := [
 	"scene_test_scroll_follows_focus_into_view",
 	"scene_test_every_section_anchor_stays_on_screen",
 	"scene_test_stand_content_never_overflows_viewport",
+	"scene_test_pressing_a_plant_selects_without_selling",
 	"scene_test_recommend_and_advance_drive_run_state",
 ]
 
@@ -276,6 +277,56 @@ func test_action_economy_survives_save_load() -> void:
 	expect(legacy.week_action_allowance > 0, "a legacy save migrates to a full week allowance")
 	expect(legacy.week_actions_remaining == legacy.week_action_allowance, "a legacy save opens with all visits available")
 
+# --- select a plant without selling it (issue #96) ---
+# Inspecting a plant must be a neutral action: it only points the bench/restock/event
+# actions at that plant, with no sale, cash, reputation, memory, or spent visit. Previously
+# the only path that set selected_plant_id was recommend_plant (a full sale), so you had to
+# try to sell a plant to propagate it.
+
+func test_select_plant_has_no_simulation_side_effects() -> void:
+	var rs := _fresh_run_state()
+	var stocked := _in_stock_plant_ids(rs)
+	expect(stocked.size() > 0, "need an in-stock plant to select")
+	var target: String = stocked[0]
+	var plant_before := rs.find_plant(target)
+	var stock_before := int(plant_before.get("starting_stock", 0))
+	var cash_before := rs.cash
+	var reputation_before := rs.reputation
+	var visits_before := rs.week_actions_remaining
+	var memory_before := rs.customer_memory.size()
+
+	rs.select_plant(target)
+
+	expect(rs.selected_plant_id == target, "selecting points the actions at the chosen plant")
+	expect(rs.cash == cash_before, "selecting a plant earns no cash")
+	expect(rs.reputation == reputation_before, "selecting a plant moves no reputation")
+	expect(int(rs.find_plant(target).get("starting_stock", 0)) == stock_before, "selecting a plant sells no stock")
+	expect(rs.week_actions_remaining == visits_before, "selecting a plant spends no weekly visit")
+	expect(rs.customer_memory.size() == memory_before, "selecting a plant writes no customer memory")
+	expect(not rs.weekly_recommended_plant_ids.has(target), "selecting a plant does not count as a pitch")
+
+func test_propagation_targets_the_selected_plant() -> void:
+	var rs := _fresh_run_state()
+	rs.cash = 10_000
+	# Find a plant that can propagate, select it without any sale, and confirm the bench acts
+	# on that explicit selection (the flow #96 unblocks).
+	var target := ""
+	for plant in rs.plants:
+		if not rs.propagation_profile(plant).is_empty():
+			target = plant.get("id", "")
+			break
+	expect(target != "", "need a plant with a propagation profile")
+	rs.select_plant(target)
+	var result := rs.start_propagation()
+	expect(not rs.propagation_trays.is_empty(), "starting a tray works from an explicit selection, no sale required")
+	expect(String(result.get("log", "")).length() > 0, "the bench reports acting on the selected plant")
+
+func test_select_ignores_unknown_plant() -> void:
+	var rs := _fresh_run_state()
+	var before := rs.selected_plant_id
+	rs.select_plant("not_a_real_plant")
+	expect(rs.selected_plant_id == before, "selecting a nonexistent plant leaves the selection untouched")
+
 # --- writing pack surfaces in play (issue #95) ---
 # The pack genuinely meets the writing bar; the defect was that it was loaded and never
 # read. These assert the barks and reflections actually reach the player-facing strings —
@@ -413,6 +464,30 @@ func scene_test_stand_content_never_overflows_viewport() -> void:
 			await _settle(1)
 		stand._on_advance_week_button_pressed()
 		await _settle(1)
+	stand.queue_free()
+
+# Pressing an inventory plant must select/inspect it through the real handler wiring — not
+# sell it. Guards the issue #96 rewire (inventory press was bound to _recommend_plant) from
+# silently reverting to a sale on press.
+func scene_test_pressing_a_plant_selects_without_selling() -> void:
+	var stand := await _mount_stand()
+	var rs = stand.run_state
+	var cash_before: int = rs.cash
+	var target_button: Button = null
+	var target_id := ""
+	for child in stand.inventory_list.get_children():
+		if child is Button and String(child.get_meta("plant_id", "")) != rs.selected_plant_id:
+			target_button = child
+			target_id = String(child.get_meta("plant_id", ""))
+			break
+	expect(target_button != null, "the inventory renders a second plant to select")
+	if target_button == null:
+		stand.queue_free()
+		return
+	target_button.emit_signal("pressed")
+	await _settle(1)
+	expect(rs.selected_plant_id == target_id, "pressing a plant button selects it through the UI")
+	expect(rs.cash == cash_before, "selecting through the UI sells nothing")
 	stand.queue_free()
 
 # Driving the real UI handlers (not just the rules layer) must move the run forward:

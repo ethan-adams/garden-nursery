@@ -27,6 +27,7 @@ var station_mode := "all"
 @onready var signal_text_label: Label = %SignalText
 @onready var signal_traits_label: Label = %SignalTraits
 @onready var inventory_list: VBoxContainer = %InventoryList
+@onready var recommend_button: Button = %RecommendButton
 @onready var customer_list: VBoxContainer = %CustomerList
 @onready var outcome_label: Label = %OutcomeText
 @onready var propagation_status_label: Label = %PropagationStatus
@@ -111,6 +112,7 @@ func _read_json(path: String) -> Dictionary:
 func _setup_focus() -> void:
 	next_signal_button.grab_focus()
 	next_signal_button.focus_mode = Control.FOCUS_ALL
+	recommend_button.focus_mode = Control.FOCUS_ALL
 	start_propagation_button.focus_mode = Control.FOCUS_ALL
 	restock_button.focus_mode = Control.FOCUS_ALL
 	event_button.focus_mode = Control.FOCUS_ALL
@@ -193,6 +195,8 @@ func _refresh_all() -> void:
 	_render_customers()
 	_render_propagation_bench()
 	_render_restock_button()
+	_render_event_button()
+	_render_recommend_button()
 	_render_log()
 	_apply_station_mode()
 
@@ -213,6 +217,7 @@ func _apply_station_mode() -> void:
 
 	next_signal_button.visible = is_signal
 	start_propagation_button.visible = is_bench or station_mode == "all"
+	recommend_button.visible = is_stand or station_mode == "all"
 	restock_button.visible = is_stand or station_mode == "all"
 	event_button.visible = is_stand or station_mode == "all"
 	propagation_heading.visible = is_bench or station_mode == "all"
@@ -290,8 +295,13 @@ func _render_inventory() -> void:
 	for child in inventory_list.get_children():
 		child.queue_free()
 	for plant in run_state.plants:
+		var plant_id: String = plant.get("id", "")
 		var button := Button.new()
-		button.text = "%s  $%d  Stock %d  %s\n%s\n%s" % [
+		# A plain marker (not colour alone) shows which plant the bench/restock/recommend
+		# actions are pointed at, readable at 1280x800 and colour-blind safe (issue #96).
+		var selected_mark := "▸ " if plant_id == run_state.selected_plant_id else ""
+		button.text = "%s%s  $%d  Stock %d  %s\n%s\n%s" % [
+			selected_mark,
 			plant.get("name", "Unnamed plant"),
 			int(plant.get("price", 0)),
 			int(plant.get("starting_stock", 0)),
@@ -304,7 +314,10 @@ func _render_inventory() -> void:
 		button.custom_minimum_size = Vector2(0, 96)
 		button.focus_mode = Control.FOCUS_ALL
 		button.add_theme_font_override("font", CARD_FONT)
-		button.pressed.connect(_recommend_plant.bind(plant.get("id", "")))
+		button.set_meta("plant_id", plant_id)
+		# Pressing a plant selects/inspects it — a neutral action. Selling is the explicit
+		# Recommend button below the list (issue #96).
+		button.pressed.connect(_select_plant.bind(plant_id))
 		inventory_list.add_child(button)
 
 
@@ -462,6 +475,39 @@ func _journal_reflections_text() -> String:
 	for reflection in run_state.journal_week_reflections.slice(0, min(3, run_state.journal_week_reflections.size())):
 		lines.append("- %s" % reflection)
 	return "\n".join(lines)
+
+
+# Inspect a plant: point the bench/restock/recommend actions at it with no sale. Rebuilding
+# the list frees the pressed button, so re-grab focus on the freshly-built one for the same
+# plant, keeping the controller's place (issue #96).
+func _select_plant(plant_id: String) -> void:
+	run_state.select_plant(plant_id)
+	_save_run_state()
+	_refresh_all()
+	_focus_inventory_button(plant_id)
+
+
+func _focus_inventory_button(plant_id: String) -> void:
+	for child in inventory_list.get_children():
+		if child is Button and child.get_meta("plant_id", "") == plant_id:
+			child.grab_focus()
+			return
+
+
+func _render_recommend_button() -> void:
+	var plant := _find_plant(run_state.selected_plant_id)
+	if plant.is_empty():
+		recommend_button.disabled = true
+		recommend_button.text = "Recommend to the Regulars"
+		return
+	recommend_button.disabled = false
+	recommend_button.text = "Recommend %s to the Regulars" % plant.get("name", "plant")
+
+
+func _on_recommend_button_pressed() -> void:
+	if run_state.selected_plant_id.is_empty():
+		return
+	_recommend_plant(run_state.selected_plant_id)
 
 
 func _recommend_plant(plant_id: String) -> void:
