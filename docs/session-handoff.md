@@ -15,7 +15,8 @@ the workflow contract is the root `CLAUDE.md`.
 - Current phase: build `Make It Real 0.3` (issues `#91`–`#101`; the codex-era backlog `#51`–`#71` is closed as not-planned)
 - Progress (2026-07-11): the felt gate is nearly clear. Closed: `#91` free-money, `#92` export art, `#93` action economy, `#94` stand vertical fit, `#95` writing-pack surfacing, `#96` select-without-selling, `#98` behavioral/screenshot harness, `#103` stand horizontal overflow guard. `#100` pixel-art identity (Kenney Tiny Farm CC0) shipped a first pass and is **left open** for Ethan's art-director refinement (ledger/journal props are weak — see the issue comment and `docs/decisions.md` 2026-07-11).
 - Visual identity is now **cozy pixel art** — `docs/decisions.md` 2026-07-11 supersedes the art-bible's painterly pillar for the current gate.
-- Current priority: refine `#100` with Ethan's eye when he wants, then the foundation trio: `#97` plant instances/region-clean refactor, `#99` full-year calendar, `#101` seed week-close RNG.
+- Progress (2026-07-16): `#99` full-year calendar shipped — 24-week wrapping year, season-tagged signals, four community events, restrained magic surfacing at the longest night. Work selection now loops on `docs/VISION.md` via Ethan's generalized harness (`~/dev/harness`); issues are the durable record, not the driver (see `docs/decisions.md` 2026-07-16).
+- Current priority: `#101` seeded week-close RNG, `#97` plant instances/region-clean refactor, then scope `0.4 A Living Day`; `#100` stays open for Ethan's art-director refinement.
 - Read `docs/VISION.md` before planning anything; it was reset 2026-07-10 with Ethan's answers from the vision Q&A.
 
 ## What Exists
@@ -24,7 +25,7 @@ the workflow contract is the root `CLAUDE.md`.
 - `godot/scenes/nursery/nursery_yard.tscn` has the Hush Arbor yard art, player, camera, and interactive stations.
 - `godot/scenes/nursery/nursery_stand.tscn` contains the playable market/recommendation/propagation/week loop as station overlays.
 - JSON catalogs live under `godot/data/`.
-- Current content size: 16 plants, 3 customers, 4 market signals, and 3 week outcomes.
+- Current content size: 16 plants, 3 customers, 12 season-tagged market signals, 7 week outcomes, a 24-week year, and 4 community events.
 - `npm test` and `npm run test:product` are the standard local checks.
 - GitHub milestones cover the end-to-end path from Vertical Slice 0.1 through Production Beta 0.8.
 

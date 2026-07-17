@@ -160,7 +160,7 @@ func recommend_plant(plant_id: String) -> Dictionary:
 
 
 func next_signal() -> bool:
-	var signals: Array = region.get("market_signals", [])
+	var signals := available_market_signals()
 	if signals.is_empty():
 		return false
 	selected_signal_index = (selected_signal_index + 1) % signals.size()
@@ -248,12 +248,21 @@ func restock_selected_plant() -> Dictionary:
 	}
 
 
+# Events live on week-of-year windows and re-arm each year. Year 1 keeps bare
+# event ids as resolution keys so pre-year-wrap saves stay valid.
+func event_resolution_key(event_id: String, target_week: int) -> String:
+	var year := year_number(target_week)
+	if year <= 1:
+		return event_id
+	return "%s#y%d" % [event_id, year]
+
+
 func active_community_event() -> Dictionary:
 	for event in region.get("community_events", []):
 		var event_id: String = event.get("id", "")
-		if resolved_events.has(event_id):
+		if resolved_events.has(event_resolution_key(event_id, week)):
 			continue
-		if week >= int(event.get("start_week", 1)) and week <= int(event.get("deadline_week", 1)):
+		if week_of_year(week) >= int(event.get("start_week", 1)) and week_of_year(week) <= int(event.get("deadline_week", 1)):
 			return event
 	return {}
 
@@ -275,7 +284,7 @@ func contribute_selected_plant_to_event() -> Dictionary:
 		return {
 			"outcome_text": "The seed-swap table needs real starts, not just a good tag."
 		}
-	var event_id: String = event.get("id", "")
+	var event_id := event_resolution_key(event.get("id", ""), week)
 	if not event_contributions.has(event_id):
 		event_contributions[event_id] = {}
 	var contributions: Dictionary = event_contributions[event_id]
@@ -342,8 +351,8 @@ func resolve_due_community_events(closing_week: int) -> Dictionary:
 	var cash_bonus := 0
 	var reputation_bonus := 0
 	for event in region.get("community_events", []):
-		var event_id: String = event.get("id", "")
-		if resolved_events.has(event_id) or closing_week < int(event.get("deadline_week", 1)):
+		var event_id := event_resolution_key(event.get("id", ""), closing_week)
+		if resolved_events.has(event_id) or week_of_year(closing_week) < int(event.get("deadline_week", 1)):
 			continue
 		var contributions: Dictionary = event_contributions.get(event_id, {})
 		var score := 0
@@ -533,19 +542,57 @@ func no_visits_left_text(next_action: String) -> String:
 	]
 
 
-func current_signal() -> Dictionary:
+# Signals tagged with a "seasons" list only circulate in those seasons, so the
+# board reads differently across the year; untagged signals circulate year-round.
+func available_market_signals() -> Array:
 	var signals: Array = region.get("market_signals", [])
+	var entry := current_calendar_entry()
+	if entry.is_empty():
+		return signals
+	var family := season_family(entry.get("season", ""))
+	var in_season: Array = []
+	for signal_data in signals:
+		var seasons: Array = signal_data.get("seasons", [])
+		if seasons.is_empty() or seasons.has(family):
+			in_season.append(signal_data)
+	if in_season.is_empty():
+		return signals
+	return in_season
+
+
+func current_signal() -> Dictionary:
+	var signals := available_market_signals()
 	if signals.is_empty():
 		return current_calendar_signal()
 	return merged_signal_with_calendar(signals[selected_signal_index % signals.size()])
+
+
+func year_length() -> int:
+	return maxi(1, region.get("season_calendar", []).size())
+
+
+func week_of_year(target_week: int) -> int:
+	return posmod(target_week - 1, year_length()) + 1
+
+
+func year_number(target_week: int) -> int:
+	return floori(float(target_week - 1) / float(year_length())) + 1
+
+
+# Seasons are labeled as phase + family ("early spring", "midwinter" is written
+# "mid winter" in data for this reason); the family word groups signals by season.
+func season_family(season_name: String) -> String:
+	var parts := season_name.strip_edges().split(" ")
+	if parts.is_empty():
+		return season_name
+	return parts[parts.size() - 1]
 
 
 func current_calendar_entry() -> Dictionary:
 	var calendar: Array = region.get("season_calendar", [])
 	if calendar.is_empty():
 		return {}
-	var index := int(clamp(week - 1, 0, calendar.size() - 1))
-	return calendar[index]
+	return calendar[posmod(week - 1, calendar.size())]
 
 
 func current_calendar_signal() -> Dictionary:
@@ -689,8 +736,12 @@ func calendar_summary_text() -> String:
 	var entry := current_calendar_entry()
 	if entry.is_empty():
 		return "No forecast posted."
+	var season_label: String = entry.get("season", region.get("season", "season"))
+	var year := year_number(week)
+	if year > 1:
+		season_label = "Year %d, %s" % [year, season_label]
 	return "%s, %s: %s (%d%% uncertain)." % [
-		entry.get("season", region.get("season", "season")),
+		season_label,
 		entry.get("weather", "weather"),
 		entry.get("forecast", ""),
 		int(float(entry.get("uncertainty", 0.0)) * 100.0)

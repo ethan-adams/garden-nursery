@@ -23,7 +23,11 @@ Or let the harness claim the queue head on its own:
 
 ## Current Next Issue
 
-- `#91` fix: closing the week always pays out even with no matching activity - https://github.com/ethan-adams/garden-nursery/issues/91
+As of 2026-07-16 the harness selects work by looping on `docs/VISION.md` (see
+`docs/decisions.md`); the live GitHub queue is the durable record, this pointer is not.
+Remaining 0.3 foundation issues: `#101` seeded week-close RNG, `#97` plant-instance
+refactor, plus `#100` left open for Ethan's art-director refinement. (`#91` was listed
+here long after the fix shipped — code is ground truth over this file.)
 
 ## Godot Vertical Slice 0.1
 

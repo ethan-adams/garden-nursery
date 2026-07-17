@@ -32,7 +32,7 @@
     },
     {
       "week": 2,
-      "season": "mid spring",
+      "season": "early spring",
       "weather": "orchard bloom",
       "forecast": "Old pear bloom has bees working every warm hour between showers.",
       "points_to_traits": ["pollinator", "story-rich", "porch-friendly"],
@@ -43,7 +43,7 @@
     },
     {
       "week": 3,
-      "season": "late spring",
+      "season": "mid spring",
       "weather": "warm spell",
       "forecast": "Three bright afternoons are likely, though the creek still cools the night air.",
       "points_to_traits": ["culinary", "warmth-loving", "porch-friendly"],
@@ -54,7 +54,7 @@
     },
     {
       "week": 4,
-      "season": "early summer",
+      "season": "mid spring",
       "weather": "wet lanes",
       "forecast": "Rain keeps the lane soft; north porches smell like moss and wet stone.",
       "points_to_traits": ["damp-tolerant", "shade", "low-effort"],
@@ -65,14 +65,223 @@
     },
     {
       "week": 5,
+      "season": "late spring",
+      "weather": "last-frost gossip",
+      "forecast": "Half the town swears one more frost is coming; the other half already planted tomatoes. Someone will be smug by Friday.",
+      "points_to_traits": ["hardy", "cool-spring"],
+      "risk_traits": ["tender", "warmth-loving"],
+      "propagation_bonus_traits": ["hardy", "cool-spring"],
+      "propagation_risk_traits": ["tender"],
+      "uncertainty": 0.4
+    },
+    {
+      "week": 6,
+      "season": "late spring",
+      "weather": "planting rush",
+      "forecast": "Every porch has a flat of starts on it, and every conversation opens with what went into the ground yesterday.",
+      "points_to_traits": ["culinary", "quick-crop", "porch-friendly"],
+      "risk_traits": [],
+      "propagation_bonus_traits": ["quick-crop", "culinary"],
+      "propagation_risk_traits": [],
+      "uncertainty": 0.18
+    },
+    {
+      "week": 7,
+      "season": "early summer",
+      "weather": "bright mornings",
+      "forecast": "The mornings run long and gold now; beds dry out by noon and the bees are at work before the kettle is.",
+      "points_to_traits": ["pollinator", "culinary", "warmth-loving"],
+      "risk_traits": ["cool-spring"],
+      "propagation_bonus_traits": ["warmth-loving", "pollinator"],
+      "propagation_risk_traits": ["cool-spring"],
+      "uncertainty": 0.2
+    },
+    {
+      "week": 8,
+      "season": "early summer",
+      "weather": "school's out",
+      "forecast": "Children own the creek again. Tovan wants sturdy things settled before the school garden is left to the sprinkler's mercy.",
+      "points_to_traits": ["hardy", "story-rich", "low-effort"],
+      "risk_traits": ["tender"],
+      "propagation_bonus_traits": ["hardy"],
+      "propagation_risk_traits": ["tender"],
+      "uncertainty": 0.22
+    },
+    {
+      "week": 9,
+      "season": "mid summer",
+      "weather": "dry spell",
+      "forecast": "No real rain in ten days. The creek is polite about it; the rain barrels are not.",
+      "points_to_traits": ["drought-tolerant", "low-effort"],
+      "risk_traits": ["damp-tolerant", "shade"],
+      "propagation_bonus_traits": ["drought-tolerant"],
+      "propagation_risk_traits": ["damp-tolerant"],
+      "uncertainty": 0.26
+    },
+    {
+      "week": 10,
+      "season": "mid summer",
+      "weather": "porch suppers",
+      "forecast": "Too hot to cook indoors, so nobody does. Supper moves to the porches and everyone judges the planters, kindly.",
+      "points_to_traits": ["culinary", "porch-friendly", "giftable"],
+      "risk_traits": [],
+      "propagation_bonus_traits": ["warmth-loving"],
+      "propagation_risk_traits": [],
+      "uncertainty": 0.2
+    },
+    {
+      "week": 11,
+      "season": "late summer",
+      "weather": "heavy heat",
+      "forecast": "The valley holds its breath in the afternoons. Water early, shade the trays, and forgive anything that wilts by four.",
+      "points_to_traits": ["drought-tolerant", "hardy"],
+      "risk_traits": ["tender", "cool-spring"],
+      "propagation_bonus_traits": [],
+      "propagation_risk_traits": ["tender", "cool-spring"],
+      "uncertainty": 0.3
+    },
+    {
+      "week": 12,
+      "season": "late summer",
+      "weather": "first cool night",
+      "forecast": "One night cool enough for a blanket, and suddenly everyone remembers autumn exists and asks what keeps its color.",
+      "points_to_traits": ["late-color", "hardy", "soil-builder"],
+      "risk_traits": ["warmth-loving"],
+      "propagation_bonus_traits": ["cool-spring", "hardy"],
+      "propagation_risk_traits": ["warmth-loving"],
+      "uncertainty": 0.24
+    },
+    {
+      "week": 13,
+      "season": "early autumn",
+      "weather": "orchard harvest",
+      "forecast": "Ladders in the old rows, wasps drunk on windfalls, and every kitchen smelling of peeled apples by Thursday.",
+      "points_to_traits": ["old-orchard", "culinary", "soil-builder"],
+      "risk_traits": [],
+      "propagation_bonus_traits": ["hardy", "soil-builder"],
+      "propagation_risk_traits": [],
+      "uncertainty": 0.18
+    },
+    {
+      "week": 14,
+      "season": "early autumn",
+      "weather": "school term",
+      "forecast": "The school garden gets its second wind. Tovan needs plants that survive being loved by thirty children at once.",
+      "points_to_traits": ["hardy", "story-rich", "pollinator"],
+      "risk_traits": ["tender"],
+      "propagation_bonus_traits": ["hardy"],
+      "propagation_risk_traits": ["tender"],
+      "uncertainty": 0.2
+    },
+    {
+      "week": 15,
+      "season": "mid autumn",
+      "weather": "gleaning week",
+      "forecast": "The orchards open their gates for gleaning. Bring a basket, and leave the low branches for shorter neighbors.",
+      "points_to_traits": ["old-orchard", "soil-builder", "culinary"],
+      "risk_traits": [],
+      "propagation_bonus_traits": ["soil-builder"],
+      "propagation_risk_traits": [],
+      "uncertainty": 0.2
+    },
+    {
+      "week": 16,
+      "season": "mid autumn",
+      "weather": "rain returns",
+      "forecast": "The lanes go soft and glad about it. Moss brightens on the north steps like it never left.",
+      "points_to_traits": ["damp-tolerant", "shade", "low-effort"],
+      "risk_traits": ["drought-tolerant"],
+      "propagation_bonus_traits": ["damp-tolerant", "shade"],
+      "propagation_risk_traits": ["drought-tolerant"],
+      "uncertainty": 0.22
+    },
+    {
+      "week": 17,
       "season": "late autumn",
       "weather": "damp autumn",
       "forecast": "Fog hangs in the orchard rows and customers ask what will settle in before cold.",
-      "points_to_traits": ["hardy", "soil-builder", "old-orchards"],
+      "points_to_traits": ["hardy", "soil-builder", "old-orchard"],
       "risk_traits": ["tender", "warmth-loving"],
       "propagation_bonus_traits": ["hardy", "soil-builder"],
       "propagation_risk_traits": ["tender"],
       "uncertainty": 0.3
+    },
+    {
+      "week": 18,
+      "season": "late autumn",
+      "weather": "first hard frost",
+      "forecast": "The real frost, not the gossip kind. Anything tender still outside is a lesson now.",
+      "points_to_traits": ["hardy"],
+      "risk_traits": ["tender", "warmth-loving"],
+      "propagation_bonus_traits": ["hardy"],
+      "propagation_risk_traits": ["tender", "warmth-loving"],
+      "uncertainty": 0.2
+    },
+    {
+      "week": 19,
+      "season": "early winter",
+      "weather": "short days",
+      "forecast": "Light is down to a ribbon between the hills. Windowsills become the whole garden, and are taken seriously.",
+      "points_to_traits": ["porch-friendly", "low-effort", "shade"],
+      "risk_traits": ["warmth-loving"],
+      "propagation_bonus_traits": ["low-effort"],
+      "propagation_risk_traits": ["tender"],
+      "uncertainty": 0.18
+    },
+    {
+      "week": 20,
+      "season": "early winter",
+      "weather": "woodsmoke",
+      "forecast": "Woodsmoke settles in the valley by four o'clock. People shop slowly, mostly to stand near other people.",
+      "points_to_traits": ["giftable", "story-rich", "porch-friendly"],
+      "risk_traits": [],
+      "propagation_bonus_traits": [],
+      "propagation_risk_traits": ["tender"],
+      "uncertainty": 0.2
+    },
+    {
+      "week": 21,
+      "season": "mid winter",
+      "weather": "longest night",
+      "forecast": "The longest night of the year. Hush Arbor answers it the old way: something living and lit in every window.",
+      "points_to_traits": ["glowing", "giftable", "magical", "story-rich"],
+      "risk_traits": [],
+      "propagation_bonus_traits": ["glowing"],
+      "propagation_risk_traits": [],
+      "uncertainty": 0.15
+    },
+    {
+      "week": 22,
+      "season": "mid winter",
+      "weather": "deep cold",
+      "forecast": "Cold that creaks the porch boards. Nothing moves outside but chimney smoke, and nothing should.",
+      "points_to_traits": ["hardy", "low-effort"],
+      "risk_traits": ["tender", "warmth-loving"],
+      "propagation_bonus_traits": [],
+      "propagation_risk_traits": ["tender", "warmth-loving"],
+      "uncertainty": 0.22
+    },
+    {
+      "week": 23,
+      "season": "late winter",
+      "weather": "seed catalogs",
+      "forecast": "The catalogs arrive damp from the mailboxes and are read like letters from someone missed all year.",
+      "points_to_traits": ["story-rich", "culinary", "quick-crop"],
+      "risk_traits": [],
+      "propagation_bonus_traits": ["hardy", "cool-spring"],
+      "propagation_risk_traits": [],
+      "uncertainty": 0.2
+    },
+    {
+      "week": 24,
+      "season": "late winter",
+      "weather": "thaw gossip",
+      "forecast": "The creek runs louder every day and the frost gossip changes direction: this time it's about how soon.",
+      "points_to_traits": ["early-spring", "cool-spring", "hardy"],
+      "risk_traits": [],
+      "propagation_bonus_traits": ["early-spring", "cool-spring"],
+      "propagation_risk_traits": [],
+      "uncertainty": 0.28
     }
   ],
   "community_events": [
@@ -87,12 +296,49 @@
       "cash_reward": 16,
       "reputation_reward": 4,
       "relationship_note": "showed up for the seed-swap table with useful, honest labels"
+    },
+    {
+      "id": "porch_supper_week",
+      "name": "Porch Supper Week",
+      "start_week": 10,
+      "deadline_week": 11,
+      "request": "Send plants that make a supper table friendlier — things to cook with, things to sit beside. Nothing that upstages the host.",
+      "preferred_traits": ["culinary", "porch-friendly", "giftable"],
+      "etiquette": "A supper plant arrives with a use: a recipe, a scent, or a story worth retelling.",
+      "cash_reward": 20,
+      "reputation_reward": 5,
+      "relationship_note": "sent plants that made porch suppers easier to host"
+    },
+    {
+      "id": "orchard_gleaning",
+      "name": "Orchard Gleaning Week",
+      "start_week": 15,
+      "deadline_week": 16,
+      "request": "The old rows open for gleaning. The orchard wants plants that give back to tired soil, from people who know what a windfall is worth.",
+      "preferred_traits": ["soil-builder", "old-orchard", "hardy", "culinary"],
+      "etiquette": "Take from the high branches, leave the low ones for shorter neighbors, and never comment on someone's basket.",
+      "cash_reward": 22,
+      "reputation_reward": 5,
+      "relationship_note": "helped gleaning week with plants that fed the soil back"
+    },
+    {
+      "id": "longest_night_lanterns",
+      "name": "Longest Night Lanterns",
+      "start_week": 21,
+      "deadline_week": 22,
+      "request": "Every window wants something living and lit for the longest night. Bring what glows, what gifts well, or what carries a story worth the dark.",
+      "preferred_traits": ["glowing", "giftable", "story-rich", "magical"],
+      "etiquette": "A lantern plant is half light and half promise; label what it needs to still be alive in spring.",
+      "cash_reward": 18,
+      "reputation_reward": 6,
+      "relationship_note": "kept windows living and lit through the longest night"
     }
   ],
   "market_signals": [
     {
       "id": "weather_board_frost",
       "source": "weather board",
+      "seasons": ["spring", "autumn", "winter"],
       "text": "Possible frost Thursday. Cover tender starts if the downslope wind clears the mist.",
       "points_to_traits": ["hardy", "early-spring"],
       "risk_traits": ["tender", "warmth-loving"],
@@ -101,6 +347,7 @@
     {
       "id": "supplier_hardy_trays",
       "source": "supplier note",
+      "seasons": ["spring"],
       "text": "Good price on hardy greens and chives; lantern tomatoes arrived pretty but early.",
       "points_to_traits": ["hardy", "culinary"],
       "risk_traits": ["tender"],
@@ -109,6 +356,7 @@
     {
       "id": "porch_chatter_shade",
       "source": "customer chatter",
+      "seasons": ["spring", "summer"],
       "text": "Three people asked whether a porch can be beautiful if it only gets morning sun.",
       "points_to_traits": ["shade", "porch-friendly", "low-effort"],
       "risk_traits": ["afternoon-sun"],
@@ -117,10 +365,83 @@
     {
       "id": "school_notice",
       "source": "community board",
+      "seasons": ["spring", "autumn"],
       "text": "School garden workday moved up. Tovan needs sturdy plants with stories before the children lose interest.",
       "points_to_traits": ["hardy", "story-rich", "pollinator"],
       "risk_traits": [],
       "uncertainty": 0.22
+    },
+    {
+      "id": "creek_gauge_low",
+      "source": "weather board",
+      "seasons": ["summer"],
+      "text": "The creek gauge reads low and the rain barrels are spoken for. Anything that shrugs at a dry week earns its bench space.",
+      "points_to_traits": ["drought-tolerant", "low-effort"],
+      "risk_traits": ["damp-tolerant"],
+      "uncertainty": 0.2
+    },
+    {
+      "id": "cafe_specials_board",
+      "source": "cafe specials board",
+      "seasons": ["summer"],
+      "text": "Mara's board says cold plates and herb-everything until the kitchen cools down. She buys what she can pick the same day.",
+      "points_to_traits": ["culinary", "quick-crop"],
+      "risk_traits": [],
+      "uncertainty": 0.18
+    },
+    {
+      "id": "orchard_bee_count",
+      "source": "orchard association",
+      "seasons": ["spring", "summer"],
+      "text": "The bee count is up in the old rows. The orchard association notices who sells pollinator plants, quietly.",
+      "points_to_traits": ["pollinator", "story-rich"],
+      "risk_traits": [],
+      "uncertainty": 0.26
+    },
+    {
+      "id": "cider_press_schedule",
+      "source": "community board",
+      "seasons": ["autumn"],
+      "text": "The cider press schedule is posted and every kitchen within a mile is planning around it.",
+      "points_to_traits": ["culinary", "old-orchard"],
+      "risk_traits": [],
+      "uncertainty": 0.18
+    },
+    {
+      "id": "mulch_pile_notice",
+      "source": "community board",
+      "seasons": ["autumn"],
+      "text": "The town mulch pile opens Saturday. Serious gardeners are thinking about their soil now, not their flowers.",
+      "points_to_traits": ["soil-builder", "hardy"],
+      "risk_traits": [],
+      "uncertainty": 0.2
+    },
+    {
+      "id": "windowsill_club",
+      "source": "customer chatter",
+      "seasons": ["winter"],
+      "text": "The windowsill club is comparing notes again. Small, forgiving, and good in low light wins the month.",
+      "points_to_traits": ["porch-friendly", "low-effort", "shade"],
+      "risk_traits": ["warmth-loving"],
+      "uncertainty": 0.22
+    },
+    {
+      "id": "lantern_walk_flyer",
+      "source": "crossing post flyer",
+      "seasons": ["winter"],
+      "text": "A flyer for the lantern walk went up at the crossing. People want something living to carry; the glow is optional but remembered.",
+      "points_to_traits": ["glowing", "giftable", "story-rich"],
+      "risk_traits": [],
+      "uncertainty": 0.24
+    },
+    {
+      "id": "gift_wrapping_table",
+      "source": "customer chatter",
+      "seasons": ["winter"],
+      "text": "Cilla is running the gift-wrapping table this year, which means every plant that leaves the stand had better look intentional.",
+      "points_to_traits": ["giftable", "porch-friendly"],
+      "risk_traits": [],
+      "uncertainty": 0.2
     }
   ],
   "week_outcomes": [
@@ -144,6 +465,34 @@
       "cash_bonus": 8,
       "reputation_bonus": -1,
       "text": "Lantern tomatoes drew hands to the bench, then the cold made everyone ask for cover cloth. Pretty did not mean ready."
+    },
+    {
+      "id": "read_dry_spell",
+      "trigger_traits": ["drought-tolerant", "low-effort"],
+      "cash_bonus": 16,
+      "reputation_bonus": 3,
+      "text": "The rain held off, just like the creek gauge said. Whoever bought drought-shruggers watered nothing and told everyone."
+    },
+    {
+      "id": "fed_the_kitchens",
+      "trigger_traits": ["culinary", "quick-crop"],
+      "cash_bonus": 15,
+      "reputation_bonus": 2,
+      "text": "Mara picked her order at dawn and the specials board did the advertising. Herb-everything, all week."
+    },
+    {
+      "id": "built_the_soil",
+      "trigger_traits": ["soil-builder", "old-orchard"],
+      "cash_bonus": 17,
+      "reputation_bonus": 3,
+      "text": "Gleaning baskets came back heavy and the tired rows got their mulch. The orchard association remembers who helped."
+    },
+    {
+      "id": "lit_the_longest_night",
+      "trigger_traits": ["glowing", "giftable", "story-rich"],
+      "cash_bonus": 14,
+      "reputation_bonus": 5,
+      "text": "Every window on the lane held something alive on the longest night. Yours were the ones people slowed down for."
     }
   ]
 }

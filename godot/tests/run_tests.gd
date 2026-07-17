@@ -375,6 +375,60 @@ func test_week_close_surfaces_a_pack_reflection() -> void:
 			break
 	expect(found, "closing the week surfaces a pack reflection in the outcome text, not just telemetry")
 
+func test_calendar_runs_a_full_wrapping_year() -> void:
+	var rs := _fresh_run_state()
+	var year := rs.year_length()
+	expect(year >= 20, "Hush Arbor ships a full-year calendar, not a five-week stub")
+	var families := {}
+	for w in range(1, year + 1):
+		rs.week = w
+		families[rs.season_family(rs.current_calendar_entry().get("season", ""))] = true
+	for family in ["spring", "summer", "autumn", "winter"]:
+		expect(families.has(family), "the played year passes through %s" % family)
+
+	# Time never freezes: the year wraps and the summary says which year it is.
+	rs.week = year + 1
+	expect(rs.current_calendar_entry() == rs.region["season_calendar"][0], "week %d wraps back to the week-one beat" % (year + 1))
+	expect(rs.calendar_summary_text().begins_with("Year 2"), "the second year announces itself in the forecast summary")
+
+func test_signals_rotate_with_the_seasons() -> void:
+	var rs := _fresh_run_state()
+	rs.week = 1
+	var spring_ids := {}
+	for signal_data in rs.available_market_signals():
+		spring_ids[signal_data.get("id", "")] = true
+	# Find a mid-winter week and confirm the board reads differently there.
+	for w in range(1, rs.year_length() + 1):
+		rs.week = w
+		if rs.season_family(rs.current_calendar_entry().get("season", "")) == "winter":
+			break
+	var winter_signals := rs.available_market_signals()
+	expect(not winter_signals.is_empty(), "winter still posts market signals")
+	var differs := false
+	for signal_data in winter_signals:
+		if not spring_ids.has(signal_data.get("id", "")):
+			differs = true
+			break
+	expect(differs, "the signal board circulates different reads in winter than in spring")
+
+func test_community_events_span_the_year_and_rearm() -> void:
+	var rs := _fresh_run_state()
+	var event_families := {}
+	for event in rs.region.get("community_events", []):
+		rs.week = int(event.get("start_week", 1))
+		event_families[rs.season_family(rs.current_calendar_entry().get("season", ""))] = true
+	expect(event_families.size() >= 3, "community events land in at least three different seasons")
+
+	# An event resolved in year one comes back around in year two.
+	var first_event: Dictionary = rs.region.get("community_events", [])[0]
+	var start := int(first_event.get("start_week", 1))
+	rs.week = start
+	expect(rs.active_community_event().get("id", "") == first_event.get("id", ""), "the first event opens in its window")
+	rs.resolved_events.append(rs.event_resolution_key(first_event.get("id", ""), rs.week))
+	expect(rs.active_community_event().get("id", "") != first_event.get("id", ""), "a resolved event stays closed for the rest of its year")
+	rs.week = start + rs.year_length()
+	expect(rs.active_community_event().get("id", "") == first_event.get("id", ""), "the same event re-arms when its week comes back around next year")
+
 # --- scene-driven behavioral tests: drive the real overlay, assert observable state ---
 # These exist so "focus is reachable and scroll follows it at 1280x800" and "the flow
 # actually moves the run forward" are machine-verified, not left to a human launching the

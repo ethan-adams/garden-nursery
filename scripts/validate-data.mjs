@@ -135,6 +135,57 @@ for (const catalog of catalogs) {
   });
 }
 
+// Region-year shape (#99): the calendar must be a contiguous full year that passes
+// through all four seasons, events must sit inside it, and season tags on signals
+// must name real season families.
+try {
+  const regionPath = "godot/data/regions/hush_arbor.json";
+  const region = JSON.parse(await readFile(regionPath, "utf8"));
+  const calendar = region.season_calendar ?? [];
+  const families = new Set(calendar.map((entry) => String(entry.season ?? "").trim().split(" ").at(-1)));
+
+  if (calendar.length < 20) {
+    fail(`${regionPath}: season_calendar has ${calendar.length} weeks; a full year needs at least 20`);
+  }
+  calendar.forEach((entry, index) => {
+    if (entry.week !== index + 1) {
+      fail(`${regionPath}: season_calendar[${index}] has week ${entry.week}; weeks must run contiguously from 1`);
+    }
+  });
+  for (const family of ["spring", "summer", "autumn", "winter"]) {
+    if (!families.has(family)) {
+      fail(`${regionPath}: season_calendar never passes through ${family}`);
+    }
+  }
+
+  const events = region.community_events ?? [];
+  if (events.length < 3) {
+    fail(`${regionPath}: expected at least 3 community events across the year, found ${events.length}`);
+  }
+  for (const event of events) {
+    const start = Number(event.start_week);
+    const deadline = Number(event.deadline_week);
+    if (!(start >= 1 && deadline <= calendar.length && start <= deadline)) {
+      fail(`${regionPath}: event "${event.id}" window ${start}-${deadline} must sit inside weeks 1-${calendar.length}`);
+    }
+  }
+
+  for (const signal of region.market_signals ?? []) {
+    if (!Object.hasOwn(signal, "seasons")) continue;
+    if (!Array.isArray(signal.seasons) || signal.seasons.length === 0) {
+      fail(`${regionPath}: signal "${signal.id}" has a "seasons" tag that is not a non-empty array`);
+    } else {
+      for (const season of signal.seasons) {
+        if (!families.has(season)) {
+          fail(`${regionPath}: signal "${signal.id}" names unknown season family "${season}"`);
+        }
+      }
+    }
+  }
+} catch (error) {
+  fail(`region year validation failed: ${error.message}`);
+}
+
 if (!process.exitCode) {
   console.log("ok - data catalogs validate");
 }

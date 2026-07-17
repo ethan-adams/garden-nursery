@@ -114,8 +114,9 @@ export function recommendPlantToCustomers(plant, customers, signal, startingStoc
 export function calendarEntryForWeek(region, week) {
   const calendar = region.season_calendar ?? [];
   if (calendar.length === 0) return null;
-  const index = Math.max(0, Math.min(calendar.length - 1, Number(week ?? 1) - 1));
-  return calendar[index];
+  // The year wraps: week (length + 1) is week 1 of year 2.
+  const zeroBased = Math.max(0, Number(week ?? 1) - 1);
+  return calendar[zeroBased % calendar.length];
 }
 
 export function mergeSignalWithCalendar(signal, region, week) {

@@ -31,6 +31,20 @@ const weekOneWeather = calendarEntryForWeek(region, 1);
 const mergedFrostSignal = mergeSignalWithCalendar(frostSignal, region, 1);
 
 assert.equal(weekOneWeather.weather, "mild frost", "week one should start with the Hush Arbor frost beat");
+
+const yearLength = region.season_calendar.length;
+assert.ok(yearLength >= 20, "Hush Arbor should have a full-year weekly calendar");
+assert.deepEqual(
+  calendarEntryForWeek(region, yearLength + 1),
+  weekOneWeather,
+  "the calendar should wrap back to week one when the year rolls over"
+);
+const seasonFamilies = new Set(region.season_calendar.map((entry) => entry.season.split(" ").at(-1)));
+for (const family of ["spring", "summer", "autumn", "winter"]) {
+  assert.ok(seasonFamilies.has(family), `the year should pass through ${family}`);
+}
+const midwinter = calendarEntryForWeek(region, 21);
+assert.equal(midwinter.season.split(" ").at(-1), "winter", "late-year weeks should reach winter instead of freezing on autumn");
 assert.ok(mergedFrostSignal.points_to_traits.includes("cool-spring"), "calendar forecasts should add demand traits to market signals");
 assert.ok(mergedFrostSignal.risk_traits.includes("warmth-loving"), "calendar forecasts should add weather risk traits to market signals");
 assert.ok(mergedFrostSignal.text.includes("Forecast:"), "merged market signals should show forecast uncertainty in-world");
